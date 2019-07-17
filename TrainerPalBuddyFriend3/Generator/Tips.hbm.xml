@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="tpbf3" namespace="TrainerPalBuddyFriend3" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Tips" table="tips" lazy="true" >
+    <id name="Tippk" column="TipPK" />
+    <many-to-one name="Types">
+      <column name="TypeFK" sql-type="int(11)" not-null="true" />
+    </many-to-one>
+    <property name="Tipid">
+      <column name="TipID" sql-type="varchar(45)" not-null="true" />
+    </property>
+    <property name="Text">
+      <column name="Text" sql-type="varchar(1000)" not-null="false" />
+    </property>
+    <property name="Custom">
+      <column name="Custom" sql-type="int(11)" not-null="true" />
+    </property>
+  </class>
+</hibernate-mapping>

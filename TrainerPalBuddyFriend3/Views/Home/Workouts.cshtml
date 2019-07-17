@@ -1,0 +1,44 @@
+﻿@model TrainerPalBuddyFriend3.Workouts
+<script scr="@Url.Content(" ~/Scripts/jquery-3.3.1.min.js")" type="text/javascript"></script>
+<script scr="@Url.Content(" ~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+
+<h4 id="id1" style="color:purple"></h4>
+<hr />
+<h3><b>Create new Workout</b></h3>
+@using (Ajax.BeginForm("Form6", "Home", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "id1",
+    LoadingElementId = "LoadingImage",
+    OnSuccess = "onSuccess_Message",
+    OnFailure = "onFailure_Message"
+
+}))
+{
+<table>
+    <tr>
+        <td>Workout ID: </td>
+        <td>@Html.TextBoxFor(m => m.Workoutid)</td>
+    </tr>
+    <tr>
+        <td>Workout Name: </td>
+        <td>@Html.TextBoxFor(m => m.Name)</td>
+    </tr>
+    <tr>
+        <td>Workout Description: </td>
+        <td>@Html.TextAreaFor(m => m.Description)</td>
+    </tr>
+    <tr>
+        <td>Custom: </td>
+        <td>0 @Html.RadioButtonFor(m => m.Customflg, 0)</td>
+        <td>1 @Html.RadioButtonFor(m => m.Customflg, 1)</td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="Submit Form" /></td>
+    </tr>
+</table>
+<div id="LoadingImage" style="display:none">Loading...</div>
+<div id="onSuccess_Message"></div>
+<div id="onFailure_Message"></div>
+}
+

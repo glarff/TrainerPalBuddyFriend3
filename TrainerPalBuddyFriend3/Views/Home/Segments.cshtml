@@ -1,0 +1,47 @@
+﻿@model TrainerPalBuddyFriend3.Segments
+<script scr="@Url.Content("~/Scripts/jquery-3.3.1.min.js")" type="text/javascript"></script>
+<script scr="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+
+<h4 id="id2" style="color:purple"></h4>
+<hr />
+<h3><b>Create new Segment</b></h3>
+@using (Ajax.BeginForm("Form4", "Home", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "id2",
+    LoadingElementId = "LoadingImage",
+    OnSuccess = "onSuccess_Message",
+    OnFailure = "onFailure_Message"
+
+}))
+{
+<table>
+    <tr>
+        <td>Segment ID: </td>
+        <td>@Html.TextBoxFor(m => m.Segmentid)</td>
+    </tr>
+    <tr>
+        <td>Segment Name: </td>
+        <td>@Html.TextBoxFor(m => m.Name)</td>
+    </tr>
+    <tr>
+        <td>Type: </td>
+        <td>@Html.DropDownListFor(m => m.Types.Typepk, Model.DropDownList)</td>
+    </tr>
+    <tr>
+        <td>Intensity (1-5): </td>
+        <td>@Html.TextBoxFor(m => m.Intensity)</td>
+    </tr>
+    <tr>
+        <td>Custom: </td>
+        <td>0 @Html.RadioButtonFor(m => m.Customflg, 0)</td>
+        <td>1 @Html.RadioButtonFor(m => m.Customflg, 1)</td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="Submit Form" /></td>
+    </tr>
+</table>
+    <div id="LoadingImage" style="display:none">Loading...</div>
+    <div id="onSuccess_Message"></div>
+    <div id="onFailure_Message"></div>
+}

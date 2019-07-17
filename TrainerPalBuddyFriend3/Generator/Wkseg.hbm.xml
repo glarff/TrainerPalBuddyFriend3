@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="tpbf3" namespace="TrainerPalBuddyFriend3" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Wkseg" table="wkseg" lazy="true" >
+    <id name="Wksegpk" column="WkSegPK" />
+    <many-to-one name="Workouts">
+      <column name="WorkoutFK" sql-type="int(11)" not-null="true" />
+    </many-to-one>
+    <many-to-one name="Segments">
+      <column name="SegmentFK" sql-type="int(11)" not-null="true" />
+    </many-to-one>
+    <property name="Duration">
+      <column name="Duration" sql-type="int(11)" not-null="true" />
+    </property>
+    <property name="Sequence">
+      <column name="Sequence" sql-type="int(11)" not-null="true" />
+    </property>
+  </class>
+</hibernate-mapping>
