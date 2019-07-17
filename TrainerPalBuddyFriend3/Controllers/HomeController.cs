@@ -198,36 +198,50 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult WkSeg()
+        public ActionResult WkSeg(Workouts w)
         {
-            var list = new List<MyListTable>();
-
-            using (ISession _S = MvcApplication.SF.GetCurrentSession())
+            if (w.Workoutid == null)
             {
-                Workouts wk = null;
+                var list = new List<MyListTable>();
 
-                var typeList = _S.QueryOver<Workouts>(() => wk)
-                    .SelectList(l => l
-                        .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
-                        .Select(x => x.Name).WithAlias(() => wk.Name)
-                    )
-                    .TransformUsing(Transformers.AliasToBean<Workouts>())
-                    .List<Workouts>();
-
-                foreach (var r in typeList)
+                // Get list of workouts
+                using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    list.Add(new MyListTable
+                    Workouts wk = null;
+
+                    var typeList = _S.QueryOver<Workouts>(() => wk)
+                        .SelectList(l => l
+                            .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
+                            .Select(x => x.Name).WithAlias(() => wk.Name)
+                        )
+                        .TransformUsing(Transformers.AliasToBean<Workouts>())
+                        .List<Workouts>();
+
+                    foreach (var r in typeList)
                     {
-                        Key = r.Workoutpk,
-                        Display = r.Name.ToString()
-                    });
+                        list.Add(new MyListTable
+                        {
+                            Key = r.Workoutpk,
+                            Display = r.Name.ToString()
+                        });
+                    }
                 }
+
+                // Get list of available segments to add to workout
+
+                // Get list of already added segments for workout
+
+                var model = new Wkseg();
+                model.DropDownList = new SelectList(list, "Key", "Display");
+
+                return View(model);
+
             }
 
-            var model = new Wkseg();
-            model.DropDownList = new SelectList(list, "Key", "Display");
-
-            return View(model);
+            else
+            {
+                return View();
+            }
 
         }
 
