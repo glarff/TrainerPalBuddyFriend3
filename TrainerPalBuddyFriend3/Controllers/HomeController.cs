@@ -198,9 +198,9 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult WkSeg(Workouts w)
+        public ActionResult WkSeg(Wkseg w)
         {
-            if (w.Workoutid == null)
+            if (w.Workouts == null)
             {
                 var list = new List<MyListTable>();
 
@@ -245,12 +245,44 @@ namespace TrainerPalBuddyFriend3.Controllers
 
         }
 
-        public ActionResult Form7(Workouts wk)
+        public ActionResult Form7(Wkseg wk)
         {
             if (ModelState.IsValid)
             {
-                return View("Index");
+                var tmpWk = new Wkseg();
+                tmpWk.Workouts = wk.Workouts;
+
+                // Populate available segments
+                var list2 = new List<MyListTable>();
+
+                // Get list of workouts
+                using (ISession _S = MvcApplication.SF.GetCurrentSession())
+                {
+                    Segments sg = null;
+
+                    var segmentList = _S.QueryOver<Segments>(() => sg)
+                        .SelectList(l => l
+                            .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
+                            .Select(x => x.Name).WithAlias(() => sg.Name)
+                        )
+                        .TransformUsing(Transformers.AliasToBean<Segments>())
+                        .List<Segments>();
+
+                    foreach (var r in segmentList)
+                    {
+                        list2.Add(new MyListTable
+                        {
+                            Key = r.Segmentpk,
+                            Display = r.Name.ToString()
+                        });
+                    }
+                }
+
+                tmpWk.DropDownList2 = new SelectList(list2, "Key", "Display");
+
+                return View("WkSeg", tmpWk);
             }
+
             else
             {
                 return View("Index");

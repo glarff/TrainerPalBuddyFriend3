@@ -12,5 +12,6 @@ namespace TrainerPalBuddyFriend3 {
         public virtual int Duration { get; set; }
         public virtual int Sequence { get; set; }
         public virtual SelectList DropDownList { get; set; }
+        public virtual SelectList DropDownList2 { get; set; }
     }
 }

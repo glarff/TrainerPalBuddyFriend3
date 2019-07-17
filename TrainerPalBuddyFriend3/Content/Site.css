@@ -1,12 +1,23 @@
 ﻿body {
+    background-color: #252120;
+    color: #BBBCBF;
+    font-size: 18px;
+    font-family: Montserrat;
     padding-top: 50px;
     padding-bottom: 20px;
 }
+
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+}
+
+
+input[type="submit"] {
+    background-color: #0F1A40;
+    color: #BBBCBF !important;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -16,9 +27,22 @@
     white-space: normal;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    color: #F2EAE9;
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
+    color: #070F2E;
     max-width: 280px;
+}
+
+.navbar-inverse {
+    background-color: #01030C;
+}
+
+td, th {
+    padding: 6px;
 }

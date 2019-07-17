@@ -5,27 +5,55 @@
 <h4 id="id2" style="color:purple"></h4>
 <hr />
 <h3><b>Add Segments to Workouts</b></h3>
-@using (Ajax.BeginForm("Form7", "Home", new AjaxOptions
+@if (Model.DropDownList2 == null)
 {
-    HttpMethod = "POST",
-    UpdateTargetId = "id3",
-    LoadingElementId = "LoadingImage",
-    OnSuccess = "onSuccess_Message",
-    OnFailure = "onFailure_Message"
+    using (Ajax.BeginForm("Form7", "Home", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        UpdateTargetId = "id3",
+        LoadingElementId = "LoadingImage",
+        OnSuccess = "onSuccess_Message",
+        OnFailure = "onFailure_Message"
 
-}))
-{
-    <table>
-        <tr>
-            <td>Select Workout: </td>
-            <td>@Html.DropDownListFor(m => m.Workouts.Workoutpk, Model.DropDownList)</td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" value="Submit Form" /></td>
-        </tr>
-    </table>
-    <div id="LoadingImage" style="display:none">Loading...</div>
-    <div id="onSuccess_Message"></div>
-    <div id="onFailure_Message"></div>
+    }))
+    {
+        <table>
+            <tr>
+                <td>Select Workout: </td>
+                <td>@Html.DropDownListFor(m => m.Workouts.Workoutpk, Model.DropDownList)</td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="Submit Form" /></td>
+            </tr>
+        </table>
+        <div id="LoadingImage" style="display:none">Loading...</div>
+        <div id="onSuccess_Message"></div>
+        <div id="onFailure_Message"></div>
+    }
 }
 
+else
+{
+    using (Ajax.BeginForm("Form8", "Home", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        UpdateTargetId = "id4",
+        LoadingElementId = "LoadingImage",
+        OnSuccess = "onSuccess_Message",
+        OnFailure = "onFailure_Message"
+    }))
+    {
+        <table>
+            <tr>
+                <td>Available Segments: </td>
+                <td>@Html.ListBoxFor(m => m.Segments.Segmentpk, Model.DropDownList2)</td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="Submit Form" /></td>
+            </tr>
+        </table>
+        <div id="LoadingImage2" style="display:none">Loading...</div>
+        <div id="onSuccess_Message2"></div>
+        <div id="onFailure_Message2"></div>
+    }
+}
