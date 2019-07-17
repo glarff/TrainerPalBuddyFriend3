@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
-
+using System.Web.Mvc;
 
 namespace TrainerPalBuddyFriend3 {
     
@@ -11,5 +11,6 @@ namespace TrainerPalBuddyFriend3 {
         public virtual Segments Segments { get; set; }
         public virtual int Duration { get; set; }
         public virtual int Sequence { get; set; }
+        public virtual SelectList DropDownList { get; set; }
     }
 }

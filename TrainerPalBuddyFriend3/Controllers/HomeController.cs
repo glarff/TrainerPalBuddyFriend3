@@ -54,6 +54,32 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
+        public ActionResult Form6(Workouts wk)
+        {
+            if (ModelState.IsValid)
+            {
+                using (ISession _S = MvcApplication.SF.GetCurrentSession())
+                {
+                    Workouts newWorkout = new Workouts();
+                    newWorkout.Workoutid = wk.Workoutid;
+                    newWorkout.Name = wk.Name;
+                    newWorkout.Customflg = wk.Customflg;
+
+                    _S.Save(newWorkout);
+                    _S.Flush();
+                    _S.Clear();
+                }
+
+                ViewBag.onSuccess_Message = "Workout " + wk.Name + " Added Successfully";
+
+                return View("Index");
+            }
+            else
+            {
+                return View("Index");
+            }
+        }
+
         public ActionResult Segments()
         {
             var list = new List<MyListTable>();
@@ -164,6 +190,51 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                 ViewBag.onSuccess_Message = "Tip " + wk.Text + " Added Successfully";
 
+                return View("Index");
+            }
+            else
+            {
+                return View("Index");
+            }
+        }
+
+        public ActionResult WkSeg()
+        {
+            var list = new List<MyListTable>();
+
+            using (ISession _S = MvcApplication.SF.GetCurrentSession())
+            {
+                Workouts wk = null;
+
+                var typeList = _S.QueryOver<Workouts>(() => wk)
+                    .SelectList(l => l
+                        .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
+                        .Select(x => x.Name).WithAlias(() => wk.Name)
+                    )
+                    .TransformUsing(Transformers.AliasToBean<Workouts>())
+                    .List<Workouts>();
+
+                foreach (var r in typeList)
+                {
+                    list.Add(new MyListTable
+                    {
+                        Key = r.Workoutpk,
+                        Display = r.Name.ToString()
+                    });
+                }
+            }
+
+            var model = new Wkseg();
+            model.DropDownList = new SelectList(list, "Key", "Display");
+
+            return View(model);
+
+        }
+
+        public ActionResult Form7(Workouts wk)
+        {
+            if (ModelState.IsValid)
+            {
                 return View("Index");
             }
             else
