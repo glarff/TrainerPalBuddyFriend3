@@ -32,8 +32,12 @@
     }
 }
 
+// ---------------- Select Segments - Double Select List ------------------- //
+
+// src: esausilva.com/2016/01/29/move-items-between-two-listbox-using-jquery-html-select-tag/
 else
 {
+
     using (Ajax.BeginForm("Form8", "Home", new AjaxOptions
     {
         HttpMethod = "POST",
@@ -43,6 +47,34 @@ else
         OnFailure = "onFailure_Message"
     }))
     {
+        <div class="subject-info-box-1">
+            <select multiple="multiple" id='lstBox1' class="form-control">
+                <option value="ajax">Ajax</option>
+                <option value="jquery">jQuery</option>
+                <option value="javascript">JavaScript</option>
+                <option value="mootool">MooTools</option>
+                <option value="prototype">Prototype</option>
+                <option value="dojo">Dojo</option>
+            </select>
+        </div>
+        <div class="subject-info-arrows text-center">
+            <input type="button" id="btnAllRight" value=">>" class="btn btn-default" /><br />
+            <input type="button" id="btnRight" value=">" class="btn btn-default" /><br />
+            <input type="button" id="btnLeft" value="<" class="btn btn-default" /><br />
+            <input type="button" id="btnAllLeft" value="<<" class="btn btn-default" />
+        </div>
+        <div class="subject-info-box-2">
+            <select multiple="multiple" id='lstBox2' class="form-control">
+                <option value="asp">ASP.NET</option>
+                <option value="c#">C#</option>
+                <option value="vb">VB.NET</option>
+                <option value="java">Java</option>
+                <option value="php">PHP</option>
+                <option value="python">Python</option>
+            </select>
+        </div>
+        <div class="clearfix"></div>
+
         <table>
             <tr>
                 <td>Available Segments: </td>
@@ -56,4 +88,53 @@ else
         <div id="onSuccess_Message2"></div>
         <div id="onFailure_Message2"></div>
     }
+
+    <script>
+
+        jQuery(document).ready(function ($) {
+            $('#btnRight').click(function (e) {
+                var selectedOpts = $('#lstBox1 option:selected');
+                if (selectedOpts.length == 0) {
+                    alert("Nothing to move.");
+                    e.preventDefault();
+                }
+                $('#lstBox2').append($(selectedOpts).clone());
+                $(selectedOpts).remove();
+                e.preventDefault();
+            });
+            $('#btnAllRight').click(function (e) {
+                var selectedOpts = $('#lstBox1 option');
+                if (selectedOpts.length == 0) {
+                    alert("Nothing to move.");
+                    e.preventDefault();
+                }
+                $('#lstBox2').append($(selectedOpts).clone());
+                $(selectedOpts).remove();
+                e.preventDefault();
+            });
+            $('#btnLeft').click(function (e) {
+                var selectedOpts = $('#lstBox2 option:selected');
+                if (selectedOpts.length == 0) {
+                    alert("Nothing to move.");
+                    e.preventDefault();
+                }
+                $('#lstBox1').append($(selectedOpts).clone());
+                $(selectedOpts).remove();
+                e.preventDefault();
+            });
+            $('#btnAllLeft').click(function (e) {
+                var selectedOpts = $('#lstBox2 option');
+                if (selectedOpts.length == 0) {
+                    alert("Nothing to move.");
+                    e.preventDefault();
+                }
+                $('#lstBox1').append($(selectedOpts).clone());
+                $(selectedOpts).remove();
+                e.preventDefault();
+            });
+        });
+
+    </script>
+
+    // ----------------------------------------------------------------------- //
 }

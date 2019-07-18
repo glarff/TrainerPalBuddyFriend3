@@ -23,7 +23,7 @@ namespace TrainerPalBuddyFriend3
 
                     nhCnfig.DataBaseIntegration(delegate (NHibernate.Cfg.Loquacious.IDbIntegrationConfigurationProperties abc)
                     {
-                        abc.ConnectionString = "Database=rides;Data Source=localhost;Port=3306;User Id=root;Password=dzpBTR4gls6E2";
+                        abc.ConnectionString = "Database=rides;Data Source=localhost;Port=3306;User Id=root;Password=<K%F!1?qsYt0";
                         abc.Dialect<NHibernate.Dialect.MySQL55Dialect>();
                         abc.Driver<NHibernate.Driver.MySqlDataDriver>();
                         abc.LogSqlInConsole = true;
@@ -31,10 +31,6 @@ namespace TrainerPalBuddyFriend3
                     });
 
                     nhCnfig.AddAssembly(typeof(Segments).Assembly);
-                    //nhCnfig.AddAssembly(typeof(Tips).Assembly);
-                    //nhCnfig.AddAssembly(typeof(Types).Assembly);
-                    //nhCnfig.AddAssembly(typeof(Wkseg).Assembly);
-                    //nhCnfig.AddAssembly(typeof(Workouts).Assembly);
                     nhCnfig.CurrentSessionContext<WebSessionContext>();
 
                     _SF = nhCnfig.BuildSessionFactory();
