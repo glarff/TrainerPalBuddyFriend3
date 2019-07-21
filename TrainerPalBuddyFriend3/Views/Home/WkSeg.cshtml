@@ -1,6 +1,5 @@
 ﻿@model TrainerPalBuddyFriend3.Wkseg
-<script scr="@Url.Content("~/Scripts/jquery-3.3.1.min.js")" type="text/javascript"></script>
-<script scr="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
 <h4 id="id2" style="color:purple"></h4>
 <hr />
@@ -37,7 +36,6 @@
 // src: esausilva.com/2016/01/29/move-items-between-two-listbox-using-jquery-html-select-tag/
 else
 {
-
     using (Ajax.BeginForm("Form8", "Home", new AjaxOptions
     {
         HttpMethod = "POST",
@@ -47,6 +45,36 @@ else
         OnFailure = "onFailure_Message"
     }))
     {
+<div class="section">
+    <h2>Process Workflow</h2>
+    <div class="content">
+        <div class="subsection">
+            <h3 id="h3_lbl">Defined Steps</h3>
+            <div class="content">
+                <div class="actions">
+                    <button id="steps_add_btn" type="button" aria-labelledby="h3_lbl steps_add_btn" onclick="AddProcessStep()">Add</button>&nbsp;
+                </div>
+                <table class="table table-condensed nestedtablewithactions" summary="Defined Steps">
+                    <thead>
+                        <tr>
+                            <th class="movercol">Move</th>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Duration</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
         <div class="subject-info-box-1">
             <select multiple="multiple" id='lstBox1' class="form-control">
                 <option value="ajax">Ajax</option>
@@ -87,54 +115,57 @@ else
         <div id="LoadingImage2" style="display:none">Loading...</div>
         <div id="onSuccess_Message2"></div>
         <div id="onFailure_Message2"></div>
+
+
+        <script>
+
+            jQuery(document).ready(function ($) {
+                $('#btnRight').click(function (e) {
+                    var selectedOpts = $('#lstBox1 option:selected');
+                    if (selectedOpts.length == 0) {
+                        alert("Nothing to move.");
+                        e.preventDefault();
+                    }
+                    $('#lstBox2').append($(selectedOpts).clone());
+                    $(selectedOpts).remove();
+                    e.preventDefault();
+                });
+                $('#btnAllRight').click(function (e) {
+                    var selectedOpts = $('#lstBox1 option');
+                    if (selectedOpts.length == 0) {
+                        alert("Nothing to move.");
+                        e.preventDefault();
+                    }
+                    $('#lstBox2').append($(selectedOpts).clone());
+                    $(selectedOpts).remove();
+                    e.preventDefault();
+                });
+                $('#btnLeft').click(function (e) {
+                    var selectedOpts = $('#lstBox2 option:selected');
+                    if (selectedOpts.length == 0) {
+                        alert("Nothing to move.");
+                        e.preventDefault();
+                    }
+                    $('#lstBox1').append($(selectedOpts).clone());
+                    $(selectedOpts).remove();
+                    e.preventDefault();
+                });
+                $('#btnAllLeft').click(function (e) {
+                    var selectedOpts = $('#lstBox2 option');
+                    if (selectedOpts.length == 0) {
+                        alert("Nothing to move.");
+                        e.preventDefault();
+                    }
+                    $('#lstBox1').append($(selectedOpts).clone());
+                    $(selectedOpts).remove();
+                    e.preventDefault();
+                });
+            });
+
+        </script>
+
+        // ----------------------------------------------------------------------- //
     }
 
-    <script>
 
-        jQuery(document).ready(function ($) {
-            $('#btnRight').click(function (e) {
-                var selectedOpts = $('#lstBox1 option:selected');
-                if (selectedOpts.length == 0) {
-                    alert("Nothing to move.");
-                    e.preventDefault();
-                }
-                $('#lstBox2').append($(selectedOpts).clone());
-                $(selectedOpts).remove();
-                e.preventDefault();
-            });
-            $('#btnAllRight').click(function (e) {
-                var selectedOpts = $('#lstBox1 option');
-                if (selectedOpts.length == 0) {
-                    alert("Nothing to move.");
-                    e.preventDefault();
-                }
-                $('#lstBox2').append($(selectedOpts).clone());
-                $(selectedOpts).remove();
-                e.preventDefault();
-            });
-            $('#btnLeft').click(function (e) {
-                var selectedOpts = $('#lstBox2 option:selected');
-                if (selectedOpts.length == 0) {
-                    alert("Nothing to move.");
-                    e.preventDefault();
-                }
-                $('#lstBox1').append($(selectedOpts).clone());
-                $(selectedOpts).remove();
-                e.preventDefault();
-            });
-            $('#btnAllLeft').click(function (e) {
-                var selectedOpts = $('#lstBox2 option');
-                if (selectedOpts.length == 0) {
-                    alert("Nothing to move.");
-                    e.preventDefault();
-                }
-                $('#lstBox1').append($(selectedOpts).clone());
-                $(selectedOpts).remove();
-                e.preventDefault();
-            });
-        });
-
-    </script>
-
-    // ----------------------------------------------------------------------- //
 }
