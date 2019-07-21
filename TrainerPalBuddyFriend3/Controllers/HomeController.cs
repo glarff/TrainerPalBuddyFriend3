@@ -20,7 +20,28 @@ namespace TrainerPalBuddyFriend3.Controllers
 
         public ActionResult Types()
         {
-            return View();
+            var list = new List<Types>();
+            // Get data for existing Types
+            using (ISession _S = MvcApplication.SF.GetCurrentSession())
+            {
+                Types typ = null;
+
+                var typeList = _S.QueryOver<Types>(() => typ)
+                    .SelectList(l => l
+                        .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
+                        .Select(x => x.Typeid).WithAlias(() => typ.Typeid)
+                        .Select(x => x.Name).WithAlias(() => typ.Name)
+                        .Select(x => x.Custom).WithAlias(() => typ.Custom)
+                    )
+                    .TransformUsing(Transformers.AliasToBean<Types>())
+                    .List<Types>();
+
+                foreach (var r in typeList)
+                {
+                    list.Add(r);
+                }
+            }
+            return View(list);
         }
 
         public ActionResult Workouts()
@@ -28,23 +49,82 @@ namespace TrainerPalBuddyFriend3.Controllers
             return View();
         }
 
-        public ActionResult Form3(Types tp)
+        public ActionResult Form3(List<Types> newList)
         {
             if (ModelState.IsValid)
             {
+                // Get existing types
+                var newListPKs = new List<int>();
+                var oldListPKs = new List<int>();
+
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Types newType = new Types();
-                    newType.Typeid = tp.Typeid;
-                    newType.Name = tp.Name;
-                    newType.Custom = tp.Custom;
+                    Types typ = null;
 
-                    _S.Save(newType);
-                    _S.Flush();
-                    _S.Clear();
+                    var oldList = _S.QueryOver<Types>(() => typ)
+                        .SelectList(l => l
+                            .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
+                        )
+                        .TransformUsing(Transformers.AliasToBean<Types>())
+                        .List<Types>();
+
+                    foreach (var r in oldList)
+                    {
+                        oldListPKs.Add(r.Typepk);
+                    }
+
+                    foreach (var r in newList)
+                    {
+                        newListPKs.Add(r.Typepk);
+                    }
+
+                    foreach (var q in newList)
+                    {
+                        //updates
+                        if (oldListPKs.Contains(q.Typepk))
+                        {
+                            var persistentType = _S.Load<Types>(q.Typepk);
+
+                            persistentType.Typeid = q.Typeid;
+                            persistentType.Name = q.Name;
+                            persistentType.Custom = q.Custom;
+
+                            _S.Save(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+
+                        //inserts
+                        else if (q.Typepk == 0)
+                        {
+                            var persistentType = new Types();
+
+                            persistentType.Typeid = q.Typeid;
+                            persistentType.Name = q.Name;
+                            persistentType.Custom = q.Custom;
+
+                            _S.Save(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+
+                    }
+
+                    //deletions
+                    foreach (var x in oldListPKs)
+                    {
+                        if (!(newListPKs.Contains(x)))
+                        {
+                            var persistentType = _S.Load<Types>(x);
+
+                            _S.Delete(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+
+                    }
+
                 }
-
-                ViewBag.onSuccess_Message = "Type " + tp.Name + " Added Successfully"; 
                
                 return View("Index");
             }

@@ -1,10 +1,24 @@
-﻿@model TrainerPalBuddyFriend3.Types
+﻿@model  List<Types>
 <script scr="@Url.Content(" ~/Scripts/jquery-3.3.1.min.js")" type="text/javascript"></script>
 <script scr="@Url.Content(" ~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
-<h4 id="id1" style="color:purple"></h4>
-<hr />
-<h3><b>Create new Activity Type</b></h3>
+<script>
+    $(document).on('click', 'button.deletebtn', function () {
+        $(this).closest('tr').hide();
+        $(this).parent().siblings().children().val(-1);
+
+        return false;
+    });
+
+    $(document).on('click', 'button.addbtn', function (){
+        @{ Types newTyp = new Types();
+            Model.Add(newTyp);
+            }
+        $('#myTbl tr[name!="submitRow"]:last').after('<tr><td class="pk" style="display:none">@Html.TextBoxFor(m => m[Model.Count-1].Typepk)</td><td>>@Html.TextBoxFor(m  => m[Model.Count-1].Typeid)</td><td>>@Html.TextBoxFor(m => m[Model.Count-1].Name)</td><td>>@Html.TextBoxFor(m => m[Model.Count-1].Custom)</td><td><button class="btnEdit" onclick="click">Edit</button>&nbsp;</td><td><button type="button" class="deletebtn" title="Remove row">X</button></td></tr>');
+    });
+</script>
+
 @using (Ajax.BeginForm("Form3", "Home", new AjaxOptions
 {
     HttpMethod = "POST",
@@ -15,26 +29,54 @@
 
 }))
 {
-<table>
-    <tr>
-        <td>Type ID: </td>
-        <td>@Html.TextBoxFor(m => m.Typeid)</td>
-    </tr>
-    <tr>
-        <td>Type Name: </td>
-        <td>@Html.TextBoxFor(m => m.Name)</td>
-    </tr>
-    <tr>
-        <td>Custom: </td>
-        <td>0 @Html.RadioButtonFor(m => m.Custom, 0)</td>
-        <td>1 @Html.RadioButtonFor(m => m.Custom, 1)</td>
-    </tr>
-    <tr>
-        <td colspan="2"><input type="submit" value="Submit Form" /></td>
-    </tr>
-</table>
-<div id="LoadingImage" style="display:none">Loading...</div>
-<div id="onSuccess_Message"></div>
-<div id="onFailure_Message"></div>
-}
+    <div class="section">
+        <h2>Activity Types</h2>
+        <div class="content">
+            <div class="subsection">
+                <div class="content">
+                    <div class="actions">
+                        <button type="button" class="addbtn" title="Remove row">Add</button>
+                    </div>
+                    <table id ="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
+                        <thead>
+                            <tr>
+                                <th style="display:none" >PK</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Custom</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 0; }
+                            @foreach (var r in Model)
+                            {
+                                <tr>
+                                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m[i].Typepk)</td>
+                                    <td>>@Html.TextBoxFor(m => m[i].Typeid)</td>
+                                    <td>>@Html.TextBoxFor(m => m[i].Name)</td>
+                                    <td>>@Html.TextBoxFor(m => m[i].Custom)</td>
+                                    <td>
+                                        <button class="btnEdit" onclick="click">Edit</button>&nbsp;
+                                    </td>
+                                    <td>
+                                        <button type="button" class="deletebtn" title="Remove row">X</button>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                            <tr name="submitRow">
+                                <td colspan="5"><input type="submit" value="Save Changes" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+
+    </script>
+}

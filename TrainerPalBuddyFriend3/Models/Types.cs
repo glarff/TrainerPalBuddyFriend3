@@ -12,4 +12,6 @@ namespace TrainerPalBuddyFriend3 {
         public virtual string Name { get; set; }
         public virtual int Custom { get; set; }
     }
+
 }
+
