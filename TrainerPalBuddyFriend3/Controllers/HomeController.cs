@@ -198,8 +198,6 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        private List<Wkseg> wkx;
-
         public ActionResult WkSeg(Wkseg w)
         {          
             if (w.Workouts == null)
