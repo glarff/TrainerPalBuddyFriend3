@@ -16,6 +16,10 @@
     display:table-row;
 }
 
+.disabledInput {
+    disabled:disabled;
+    background-color:darkgray;
+}
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
@@ -162,21 +166,6 @@ body {
     grid-row: 2 / 4;
 }
 
-button {
-    background-color: red;
-    border: 1px solid #dedede;
-    border-top: 1px solid #eee;
-    border-left: 1px solid #eee;
-    line-height: 130%;
-    text-decoration: none;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    width: 150px;
-    overflow: visible;
-    padding: 4px 10px 3px 7px;
-}
-
 .wkTitle {
     font-size: 42px;
     padding-left: 50px;
@@ -318,8 +307,8 @@ button {
 }
 
 .segmentTitleLabel {
-    padding-top: 40px;
-    padding-left: 50px;
+    padding-top: 10px;
+    padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 10px;
     width: 500px;

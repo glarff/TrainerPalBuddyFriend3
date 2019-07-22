@@ -4,6 +4,13 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        $('input[type="text"]').each(function(){
+            $(this).prop('disabled', true);
+            $(this).css('background-color', 'darkgrey');
+        })
+    });
+
     $(document).on('click', 'button.deletebtn', function () {
         $(this).closest('tr').hide();
         $(this).parent().siblings().children().val(0);
@@ -12,8 +19,8 @@
     });
 
     $(document).on('click', 'button.editbtn', function () {
-
-        return false;
+        $(this).parent().siblings().children().prop('disabled', false);
+        $(this).parent().siblings().children().css('background-color', 'white');
     });
 
     $(document).on('click', 'button.addbtn', function () {
@@ -62,7 +69,7 @@
                                     <td>@Html.TextBoxFor(m => m[i].Name)</td>
                                     <td>@Html.TextBoxFor(m => m[i].Custom)</td>
                                     <td>
-                                        <button type="button" class="editBtn" title="Edit row">Edit</button>
+                                        <button type="button" class="editbtn" title="Edit row">Edit</button>
                                     </td>
                                     <td>
                                         <button type="button" class="deletebtn" title="Remove row">X</button>
@@ -84,7 +91,7 @@
                                     <td>@Html.TextBoxFor(m => m[j].Name)</td>
                                     <td>@Html.TextBoxFor(m => m[j].Custom)</td>
                                     <td>
-                                        <button type="button" class="editBtn" title="Edit row">Edit</button>
+                                        <button type="button" class="editbtn" title="Edit row">Edit</button>
                                     </td>
                                     <td>
                                         <button type="button" class="deletebtn" title="Remove row">X</button>
