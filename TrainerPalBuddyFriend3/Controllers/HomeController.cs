@@ -95,7 +95,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         }
 
                         //inserts
-                        else if (q.Typepk == 0)
+                        else if (q.Typepk == -1)
                         {
                             var persistentType = new Types();
 

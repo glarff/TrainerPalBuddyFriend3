@@ -6,16 +6,20 @@
 <script>
     $(document).on('click', 'button.deletebtn', function () {
         $(this).closest('tr').hide();
-        $(this).parent().siblings().children().val(-1);
+        $(this).parent().siblings().children().val(0);
 
         return false;
     });
 
-    $(document).on('click', 'button.addbtn', function (){
-        @{ Types newTyp = new Types();
-            Model.Add(newTyp);
-            }
-        $('#myTbl tr[name!="submitRow"]:last').after('<tr><td class="pk" style="display:none">@Html.TextBoxFor(m => m[Model.Count-1].Typepk)</td><td>>@Html.TextBoxFor(m  => m[Model.Count-1].Typeid)</td><td>>@Html.TextBoxFor(m => m[Model.Count-1].Name)</td><td>>@Html.TextBoxFor(m => m[Model.Count-1].Custom)</td><td><button class="btnEdit" onclick="click">Edit</button>&nbsp;</td><td><button type="button" class="deletebtn" title="Remove row">X</button></td></tr>');
+    $(document).on('click', 'button.editbtn', function () {
+
+        return false;
+    });
+
+    $(document).on('click', 'button.addbtn', function () {
+        $('.hiddenRow:first').addClass('visibleRow');
+        $('.hiddenRow:first').children(".pk").children().val(-1);
+        $('.hiddenRow:first').removeClass('hiddenRow');
     });
 </script>
 
@@ -52,19 +56,41 @@
                             @{ int i = 0; }
                             @foreach (var r in Model)
                             {
-                                <tr>
+                                <tr class="visibleRow">
                                     <td class="pk" style="display:none">@Html.TextBoxFor(m => m[i].Typepk)</td>
-                                    <td>>@Html.TextBoxFor(m => m[i].Typeid)</td>
-                                    <td>>@Html.TextBoxFor(m => m[i].Name)</td>
-                                    <td>>@Html.TextBoxFor(m => m[i].Custom)</td>
+                                    <td>@Html.TextBoxFor(m => m[i].Typeid)</td>
+                                    <td>@Html.TextBoxFor(m => m[i].Name)</td>
+                                    <td>@Html.TextBoxFor(m => m[i].Custom)</td>
                                     <td>
-                                        <button class="btnEdit" onclick="click">Edit</button>&nbsp;
+                                        <button type="button" class="editBtn" title="Edit row">Edit</button>
                                     </td>
                                     <td>
                                         <button type="button" class="deletebtn" title="Remove row">X</button>
                                     </td>
                                 </tr>
                                 i++;
+                            }
+                            @{ int j = 0; }
+                            @for (j = i; j < i + 20; j++)
+                            {
+                                // ugly solution until I can find something better that works
+                                // add invisible rows to handle additions
+                                var newTyp = new Types();
+                                Model.Add(newTyp);
+
+                                <tr class ="hiddenRow">
+                                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Typepk)</td>
+                                    <td>+ @Html.TextBoxFor(m => m[j].Typeid)</td>
+                                    <td>@Html.TextBoxFor(m => m[j].Name)</td>
+                                    <td>@Html.TextBoxFor(m => m[j].Custom)</td>
+                                    <td>
+                                        <button type="button" class="editBtn" title="Edit row">Edit</button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="deletebtn" title="Remove row">X</button>
+                                    </td>
+                                </tr>
+
                             }
                             <tr name="submitRow">
                                 <td colspan="5"><input type="submit" value="Save Changes" /></td>
