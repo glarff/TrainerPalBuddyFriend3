@@ -18,6 +18,12 @@ namespace TrainerPalBuddyFriend3.Controllers
             return View();
         }
 
+        public ActionResult Demo()
+        {
+
+            return View();
+        }
+
         public ActionResult Types()
         {
             var list = new List<Types>();

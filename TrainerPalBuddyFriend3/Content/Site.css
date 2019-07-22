@@ -88,3 +88,271 @@ select[multiple] {
     width: 70%;
     margin-bottom: 5px;
 }
+
+* {
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 26.4px;
+    color: #ffffe6;
+}
+
+body {
+    background: #333333;
+    margin: 40px;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 600px 300px 60px 450px 250px;
+    background-color: #333333;
+    color: #444;
+    grid-auto-rows: minmax(50px, auto);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.box {
+    background-color: #333333;
+    color: #fff;
+}
+
+.a {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.b {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.c {
+    grid-column: 1 / 2;
+    grid-row: 2;
+}
+
+.d {
+    grid-column: 1 / 2;
+    grid-row: 3;
+}
+
+.e {
+    grid-column: 1 / 2;
+    grid-row: 4;
+}
+
+.f {
+    grid-column: 3 / 5;
+    grid-row: 1;
+}
+
+.g {
+    grid-column: 3;
+    grid-row: 2 / 4;
+}
+
+.h {
+    grid-column: 4;
+    grid-row: 2 / 4;
+}
+
+.i {
+    grid-column: 5;
+    grid-row: 2 / 4;
+}
+
+button {
+    background-color: red;
+    border: 1px solid #dedede;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    line-height: 130%;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    width: 150px;
+    overflow: visible;
+    padding: 4px 10px 3px 7px;
+}
+
+.wkTitle {
+    font-size: 42px;
+    padding-left: 50px;
+    width: 450px;
+    display: block;
+    float: left;
+}
+
+.buttonContainer {
+    width: 150px;
+    display: block;
+    float: left;
+}
+
+.bigTimer {
+    font-size: 64px;
+}
+
+.intensityText {
+    border: 1px solid white;
+    font-size: 28px;
+    font-weight: bold;
+    height: 58px;
+    line-height: 58px;
+    text-align: center;
+}
+
+.mainComponentContainer {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: block;
+    height: auto;
+    width: 750px;
+    float: left;
+    clear: left;
+    font-size: 42px;
+    background-color: black;
+    text-align: center;
+    border-style: groove;
+    border: 2px solid blue;
+    border-radius: 30px;
+}
+
+.mainTimerContainer {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: block;
+    width: 750px;
+    float: left;
+    clear: left;
+    font-size: 64px;
+    background-color: black;
+    text-align: center;
+    border-style: groove;
+    border: 2px solid blue;
+    border-radius: 30px;
+}
+
+.mainTimerFooter {
+    padding-top: 10px;
+    padding-bottom: 30px;
+    width: 725px;
+    float: left;
+    clear: left;
+    font-size: 18px;
+    text-align: right;
+}
+
+.segmentsText {
+    border: 1px solid #595959;
+    font-size: 28px;
+    height: 58px;
+    line-height: 58px;
+    padding-left: 10px;
+}
+
+.segmentTimerContainer {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: block;
+    width: 750px;
+    float: left;
+    clear: left;
+    font-size: 64px;
+    background-color: black;
+    text-align: center;
+    border-style: groove;
+    border: 2px solid blue;
+    border-radius: 30px;
+}
+
+.segmentTimerFooter {
+    padding-top: 10px;
+    padding-bottom: 50px;
+    width: 725px;
+    float: left;
+    clear: left;
+    font-size: 18px;
+    text-align: right;
+}
+
+.segmentTips {
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    display: block;
+    width: 650px;
+    font-size: 32px;
+    text-align: center;
+    line-height: 48px;
+}
+
+.segmentTipsFooter {
+    padding-top: 10px;
+    width: 725px;
+    float: left;
+    clear: left;
+    font-size: 18px;
+    text-align: right;
+}
+
+.segmentTitleContainer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: block;
+    width: 300px;
+    float: right;
+    font-size: 32px;
+    background-color: black;
+    text-align: center;
+    border-style: groove;
+    border: 2px solid blue;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    vertical-align: middle;
+}
+
+.segmentTitleLabel {
+    padding-top: 40px;
+    padding-left: 50px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    width: 500px;
+    font-size: 28px;
+    vertical-align: bottom;
+}
+
+.upcomingSegmentsTitle {
+    display: block;
+    width: 600px;
+    float: left;
+    font-size: 48px;
+}
+
+.upcomingSegmentsIntensityContainer {
+    display: block;
+    float: left;
+    width: 60px;
+}
+
+.upcomingSegmentsTitleContainer {
+    background-color: black;
+    display: block;
+    float: left;
+    font-size: 32px;
+    width: 500px;
+}
+
+
+.upcomingSegmentsWindowContainer {
+    background-color: black;
+    display: block;
+    float: left;
+    font-size: 32px;
+    width: 250px;
+}

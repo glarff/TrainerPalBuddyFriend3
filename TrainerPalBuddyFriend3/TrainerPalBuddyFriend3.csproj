@@ -287,8 +287,11 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\script.js" />
+    <Content Include="Scripts\workouts.js" />
     <Content Include="Views\Home\Workouts.cshtml" />
     <Content Include="Views\Home\WkSeg.cshtml" />
+    <Content Include="Views\Home\Demo.cshtml" />
     <None Include="Views\Home\Types.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

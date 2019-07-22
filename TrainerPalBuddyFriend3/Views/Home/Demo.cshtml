@@ -1,0 +1,109 @@
+﻿<html>
+
+<head>
+    <title>TrainerPalBuddyFriend</title>
+    <script type="text/javascript" src="~/Scripts/script.js"></script>
+    <script type="text/javascript" src="~/Scripts/workouts.js"></script>
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <!---------------------- Title and Start Button ------------------------>
+
+        <div class="box a">
+            <span id="workoutTitle" class="wkTitle"></span>
+        </div>
+
+        <div class="box b">
+            <span class="buttonContainer">
+                <button type="button" onclick="execute()">Start</button>
+            </span>
+        </div>
+        <!---------------------------------------------------------------------->
+        <!------------------------ Main Timer Section -------------------------->
+
+        <div class="box c">
+            <span class="mainComponentContainer">
+                <div id="mainTimer" class="bigTimer"></div>
+            </span>
+            <span class="mainTimerFooter">Time Remaining in Workout</span>
+        </div>
+        <!---------------------------------------------------------------------->
+        <!---------------------- Current Segment Section ----------------------->
+
+        <div class="box d">
+            <span class="segmentTitleLabel">Current Segment: </span>
+
+            <span class="segmentTitleContainer">
+                <div id="segmentTitle"></div>
+            </span>
+
+            <span class="mainComponentContainer">
+                <div id="segmentTimer" class="bigTimer"></div>
+            </span>
+
+            <span class="segmentTimerFooter">Time Remaining in Segment</span>
+        </div>
+        <!---------------------------------------------------------------------->
+        <!------------------------ Segment Tips Section ------------------------>
+
+        <div class="box e">
+            <span class="mainComponentContainer">
+                <div id="segmentTips" class="segmentTips"></div>
+            </span>
+            <span class="segmentTipsFooter">Segment Tips</span>
+        </div>
+        <!---------------------------------------------------------------------->
+        <!--------------------- Upcoming Segments Section ---------------------->
+
+        <div class="box f">
+            <span class="upcomingSegmentsTitle">Upcoming Segments</span>
+        </div>
+
+        <div class="box g">
+            <span class="upcomingSegmentsIntensityContainer">
+                <div id="upcomingSegment1intensity" class="intensityText">*</div>
+                <div id="upcomingSegment2intensity" class="intensityText">*</div>
+                <div id="upcomingSegment3intensity" class="intensityText">*</div>
+                <div id="upcomingSegment4intensity" class="intensityText">*</div>
+                <div id="upcomingSegment5intensity" class="intensityText">*</div>
+            </span>
+        </div>
+
+        <div class="box h">
+            <span class="upcomingSegmentsTitleContainer">
+                <div id="upcomingSegment1title" class="segmentsText"></div>
+                <div id="upcomingSegment2title" class="segmentsText"></div>
+                <div id="upcomingSegment3title" class="segmentsText"></div>
+                <div id="upcomingSegment4title" class="segmentsText"></div>
+                <div id="upcomingSegment5title" class="segmentsText"></div>
+            </span>
+        </div>
+
+        <div class="box i">
+            <span class="upcomingSegmentsWindowContainer">
+                <div id="upcomingSegment1window" class="segmentsText"></div>
+                <div id="upcomingSegment2window" class="segmentsText"></div>
+                <div id="upcomingSegment3window" class="segmentsText"></div>
+                <div id="upcomingSegment4window" class="segmentsText"></div>
+                <div id="upcomingSegment5window" class="segmentsText"></div>
+            </span>
+        </div>
+        <!---------------------------------------------------------------------->
+
+    </div>
+
+    <script>
+
+      // Initialize and load UI elements
+      w1 = getWorkout(1);
+      loadElements();
+
+    </script>
+
+</body>
+
+</html>
