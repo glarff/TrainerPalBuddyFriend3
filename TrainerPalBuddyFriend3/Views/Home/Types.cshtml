@@ -34,8 +34,9 @@
     $(document).on('click', 'button.addbtn', function () {
         $('.hiddenRow:first').addClass('visibleRow');
         $('.hiddenRow:first').children(".pk").children().val(-1);
-        $('.hiddenRow:first').children('input[type="text"]').children().prop('readonly', false);
-        $('.hiddenRow:first').children('input[type="text"]').children().css('background-color', 'white');
+        $('.hiddenRow:first').find('input[type="text"]').prop('readonly', false);
+        $('.hiddenRow:first').find('input[type="text"]').css('background-color', 'white');
+        $('.hiddenRow:first').find('.editbtn').html('Save');
         $('.hiddenRow:first').removeClass('hiddenRow');
     });
 </script>

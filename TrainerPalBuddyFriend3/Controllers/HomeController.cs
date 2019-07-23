@@ -113,7 +113,6 @@ namespace TrainerPalBuddyFriend3.Controllers
                             _S.Flush();
                             _S.Clear();
                         }
-
                     }
 
                     //deletions
@@ -127,11 +126,11 @@ namespace TrainerPalBuddyFriend3.Controllers
                             _S.Flush();
                             _S.Clear();
                         }
-
                     }
-
                 }
-               
+
+                ViewBag.onSuccess_Message = "Types updated successfully.";
+
                 return View("Index");
             }
             else

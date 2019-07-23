@@ -7,6 +7,10 @@
     padding-bottom: 20px;
 }
 
+table {
+    margin-top: 10px;
+}
+
 
 .hiddenRow {
     display:none;
@@ -29,13 +33,15 @@
 
 button {
     background-color: #0F1A40;
-    color: #BBBCBF;
+    border-radius: 8px;
+    color: #F8F8FF;
 }
 
-
 input[type="submit"] {
-    background-color: #0F1A40;
-    color: #BBBCBF !important;
+    background-color: #006600;
+    border-radius: 8px;
+    color: #F8F8FF;
+    margin-top: 10px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
