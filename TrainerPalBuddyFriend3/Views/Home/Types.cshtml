@@ -6,7 +6,7 @@
 <script>
     $(document).ready(function () {
         $('input[type="text"]').each(function(){
-            $(this).prop('disabled', true);
+            $(this).prop('readonly', true);
             $(this).css('background-color', 'darkgrey');
         })
     });
@@ -17,13 +17,25 @@
     });
 
     $(document).on('click', 'button.editbtn', function () {
-        $(this).parent().siblings().children().prop('disabled', false);
-        $(this).parent().siblings().children().css('background-color', 'white');
+
+        if ($(this).html() == 'Edit') {
+            $(this).parent().siblings().children('input[type="text"]').prop('readonly', false);
+            $(this).parent().siblings().children('input[type="text"]').css('background-color', 'white');
+            $(this).html('Save');
+        }
+        else {
+            $(this).parent().siblings().children('input[type="text"]').prop('readonly', true);
+            $(this).parent().siblings().children('input[type="text"]').css('background-color', 'darkgrey');
+            $(this).html('Edit');
+        }
+        
     });
 
     $(document).on('click', 'button.addbtn', function () {
         $('.hiddenRow:first').addClass('visibleRow');
         $('.hiddenRow:first').children(".pk").children().val(-1);
+        $('.hiddenRow:first').children('input[type="text"]').children().prop('readonly', false);
+        $('.hiddenRow:first').children('input[type="text"]').children().css('background-color', 'white');
         $('.hiddenRow:first').removeClass('hiddenRow');
     });
 </script>
@@ -74,7 +86,7 @@
                 <td>+ @Html.TextBoxFor(m => m[j].Typeid)</td>
                 <td>@Html.TextBoxFor(m => m[j].Name)</td>
                 <td>@Html.TextBoxFor(m => m[j].Custom)</td>
-                <td> <button type="button" class="editbtn" title="Edit row">Edit</button> </td>
+                <td> <button type="button" class="editbtn" title="Edit row" >Edit</button> </td>
                 <td> <button type="button" class="deletebtn" title="Remove row">X</button> </td>
             </tr>
         }
