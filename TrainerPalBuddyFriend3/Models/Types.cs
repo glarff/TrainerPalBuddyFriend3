@@ -10,7 +10,7 @@ namespace TrainerPalBuddyFriend3 {
         public virtual int Typepk { get; set; }
         public virtual string Typeid { get; set; }
         public virtual string Name { get; set; }
-        public virtual int Custom { get; set; }
+        public virtual bool Customflg { get; set; }
     }
 
 }

@@ -38,10 +38,11 @@ button {
 }
 
 input[type="submit"] {
-    background-color: #006600;
+    background-color: #4B0082;
     border-radius: 8px;
     color: #F8F8FF;
     margin-top: 10px;
+    padding: 10px 24px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 

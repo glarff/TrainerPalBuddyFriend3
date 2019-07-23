@@ -1,10 +1,55 @@
-﻿@model TrainerPalBuddyFriend3.Workouts
+﻿@model  List<Workouts>
 <script scr="@Url.Content(" ~/Scripts/jquery-3.3.1.min.js")" type="text/javascript"></script>
 <script scr="@Url.Content(" ~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
-<h4 id="id1" style="color:purple"></h4>
-<hr />
-<h3><b>Create new Workout</b></h3>
+<script>
+    $(document).ready(function () {
+        $('input[type!="submit"]').each(function () {
+            $(this).prop('readonly', true);
+            $(this).css('background-color', 'darkgrey');
+        })
+        $('textarea').each(function () {
+            $(this).prop('readonly', true);
+            $(this).css('background-color', 'darkgrey');
+        })
+    });
+
+    $(document).on('click', 'button.deletebtn', function () {
+        $(this).closest('tr').hide();
+        $(this).parent().siblings().children().val(0);
+    });
+
+    $(document).on('click', 'button.editbtn', function () {
+
+        if ($(this).html() == 'Edit') {
+            $(this).parent().siblings().children('input[type="text"]').prop('readonly', false);
+            $(this).parent().siblings().children('textarea').prop('readonly', false);
+            $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'white');
+            $(this).parent().siblings().children('textarea').css('background-color', 'white');
+            $(this).html('Save');
+        }
+        else {
+            $(this).parent().siblings().children('input[type="text"]').prop('readonly', true);
+            $(this).parent().siblings().children('textarea').prop('readonly', true);
+            $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'darkgrey');
+            $(this).parent().siblings().children('textarea').css('background-color', 'darkgrey');
+            $(this).html('Edit');
+        }
+    });
+
+    $(document).on('click', 'button.addbtn', function () {
+        $('.hiddenRow:first').addClass('visibleRow');
+        $('.hiddenRow:first').children(".pk").children().val(-1);
+        $('.hiddenRow:first').find('input[type="text"]').prop('readonly', false);
+        $('.hiddenRow:first').find('input[type="text"]').css('background-color', 'white');
+        $('.hiddenRow:first').find('textarea').prop('readonly', false);
+        $('.hiddenRow:first').find('textarea').css('background-color', 'white');
+        $('.hiddenRow:first').find('.editbtn').html('Save');
+        $('.hiddenRow:first').removeClass('hiddenRow');
+    });
+</script>
+
 @using (Ajax.BeginForm("Form6", "Home", new AjaxOptions
 {
     HttpMethod = "POST",
@@ -12,33 +57,54 @@
     LoadingElementId = "LoadingImage",
     OnSuccess = "onSuccess_Message",
     OnFailure = "onFailure_Message"
-
 }))
 {
-<table>
-    <tr>
-        <td>Workout ID: </td>
-        <td>@Html.TextBoxFor(m => m.Workoutid)</td>
-    </tr>
-    <tr>
-        <td>Workout Name: </td>
-        <td>@Html.TextBoxFor(m => m.Name)</td>
-    </tr>
-    <tr>
-        <td>Workout Description: </td>
-        <td>@Html.TextAreaFor(m => m.Description)</td>
-    </tr>
-    <tr>
-        <td>Custom: </td>
-        <td>0 @Html.RadioButtonFor(m => m.Customflg, 0)</td>
-        <td>1 @Html.RadioButtonFor(m => m.Customflg, 1)</td>
-    </tr>
-    <tr>
-        <td colspan="2"><input type="submit" value="Submit Form" /></td>
-    </tr>
-</table>
-<div id="LoadingImage" style="display:none">Loading...</div>
-<div id="onSuccess_Message"></div>
-<div id="onFailure_Message"></div>
-}
+    <h2>Workouts</h2>
+    <button type="button" class="addbtn" title="Remove row">Add</button>
+    <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
+        <tr>
+            <th style="display:none">PK</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Custom</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @{ int i = 0; int j = 0; }
+        @foreach (var r in Model)
+        {
+            <tr class="visibleRow">
+                <td class="pk" style="display:none">@Html.TextBoxFor(m => m[i].Workoutpk)</td>
+                <td>@Html.TextBoxFor(m => m[i].Workoutid)</td>
+                <td>@Html.TextBoxFor(m => m[i].Name)</td>
+                <td>@Html.TextAreaFor(m => m[i].Description)</td>
+                <td>@Html.CheckBoxFor(m => m[i].Customflg)</td>
+                <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+                <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+            </tr>
+            i++;
+        }
 
+        @for (j = i; j < i + 20; j++)
+        {
+            // ugly solution until I can find something better that works
+            // add invisible rows to handle additions
+            var newWk = new Workouts();
+            Model.Add(newWk);
+
+            <tr class="hiddenRow">
+                <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Workoutpk)</td>
+                <td>+ @Html.TextBoxFor(m => m[j].Workoutid)</td>
+                <td>@Html.TextBoxFor(m => m[j].Name)</td>
+                <td>@Html.TextAreaFor(m => m[i].Description)</td>
+                <td>@Html.CheckBoxFor(m => m[j].Customflg)</td>
+                <td> <button type="button" class="editbtn" title="Edit row">Edit</button> </td>
+                <td> <button type="button" class="deletebtn" title="Remove row">X</button> </td>
+            </tr>
+        }
+        <tr name="submitRow">
+            <td colspan="6"><input type="submit" value="Save Changes" /></td>
+        </tr>
+    </table>
+}

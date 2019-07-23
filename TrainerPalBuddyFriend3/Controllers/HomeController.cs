@@ -37,7 +37,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
                         .Select(x => x.Typeid).WithAlias(() => typ.Typeid)
                         .Select(x => x.Name).WithAlias(() => typ.Name)
-                        .Select(x => x.Custom).WithAlias(() => typ.Custom)
+                        .Select(x => x.Customflg).WithAlias(() => typ.Customflg)
                     )
                     .TransformUsing(Transformers.AliasToBean<Types>())
                     .List<Types>();
@@ -52,7 +52,29 @@ namespace TrainerPalBuddyFriend3.Controllers
 
         public ActionResult Workouts()
         {
-            return View();
+            var list = new List<Workouts>();
+            // Get data for existing Types
+            using (ISession _S = MvcApplication.SF.GetCurrentSession())
+            {
+                Workouts wk = null;
+
+                var wkList = _S.QueryOver<Workouts>(() => wk)
+                    .SelectList(l => l
+                        .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
+                        .Select(x => x.Workoutid).WithAlias(() => wk.Workoutid)
+                        .Select(x => x.Name).WithAlias(() => wk.Name)
+                        .Select(x => x.Description).WithAlias(() => wk.Description)
+                        .Select(x => x.Customflg).WithAlias(() => wk.Customflg)
+                    )
+                    .TransformUsing(Transformers.AliasToBean<Workouts>())
+                    .List<Workouts>();
+
+                foreach (var r in wkList)
+                {
+                    list.Add(r);
+                }
+            }
+            return View(list);
         }
 
         public ActionResult Form3(List<Types> newList)
@@ -93,7 +115,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                             persistentType.Typeid = q.Typeid;
                             persistentType.Name = q.Name;
-                            persistentType.Custom = q.Custom;
+                            persistentType.Customflg = q.Customflg;
 
                             _S.Save(persistentType);
                             _S.Flush();
@@ -107,7 +129,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                             persistentType.Typeid = q.Typeid;
                             persistentType.Name = q.Name;
-                            persistentType.Custom = q.Custom;
+                            persistentType.Customflg = q.Customflg;
 
                             _S.Save(persistentType);
                             _S.Flush();
@@ -139,23 +161,83 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult Form6(Workouts wk)
+        public ActionResult Form6(List<Workouts> newList)
         {
             if (ModelState.IsValid)
             {
+                // Get existing types
+                var newListPKs = new List<int>();
+                var oldListPKs = new List<int>();
+
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Workouts newWorkout = new Workouts();
-                    newWorkout.Workoutid = wk.Workoutid;
-                    newWorkout.Name = wk.Name;
-                    newWorkout.Customflg = wk.Customflg;
+                    Workouts wk = null;
 
-                    _S.Save(newWorkout);
-                    _S.Flush();
-                    _S.Clear();
+                    var oldList = _S.QueryOver<Workouts>(() => wk)
+                        .SelectList(l => l
+                            .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
+                        )
+                        .TransformUsing(Transformers.AliasToBean<Workouts>())
+                        .List<Workouts>();
+
+                    foreach (var r in oldList)
+                    {
+                        oldListPKs.Add(r.Workoutpk);
+                    }
+
+                    foreach (var r in newList)
+                    {
+                        newListPKs.Add(r.Workoutpk);
+                    }
+
+                    foreach (var q in newList)
+                    {
+                        //updates
+                        if (oldListPKs.Contains(q.Workoutpk))
+                        {
+                            var persistentType = _S.Load<Workouts>(q.Workoutpk);
+
+                            persistentType.Workoutid = q.Workoutid;
+                            persistentType.Name = q.Name;
+                            persistentType.Description = q.Description;
+                            persistentType.Customflg = q.Customflg;
+
+                            _S.Save(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+
+                        //inserts
+                        else if (q.Workoutpk == -1)
+                        {
+                            var persistentType = new Workouts();
+
+                            persistentType.Workoutid = q.Workoutid;
+                            persistentType.Name = q.Name;
+                            persistentType.Description = q.Description;
+                            persistentType.Customflg = q.Customflg;
+
+                            _S.Save(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+                    }
+
+                    //deletions
+                    foreach (var x in oldListPKs)
+                    {
+                        if (!(newListPKs.Contains(x)))
+                        {
+                            var persistentType = _S.Load<Workouts>(x);
+
+                            _S.Delete(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+                    }
                 }
 
-                ViewBag.onSuccess_Message = "Workout " + wk.Name + " Added Successfully";
+                ViewBag.onSuccess_Message = "Workouts updated successfully.";
 
                 return View("Index");
             }
