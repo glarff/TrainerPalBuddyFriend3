@@ -7,8 +7,18 @@
     padding-bottom: 20px;
 }
 
+select {
+    background-color: #252120;
+    color: #BBBCBF;
+    max-width: 280px;
+}
+
 table {
     margin-top: 10px;
+}
+
+.form-dropdown option {
+    background-color: #252120 !important;
 }
 
 
@@ -58,7 +68,6 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
 textarea {
     color: #070F2E;
     max-width: 280px;

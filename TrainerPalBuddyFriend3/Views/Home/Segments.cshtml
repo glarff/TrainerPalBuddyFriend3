@@ -1,47 +1,120 @@
-﻿@model TrainerPalBuddyFriend3.Segments
+﻿@model  List<Segments>
 <script scr="@Url.Content("~/Scripts/jquery-3.3.1.min.js")" type="text/javascript"></script>
 <script scr="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
-<h4 id="id2" style="color:purple"></h4>
-<hr />
-<h3><b>Create new Segment</b></h3>
+<script>
+    $(document).ready(function () {
+        $('input[type!="submit"]').each(function () {
+            $(this).prop('readonly', true);
+            $(this).css('background-color', 'darkgrey');
+        })
+
+    });
+
+    $(document).on('click', 'button.deletebtn', function () {
+        $(this).closest('tr').hide();
+        $(this).parent().siblings().children().val(0);
+    });
+
+    $(document).on('click', 'button.editbtn', function () {
+
+        if ($(this).html() == 'Edit') {
+            $(this).parent().siblings().children('input[type="text"]').prop('readonly', false);
+            $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'white');
+            $(this).html('Save');
+        }
+        else {
+            $(this).parent().siblings().children('input[type="text"]').prop('readonly', true);
+            $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'darkgrey');
+            $(this).html('Edit');
+        }
+    });
+
+    $(document).on('click', 'button.addbtn', function () {
+        $('.hiddenRow:first').addClass('visibleRow');
+        $('.hiddenRow:first').children(".pk").children().val(-1);
+        $('.hiddenRow:first').find('input[type="text"]').prop('readonly', false);
+        $('.hiddenRow:first').find('input[type="text"]').css('background-color', 'white');
+        $('.hiddenRow:first').find('.editbtn').html('Save');
+        $('.hiddenRow:first').removeClass('hiddenRow');
+    });
+</script>
+
 @using (Ajax.BeginForm("Form4", "Home", new AjaxOptions
 {
     HttpMethod = "POST",
-    UpdateTargetId = "id2",
+    UpdateTargetId = "id1",
     LoadingElementId = "LoadingImage",
     OnSuccess = "onSuccess_Message",
     OnFailure = "onFailure_Message"
-
 }))
 {
-<table>
-    <tr>
-        <td>Segment ID: </td>
-        <td>@Html.TextBoxFor(m => m.Segmentid)</td>
-    </tr>
-    <tr>
-        <td>Segment Name: </td>
-        <td>@Html.TextBoxFor(m => m.Name)</td>
-    </tr>
-    <tr>
-        <td>Type: </td>
-        <td>@Html.DropDownListFor(m => m.Types.Typepk, Model.DropDownList)</td>
-    </tr>
-    <tr>
-        <td>Intensity (1-5): </td>
-        <td>@Html.TextBoxFor(m => m.Intensity)</td>
-    </tr>
-    <tr>
-        <td>Custom: </td>
-        <td>0 @Html.RadioButtonFor(m => m.Customflg, 0)</td>
-        <td>1 @Html.RadioButtonFor(m => m.Customflg, 1)</td>
-    </tr>
-    <tr>
-        <td colspan="2"><input type="submit" value="Submit Form" /></td>
-    </tr>
-</table>
-    <div id="LoadingImage" style="display:none">Loading...</div>
-    <div id="onSuccess_Message"></div>
-    <div id="onFailure_Message"></div>
+    <h2>Segments</h2>
+    <button type="button" class="addbtn" title="Remove row">Add</button>
+    <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
+        <tr>
+            <th style="display:none">PK</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Intensity</th>
+            <th>Custom</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @{ int i = 0; int j = 0; }
+        @foreach (var r in Model)
+        {
+            <tr class="visibleRow">
+                <td class="pk" style="display:none">@Html.TextBoxFor(m => m[i].Segmentpk)</td>
+                <td>@Html.TextBoxFor(m => m[i].Segmentid)</td>
+                <td>@Html.TextBoxFor(m => m[i].Name)</td>
+                <td>@Html.DropDownListFor(m => m[i].Types.Typepk, Model[i].DropDownList)</td>
+                <td>
+                    @Html.RadioButtonFor(m => m[i].Intensity, 1)
+                    @Html.RadioButtonFor(m => m[i].Intensity, 2)
+                    @Html.RadioButtonFor(m => m[i].Intensity, 3)
+                    @Html.RadioButtonFor(m => m[i].Intensity, 4)
+                    @Html.RadioButtonFor(m => m[i].Intensity, 5)
+                </td>
+                <td>@Html.CheckBoxFor(m => m[i].Customflg)</td>
+                <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+                <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+            </tr>
+            i++;
+        }
+
+        @for (j = i; j < i + 20; j++)
+        {
+            // ugly solution until I can find something better that works
+            // add invisible rows to handle additions
+            var newSeg = new Segments();
+
+            newSeg.DropDownList = Model[0].DropDownList;
+
+            Model.Add(newSeg);
+
+            <tr class="hiddenRow">
+                <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Segmentpk)</td>
+                <td>@Html.TextBoxFor(m => m[j].Segmentid)</td>
+                <td>@Html.TextBoxFor(m => m[j].Name)</td>
+                <td>@Html.DropDownListFor(m => m[j].Types.Typepk, Model[j].DropDownList)</td>
+                <td>
+                    @Html.RadioButtonFor(m => m[j].Intensity, 1)
+                    @Html.RadioButtonFor(m => m[j].Intensity, 2)
+                    @Html.RadioButtonFor(m => m[j].Intensity, 3)
+                    @Html.RadioButtonFor(m => m[j].Intensity, 4)
+                    @Html.RadioButtonFor(m => m[j].Intensity, 5)
+                </td>
+                <td>@Html.CheckBoxFor(m => m[j].Customflg)</td>
+                <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+                <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+            </tr>
+        }
+        <tr name="submitRow">
+            <td colspan="7"><input type="submit" value="Save Changes" /></td>
+        </tr>
+    </table>
 }
+

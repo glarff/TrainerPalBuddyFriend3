@@ -12,7 +12,7 @@ namespace TrainerPalBuddyFriend3 {
         public virtual string Segmentid { get; set; }
         public virtual string Name { get; set; }
         public virtual int Intensity { get; set; }
-        public virtual int Customflg { get; set; }
+        public virtual bool Customflg { get; set; }
         public virtual SelectList DropDownList { get; set; }
     }
 

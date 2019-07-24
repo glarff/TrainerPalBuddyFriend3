@@ -53,7 +53,8 @@ namespace TrainerPalBuddyFriend3.Controllers
         public ActionResult Workouts()
         {
             var list = new List<Workouts>();
-            // Get data for existing Types
+
+            // Get data for existing Workouts
             using (ISession _S = MvcApplication.SF.GetCurrentSession())
             {
                 Workouts wk = null;
@@ -249,10 +250,32 @@ namespace TrainerPalBuddyFriend3.Controllers
 
         public ActionResult Segments()
         {
-            var list = new List<MyListTable>();
+            var list = new List<Segments>();
 
+            // Get data for existing Workouts
             using (ISession _S = MvcApplication.SF.GetCurrentSession())
             {
+                Segments sg = null;
+
+                var sgList = _S.QueryOver<Segments>(() => sg)
+                    .SelectList(l => l
+                        .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
+                        .Select(x => x.Segmentid).WithAlias(() => sg.Segmentid)
+                        .Select(x => x.Name).WithAlias(() => sg.Name)
+                        .Select(x => x.Types).WithAlias(() => sg.Types)
+                        .Select(x => x.Intensity).WithAlias(() => sg.Intensity)
+                        .Select(x => x.Customflg).WithAlias(() => sg.Customflg)
+                    )
+                    .TransformUsing(Transformers.AliasToBean<Segments>())
+                    .List<Segments>();
+
+                foreach (var r in sgList)
+                {
+                    list.Add(r);
+                }
+
+                var list2 = new List<MyListTable>();
+
                 Types typ = null;
 
                 var typeList = _S.QueryOver<Types>(() => typ)
@@ -265,97 +288,101 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                 foreach (var r in typeList)
                 {
-                    list.Add(new MyListTable
-                    {
-                        Key = r.Typepk,
-                        Display = r.Name.ToString()
-                    });  
-                }
-            }
-
-            var model = new Segments();
-            model.DropDownList = new SelectList(list, "Key", "Display");
-
-            return View(model);
-        }
-
-        public ActionResult Form4(Segments sg)
-        {
-            if (ModelState.IsValid)
-            {
-                using (ISession _S = MvcApplication.SF.GetCurrentSession())
-                {
-                    Segments newSegment = new Segments();
-                    newSegment.Segmentid = sg.Segmentid;
-                    newSegment.Name = sg.Name;
-                    newSegment.Types = sg.Types;
-                    newSegment.Customflg = sg.Customflg;
-
-                    _S.Save(newSegment);
-                    _S.Flush();
-                    _S.Clear();
-                }
-
-                ViewBag.onSuccess_Message = "Segment " + sg.Name + " Added Successfully";
-
-                return View("Index");
-            }
-            else
-            {
-                return View("Index");
-            }
-        }
-
-        public ActionResult Tips()
-        {
-            var list = new List<MyListTable>();
-
-            using (ISession _S = MvcApplication.SF.GetCurrentSession())
-            {
-                Types typ = null;
-
-                var typeList = _S.QueryOver<Types>(() => typ)
-                    .SelectList(l => l
-                        .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
-                        .Select(x => x.Name).WithAlias(() => typ.Name)
-                    )
-                    .TransformUsing(Transformers.AliasToBean<Types>())
-                    .List<Types>();
-
-                foreach (var r in typeList)
-                {
-                    list.Add(new MyListTable
+                    list2.Add(new MyListTable
                     {
                         Key = r.Typepk,
                         Display = r.Name.ToString()
                     });
                 }
+
+                foreach (var s in list)
+                {
+                    s.DropDownList = new SelectList(list2, "Key", "Display");
+                }
             }
 
-            var model = new Tips();
-            model.DropDownList = new SelectList(list, "Key", "Display");
-
-            return View(model);
+            return View(list);
         }
 
-        public ActionResult Form5(Tips wk)
+        public ActionResult Form4(List<Segments> newList)
         {
             if (ModelState.IsValid)
             {
+                // Get existing types
+                var newListPKs = new List<int>();
+                var oldListPKs = new List<int>();
+
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Tips newTip = new Tips();
-                    newTip.Tipid = wk.Tipid;
-                    newTip.Text = wk.Text;
-                    newTip.Types = wk.Types;
-                    newTip.Custom = wk.Custom;
+                    Segments sg = null;
 
-                    _S.Save(newTip);
-                    _S.Flush();
-                    _S.Clear();
+                    var oldList = _S.QueryOver<Segments>(() => sg)
+                        .SelectList(l => l
+                            .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
+                        )
+                        .TransformUsing(Transformers.AliasToBean<Segments>())
+                        .List<Segments>();
+
+                    foreach (var r in oldList)
+                    {
+                        oldListPKs.Add(r.Segmentpk);
+                    }
+
+                    foreach (var r in newList)
+                    {
+                        newListPKs.Add(r.Segmentpk);
+                    }
+
+                    foreach (var q in newList)
+                    {
+                        //updates
+                        if (oldListPKs.Contains(q.Segmentpk))
+                        {
+                            var persistentType = _S.Load<Segments>(q.Segmentpk);
+
+                            persistentType.Segmentid = q.Segmentid;
+                            persistentType.Name = q.Name;
+                            persistentType.Types = q.Types;
+                            persistentType.Intensity = q.Intensity;
+                            persistentType.Customflg = q.Customflg;
+
+                            _S.Save(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+
+                        //inserts
+                        else if (q.Segmentpk == -1)
+                        {
+                            var persistentType = new Segments();
+
+                            persistentType.Segmentid = q.Segmentid;
+                            persistentType.Name = q.Name;
+                            persistentType.Types = q.Types;
+                            persistentType.Intensity = q.Intensity;
+                            persistentType.Customflg = q.Customflg;
+
+                            _S.Save(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+                    }
+
+                    //deletions
+                    foreach (var x in oldListPKs)
+                    {
+                        if (!(newListPKs.Contains(x)))
+                        {
+                            var persistentType = _S.Load<Segments>(x);
+
+                            _S.Delete(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+                    }
                 }
 
-                ViewBag.onSuccess_Message = "Tip " + wk.Text + " Added Successfully";
+                ViewBag.onSuccess_Message = "Segments updated successfully.";
 
                 return View("Index");
             }
@@ -364,52 +391,147 @@ namespace TrainerPalBuddyFriend3.Controllers
                 return View("Index");
             }
         }
+    
 
-        public ActionResult WkSeg(Wkseg w)
-        {          
-            if (w.Workouts == null)
+        public ActionResult Tips()
+        {
+            var list = new List<Tips>();
+
+            // Get data for existing Workouts
+            using (ISession _S = MvcApplication.SF.GetCurrentSession())
             {
-                var list = new List<MyListTable>();
+                Tips tp = null;
 
-                // Get list of workouts
+                var tpList = _S.QueryOver<Tips>(() => tp)
+                    .SelectList(l => l
+                        .Select(x => x.Tippk).WithAlias(() => tp.Tippk)
+                        .Select(x => x.Tipid).WithAlias(() => tp.Tipid)
+                        .Select(x => x.Text).WithAlias(() => tp.Text)
+                        .Select(x => x.Types).WithAlias(() => tp.Types)
+                        .Select(x => x.Customflg).WithAlias(() => tp.Customflg)
+                    )
+                    .TransformUsing(Transformers.AliasToBean<Tips>())
+                    .List<Tips>();
+
+                foreach (var r in tpList)
+                {
+                    list.Add(r);
+                }
+
+                var list2 = new List<MyListTable>();
+
+                Types typ = null;
+
+                var typeList = _S.QueryOver<Types>(() => typ)
+                    .SelectList(l => l
+                        .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
+                        .Select(x => x.Name).WithAlias(() => typ.Name)
+                    )
+                    .TransformUsing(Transformers.AliasToBean<Types>())
+                    .List<Types>();
+
+                foreach (var r in typeList)
+                {
+                    list2.Add(new MyListTable
+                    {
+                        Key = r.Typepk,
+                        Display = r.Name.ToString()
+                    });
+                }
+
+                foreach (var s in list)
+                {
+                    s.DropDownList = new SelectList(list2, "Key", "Display");
+                }
+            }
+
+            return View(list);
+        }
+
+        public ActionResult Form5(List<Tips> newList)
+        {
+            if (ModelState.IsValid)
+            {
+                // Get existing types
+                var newListPKs = new List<int>();
+                var oldListPKs = new List<int>();
+
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Workouts wk = null;
+                    Tips tp = null;
 
-                    var typeList = _S.QueryOver<Workouts>(() => wk)
+                    var oldList = _S.QueryOver<Tips>(() => tp)
                         .SelectList(l => l
-                            .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
-                            .Select(x => x.Name).WithAlias(() => wk.Name)
+                            .Select(x => x.Tippk).WithAlias(() => tp.Tippk)
                         )
-                        .TransformUsing(Transformers.AliasToBean<Workouts>())
-                        .List<Workouts>();
+                        .TransformUsing(Transformers.AliasToBean<Tips>())
+                        .List<Tips>();
 
-                    foreach (var r in typeList)
+                    foreach (var r in oldList)
                     {
-                        list.Add(new MyListTable
+                        oldListPKs.Add(r.Tippk);
+                    }
+
+                    foreach (var r in newList)
+                    {
+                        newListPKs.Add(r.Tippk);
+                    }
+
+                    foreach (var q in newList)
+                    {
+                        //updates
+                        if (oldListPKs.Contains(q.Tippk))
                         {
-                            Key = r.Workoutpk,
-                            Display = r.Name.ToString()
-                        });
+                            var persistentType = _S.Load<Tips>(q.Tippk);
+
+                            persistentType.Tipid = q.Tipid;
+                            persistentType.Text = q.Text;
+                            persistentType.Types = q.Types;
+                            persistentType.Customflg = q.Customflg;
+
+                            _S.Save(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+
+                        //inserts
+                        else if (q.Tippk == -1)
+                        {
+                            var persistentType = new Tips();
+
+                            persistentType.Tipid = q.Tipid;
+                            persistentType.Text = q.Text;
+                            persistentType.Types = q.Types;
+                            persistentType.Customflg = q.Customflg;
+
+                            _S.Save(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
+                    }
+
+                    //deletions
+                    foreach (var x in oldListPKs)
+                    {
+                        if (!(newListPKs.Contains(x)))
+                        {
+                            var persistentType = _S.Load<Tips>(x);
+
+                            _S.Delete(persistentType);
+                            _S.Flush();
+                            _S.Clear();
+                        }
                     }
                 }
 
-                // Get list of available segments to add to workout
+                ViewBag.onSuccess_Message = "Tips updated successfully.";
 
-                // Get list of already added segments for workout
-
-                var model = new Wkseg();
-                model.DropDownList = new SelectList(list, "Key", "Display");
-
-                return View(model);
-
+                return View("Index");
             }
-
             else
             {
-                return View();
+                return View("Index");
             }
-
         }
 
         public ActionResult Form7(Wkseg wk)

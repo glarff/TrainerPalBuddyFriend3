@@ -10,7 +10,7 @@ namespace TrainerPalBuddyFriend3 {
         public virtual Types Types { get; set; }
         public virtual string Tipid { get; set; }
         public virtual string Text { get; set; }
-        public virtual int Custom { get; set; }
+        public virtual bool Customflg { get; set; }
         public virtual SelectList DropDownList { get; set; }
     }
 }
