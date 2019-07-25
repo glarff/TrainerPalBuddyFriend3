@@ -1,171 +1,83 @@
-﻿@model TrainerPalBuddyFriend3.Wkseg
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js" ></script>
-
-<h4 id="id2" style="color:purple"></h4>
-<hr />
-<h3><b>Add Segments to Workouts</b></h3>
-@if (Model.DropDownList2 == null)
+﻿@model Danimoth
+@using (Ajax.BeginForm("Form7", "Home", new AjaxOptions
 {
-    using (Ajax.BeginForm("Form7", "Home", new AjaxOptions
-    {
-        HttpMethod = "POST",
-        UpdateTargetId = "id3",
-        LoadingElementId = "LoadingImage",
-        OnSuccess = "onSuccess_Message",
-        OnFailure = "onFailure_Message"
-
-    }))
-    {
-        <table>
-            <tr>
-                <td>Select Workout: </td>
-                <td>@Html.DropDownListFor(m => m.Workouts.Workoutpk, Model.DropDownList)</td>
-            </tr>
-            <tr>
-                <td colspan="2"><input type="submit" value="Submit Form" /></td>
-            </tr>
-        </table>
-        <div id="LoadingImage" style="display:none">Loading...</div>
-        <div id="onSuccess_Message"></div>
-        <div id="onFailure_Message"></div>
-    }
+    HttpMethod = "POST",
+    UpdateTargetId = "id1",
+    LoadingElementId = "LoadingImage",
+    OnSuccess = "onSuccess_Message",
+    OnFailure = "onFailure_Message"
+}))
+{
+    <h2>Select Workout</h2>
+    <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
+        <tr>
+            <td>@Html.DropDownListFor(m => m.SelectedWorkout.Workoutpk, Model.DropDownList1)</td>
+            <td><input type="submit" value="Select" /></td>
+        </tr>
+    </table>
 }
 
-// ---------------- Select Segments - Double Select List ------------------- //
-
-// src: esausilva.com/2016/01/29/move-items-between-two-listbox-using-jquery-html-select-tag/
-else
+@if (Model.SelectedWorkout != null)
 {
+
     using (Ajax.BeginForm("Form8", "Home", new AjaxOptions
     {
         HttpMethod = "POST",
-        UpdateTargetId = "id4",
+        UpdateTargetId = "id1",
         LoadingElementId = "LoadingImage",
         OnSuccess = "onSuccess_Message",
         OnFailure = "onFailure_Message"
     }))
     {
-<div class="section">
-    <h2>Process Workflow</h2>
-    <div class="content">
-        <div class="subsection">
-            <h3 id="h3_lbl">Defined Steps</h3>
-            <div class="content">
-                <div class="actions">
-                    <button id="steps_add_btn" type="button" aria-labelledby="h3_lbl steps_add_btn" onclick="AddProcessStep()">Add</button>&nbsp;
-                </div>
-                <table class="table table-condensed nestedtablewithactions" summary="Defined Steps">
-                    <thead>
-                        <tr>
-                            <th class="movercol">Move</th>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Duration</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-        <div class="subject-info-box-1">
-            <select multiple="multiple" id='lstBox1' class="form-control">
-                <option value="ajax">Ajax</option>
-                <option value="jquery">jQuery</option>
-                <option value="javascript">JavaScript</option>
-                <option value="mootool">MooTools</option>
-                <option value="prototype">Prototype</option>
-                <option value="dojo">Dojo</option>
-            </select>
-        </div>
-        <div class="subject-info-arrows text-center">
-            <input type="button" id="btnAllRight" value=">>" class="btn btn-default" /><br />
-            <input type="button" id="btnRight" value=">" class="btn btn-default" /><br />
-            <input type="button" id="btnLeft" value="<" class="btn btn-default" /><br />
-            <input type="button" id="btnAllLeft" value="<<" class="btn btn-default" />
-        </div>
-        <div class="subject-info-box-2">
-            <select multiple="multiple" id='lstBox2' class="form-control">
-                <option value="asp">ASP.NET</option>
-                <option value="c#">C#</option>
-                <option value="vb">VB.NET</option>
-                <option value="java">Java</option>
-                <option value="php">PHP</option>
-                <option value="python">Python</option>
-            </select>
-        </div>
-        <div class="clearfix"></div>
-
-        <table>
+        <h2>Add Segments</h2>
+        <button type="button" class="addbtn" title="Remove row">Add</button>
+        <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
             <tr>
-                <td>Available Segments: </td>
-                <td>@Html.ListBoxFor(m => m.Segments.Segmentpk, Model.DropDownList2)</td>
+                <th style="display:none">PK</th>
+                <th>Segment</th>
+                <th>Duration (s)</th>
+                <th>Sequence</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
-            <tr>
-                <td colspan="2"><input type="submit" value="Submit Form" /></td>
+            @{ int i = 0; int j = 0; }
+            @foreach (var r in Model.Dts)
+            {
+                <tr class="visibleRow">
+                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m.Dts[i].rWkseg.Wksegpk)</td>
+                    <td>@Html.DropDownListFor(m => m.Dts[i].rWkseg.Segments, Model.Dts[i].rWkseg.DropDownList2)</td>
+                    <td>@Html.TextBoxFor(m => m.Dts[i].rWkseg.Duration)</td>
+                    <td>@Html.TextBoxFor(m => m.Dts[i].rWkseg.Sequence)</td>
+                    <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+                    <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+                </tr>
+                i++;
+            }
+
+            @for (j = i; j < i + 20; j++)
+            {
+                // ugly solution until I can find something better that works
+                // add invisible rows to handle additions
+                var newRz = new Raszagal();
+
+                newRz.rWkseg.DropDownList2 = Model.Dts[0].rWkseg.DropDownList2;
+
+                Model.Dts.Add(newRz);
+
+                <tr class="visibleRow">
+                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m.Dts[j].rWkseg.Wksegpk)</td>
+                    <td>@Html.DropDownListFor(m => m.Dts[j].rWkseg.Segments, Model.Dts[j].rWkseg.DropDownList2)</td>
+                    <td>@Html.TextBoxFor(m => m.Dts[j].rWkseg.Duration)</td>
+                    <td>@Html.TextBoxFor(m => m.Dts[j].rWkseg.Sequence)</td>
+                    <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+                    <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+                </tr>
+            }
+            <tr name="submitRow">
+                <td colspan="6"><input type="submit" value="Save Changes" /></td>
             </tr>
         </table>
-        <div id="LoadingImage2" style="display:none">Loading...</div>
-        <div id="onSuccess_Message2"></div>
-        <div id="onFailure_Message2"></div>
 
-
-        <script>
-
-            jQuery(document).ready(function ($) {
-                $('#btnRight').click(function (e) {
-                    var selectedOpts = $('#lstBox1 option:selected');
-                    if (selectedOpts.length == 0) {
-                        alert("Nothing to move.");
-                        e.preventDefault();
-                    }
-                    $('#lstBox2').append($(selectedOpts).clone());
-                    $(selectedOpts).remove();
-                    e.preventDefault();
-                });
-                $('#btnAllRight').click(function (e) {
-                    var selectedOpts = $('#lstBox1 option');
-                    if (selectedOpts.length == 0) {
-                        alert("Nothing to move.");
-                        e.preventDefault();
-                    }
-                    $('#lstBox2').append($(selectedOpts).clone());
-                    $(selectedOpts).remove();
-                    e.preventDefault();
-                });
-                $('#btnLeft').click(function (e) {
-                    var selectedOpts = $('#lstBox2 option:selected');
-                    if (selectedOpts.length == 0) {
-                        alert("Nothing to move.");
-                        e.preventDefault();
-                    }
-                    $('#lstBox1').append($(selectedOpts).clone());
-                    $(selectedOpts).remove();
-                    e.preventDefault();
-                });
-                $('#btnAllLeft').click(function (e) {
-                    var selectedOpts = $('#lstBox2 option');
-                    if (selectedOpts.length == 0) {
-                        alert("Nothing to move.");
-                        e.preventDefault();
-                    }
-                    $('#lstBox1').append($(selectedOpts).clone());
-                    $(selectedOpts).remove();
-                    e.preventDefault();
-                });
-            });
-
-        </script>
-
-        // ----------------------------------------------------------------------- //
     }
-
 
 }

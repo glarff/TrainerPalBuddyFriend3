@@ -534,42 +534,57 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult Form7(Wkseg wk)
+        public ActionResult WkSeg(Danimoth d)
+        {
+            var list = new List<MyListTable>();
+
+            // Get data for existing Workouts
+            using (ISession _S = MvcApplication.SF.GetCurrentSession())
+            {
+                Workouts wk = null;
+
+                var wkList = _S.QueryOver<Workouts>(() => wk)
+                    .SelectList(l => l
+                        .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
+                        .Select(x => x.Name).WithAlias(() => wk.Name)
+                    )
+                    .TransformUsing(Transformers.AliasToBean<Workouts>())
+                    .List<Workouts>();
+
+
+                foreach (var r in wkList)
+                {
+                    list.Add(new MyListTable
+                    {
+                        Key = r.Workoutpk,
+                        Display = r.Name.ToString()
+                    });
+                }
+
+                d.DropDownList1 = new SelectList(list, "Key", "Display");
+                
+            }
+
+            return View(d);
+        }
+
+
+        public ActionResult Form7(Danimoth d)
         {
             if (ModelState.IsValid)
             {
-                var tmpWk = new Wkseg();
-                tmpWk.Workouts = wk.Workouts;
-
-                // Populate available segments
-                var list2 = new List<MyListTable>();
-
-                // Get list of workouts
+                // Get data for existing Wksegs
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Segments sg = null;
+                    Wkseg wks = null;
 
-                    var segmentList = _S.QueryOver<Segments>(() => sg)
+                    var vksList = _S.QueryOver<Wkseg>(() => wks)
                         .SelectList(l => l
-                            .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
-                            .Select(x => x.Name).WithAlias(() => sg.Name)
-                        )
-                        .TransformUsing(Transformers.AliasToBean<Segments>())
-                        .List<Segments>();
-
-                    foreach (var r in segmentList)
-                    {
-                        list2.Add(new MyListTable
-                        {
-                            Key = r.Segmentpk,
-                            Display = r.Name.ToString()
-                        });
-                    }
+                            .Select(x => x.Wksegpk))
                 }
 
-                tmpWk.DropDownList2 = new SelectList(list2, "Key", "Display");
 
-                return View("WkSeg", tmpWk);
+                    return View("WkSeg", d);
             }
 
             else
@@ -577,5 +592,6 @@ namespace TrainerPalBuddyFriend3.Controllers
                 return View("Index");
             }
         }
+
     }
 }
