@@ -627,8 +627,10 @@ namespace TrainerPalBuddyFriend3.Controllers
                             DropDownList2 = new SelectList(list2, "Key", "Display")
                         };
 
-                        var rz = new Raszagal();
-                        rz.rWkseg = rWksg;
+                        var rz = new Raszagal
+                        {
+                            rWkseg = rWksg
+                        };
 
                         d.Dts.Add(rz);
                     }
@@ -644,7 +646,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult Form8(Danimoth d)
+        public ActionResult Form8(List<Wkseg> d)
         {
             if (ModelState.IsValid)
             {
@@ -668,22 +670,22 @@ namespace TrainerPalBuddyFriend3.Controllers
                         oldListPKs.Add(r.Wksegpk);
                     }
 
-                    foreach (var r in d.Dts)
+                    foreach (var z in d)
                     {
-                        newListPKs.Add(r.rWkseg.Wksegpk);
+                        newListPKs.Add(z.Wksegpk);
                     }
 
-                    foreach (var q in d.Dts)
+                    foreach (var q in d)
                     {
                         //updates
-                        if (oldListPKs.Contains(q.rWkseg.Wksegpk))
+                        if (oldListPKs.Contains(q.Wksegpk))
                         {
-                            var persistentType = _S.Load<Wkseg>(q.rWkseg.Wksegpk);
+                            var persistentType = _S.Load<Wkseg>(q.Wksegpk);
 
-                            persistentType.Workouts = q.rWkseg.Workouts;
-                            persistentType.Segments = q.rWkseg.Segments;
-                            persistentType.Duration = q.rWkseg.Duration;
-                            persistentType.Sequence = q.rWkseg.Sequence;
+                            persistentType.Workouts = q.Workouts;
+                            persistentType.Segments = q.Segments;
+                            persistentType.Duration = q.Duration;
+                            persistentType.Sequence = q.Sequence;
 
                             _S.Save(persistentType);
                             _S.Flush();
@@ -691,14 +693,14 @@ namespace TrainerPalBuddyFriend3.Controllers
                         }
 
                         //inserts
-                        else if (q.rWkseg.Wksegpk == -1)
+                        else if (q.Wksegpk == -1)
                         {
                             var persistentType = new Wkseg();
 
-                            persistentType.Workouts = q.rWkseg.Workouts;
-                            persistentType.Segments = q.rWkseg.Segments;
-                            persistentType.Duration = q.rWkseg.Duration;
-                            persistentType.Sequence = q.rWkseg.Sequence;
+                            persistentType.Workouts = q.Workouts;
+                            persistentType.Segments = q.Segments;
+                            persistentType.Duration = q.Duration;
+                            persistentType.Sequence = q.Sequence;
 
                             _S.Save(persistentType);
                             _S.Flush();

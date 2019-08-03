@@ -1,45 +1,5 @@
 ﻿@model Danimoth
 
-<script>
-    $(document).ready(function () {
-        $('input[type!="submit"]').each(function () {
-            $(this).prop('readonly', true);
-            $(this).css('background-color', 'darkgrey');
-        })
-
-    });
-
-    $(document).on('click', 'button.deletebtn', function () {
-        $(this).closest('tr').hide();
-        $(this).parent().siblings().children().val(0);
-    });
-
-    $(document).on('click', 'button.editbtn', function () {
-
-        if ($(this).html() == 'Edit') {
-            $(this).parent().siblings().children('input[type="text"]').prop('readonly', false);
-            $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'white');
-            $(this).html('Save');
-        }
-        else {
-            $(this).parent().siblings().children('input[type="text"]').prop('readonly', true);
-            $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'darkgrey');
-            $(this).html('Edit');
-        }
-    });
-
-    $(document).on('click', 'button.addbtn', function () {
-        $('.hiddenRow:first').addClass('visibleRow');
-        $('.hiddenRow:first').children(".pk").children().val(-1);
-        $('.hiddenRow:first').find('input[type="text"]').prop('readonly', false);
-        $('.hiddenRow:first').find('input[type="text"]').css('background-color', 'white');
-        $('.hiddenRow:first').find('.editbtn').html('Save');
-        $('.hiddenRow:first').removeClass('hiddenRow');
-    });
-
-
-</script>
-
 @if (Model.SelectedWorkout == null)
 {
     using (Ajax.BeginForm("Form7", "Home", new AjaxOptions
@@ -86,22 +46,25 @@
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
-            @{ int i = 0; int j = 0; }
+            @{ 
+                int i = 0;
+                int j = 0;
+             }
             @foreach (var r in Model.Dts)
             {
                 <tr class="visibleRow">
-                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m.Dts[i].rWkseg.Wksegpk)</td>
-                    <td class="fk" style="display:none">@Html.TextBoxFor(m => m.Dts[i].rWkseg.Workouts.Workoutpk)</td>
-                    <td>@Html.DropDownListFor(m => m.Dts[i].rWkseg.Segments, Model.Dts[i].rWkseg.DropDownList2)</td>
-                    <td>@Html.TextBoxFor(m => m.Dts[i].rWkseg.Duration)</td>
-                    <td>@Html.TextBoxFor(m => m.Dts[i].rWkseg.Sequence)</td>
+                    <td class="pk" style="display:none">@Html.TextBoxFor(m => Model.Dts[i].rWkseg.Wksegpk)</td>
+                    <td class="fk" style="display:none">@Html.TextBoxFor(m => Model.Dts[i].rWkseg.Workouts.Workoutpk)</td>
+                    <td>@Html.DropDownListFor(m => Model.Dts[i].rWkseg.Segments, Model.Dts[i].rWkseg.DropDownList2)</td>
+                    <td>@Html.TextBoxFor(m => Model.Dts[i].rWkseg.Duration)</td>
+                    <td>@Html.TextBoxFor(m => Model.Dts[i].rWkseg.Sequence)</td>
                     <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
                     <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
                 </tr>
                 i++;
             }
 
-            @for (j = i; j < i + 20; j++)
+            @for (j = i; j < i + 5; j++)
             {
                 // ugly solution until I can find something better that works
                 // add invisible rows to handle additions
@@ -113,6 +76,7 @@
                 newRz.rWkseg = newRzWksg;
 
                 Model.Dts.Add(newRz);
+                
 
                 <tr class="hiddenRow">
                     <td class="pk" style="display:none">@Html.TextBoxFor(m => m.Dts[j].rWkseg.Wksegpk)</td>
@@ -128,20 +92,6 @@
                 <td colspan="6"><input type="submit" value="Save Changes" /></td>
             </tr>
         </table>
-
-        <script>
-            $("Form7").submit(function (event) {
-                if ($('#submit1'.val()) > 0) {
-                    $('.fk').each(function () {
-                        this.val($('#submit1'.val()));
-                    })
-                    return;
-                }
-                else {
-                    event.preventDefault();
-                }
-            });
-        </script>
 
     }
 

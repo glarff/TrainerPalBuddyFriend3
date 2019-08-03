@@ -1,52 +1,5 @@
 ﻿@model  List<Workouts>
 
-<script>
-    $(document).ready(function () {
-        $('input[type!="submit"]').each(function () {
-            $(this).prop('readonly', true);
-            $(this).css('background-color', 'darkgrey');
-        })
-        $('textarea').each(function () {
-            $(this).prop('readonly', true);
-            $(this).css('background-color', 'darkgrey');
-        })
-    });
-
-    $(document).on('click', 'button.deletebtn', function () {
-        $(this).closest('tr').hide();
-        $(this).parent().siblings().children().val(0);
-    });
-
-    $(document).on('click', 'button.editbtn', function () {
-
-        if ($(this).html() == 'Edit') {
-            $(this).parent().siblings().children('input[type="text"]').prop('readonly', false);
-            $(this).parent().siblings().children('textarea').prop('readonly', false);
-            $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'white');
-            $(this).parent().siblings().children('textarea').css('background-color', 'white');
-            $(this).html('Save');
-        }
-        else {
-            $(this).parent().siblings().children('input[type="text"]').prop('readonly', true);
-            $(this).parent().siblings().children('textarea').prop('readonly', true);
-            $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'darkgrey');
-            $(this).parent().siblings().children('textarea').css('background-color', 'darkgrey');
-            $(this).html('Edit');
-        }
-    });
-
-    $(document).on('click', 'button.addbtn', function () {
-        $('.hiddenRow:first').addClass('visibleRow');
-        $('.hiddenRow:first').children(".pk").children().val(-1);
-        $('.hiddenRow:first').find('input[type="text"]').prop('readonly', false);
-        $('.hiddenRow:first').find('input[type="text"]').css('background-color', 'white');
-        $('.hiddenRow:first').find('textarea').prop('readonly', false);
-        $('.hiddenRow:first').find('textarea').css('background-color', 'white');
-        $('.hiddenRow:first').find('.editbtn').html('Save');
-        $('.hiddenRow:first').removeClass('hiddenRow');
-    });
-</script>
-
 @using (Ajax.BeginForm("Form6", "Home", new AjaxOptions
 {
     HttpMethod = "POST",
