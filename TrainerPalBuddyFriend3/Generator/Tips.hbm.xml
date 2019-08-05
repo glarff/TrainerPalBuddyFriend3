@@ -2,7 +2,7 @@
 <hibernate-mapping assembly="tpbf3" namespace="TrainerPalBuddyFriend3" xmlns="urn:nhibernate-mapping-2.2">
   <class name="Tips" table="tips" lazy="true" >
     <id name="Tippk" column="TipPK" />
-    <many-to-one name="Types">
+    <many-to-one name="Conclave">
       <column name="TypeFK" sql-type="int(11)" not-null="true" />
     </many-to-one>
     <property name="Tipid">

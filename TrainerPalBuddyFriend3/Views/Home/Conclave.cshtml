@@ -1,4 +1,4 @@
-﻿@model  List<Types>
+﻿@model  List<Conclave>
 
 @using (Ajax.BeginForm("Form3", "Home", new AjaxOptions
 {
@@ -38,7 +38,7 @@
         {
             // ugly solution until I can find something better that works
             // add invisible rows to handle additions
-            var newTyp = new Types();
+            var newTyp = new Conclave();
             Model.Add(newTyp);
 
             <tr class="hiddenRow">

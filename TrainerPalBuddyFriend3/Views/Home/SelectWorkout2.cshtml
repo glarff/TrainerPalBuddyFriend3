@@ -1,0 +1,19 @@
+﻿@model Wkseg
+
+@using (Ajax.BeginForm("Form9", "Home", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "id1",
+    LoadingElementId = "LoadingImage",
+    OnSuccess = "onSuccess_Message",
+    OnFailure = "onFailure_Message"
+}))
+{
+<h2>Select Workout</h2>
+<table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
+    <tr>
+        <td>@Html.DropDownListFor(m => m.Workouts.Workoutpk, Model.DDLWorkouts)</td>
+        <td><input id="submit1" type="submit" value="Select" /></td>
+    </tr>
+</table>
+}

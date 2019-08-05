@@ -361,3 +361,7 @@ body {
     font-size: 32px;
     width: 250px;
 }
+
+.jumbotron {
+    background-color: black;
+}

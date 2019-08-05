@@ -24,23 +24,23 @@ namespace TrainerPalBuddyFriend3.Controllers
             return View();
         }
 
-        public ActionResult Types()
+        public ActionResult Conclave()
         {
-            var list = new List<Types>();
-            // Get data for existing Types
+            var list = new List<Conclave>();
+            // Get data for existing Conclave
             using (ISession _S = MvcApplication.SF.GetCurrentSession())
             {
-                Types typ = null;
+                Conclave typ = null;
 
-                var typeList = _S.QueryOver<Types>(() => typ)
+                var typeList = _S.QueryOver<Conclave>(() => typ)
                     .SelectList(l => l
                         .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
                         .Select(x => x.Typeid).WithAlias(() => typ.Typeid)
                         .Select(x => x.Name).WithAlias(() => typ.Name)
                         .Select(x => x.Customflg).WithAlias(() => typ.Customflg)
                     )
-                    .TransformUsing(Transformers.AliasToBean<Types>())
-                    .List<Types>();
+                    .TransformUsing(Transformers.AliasToBean<Conclave>())
+                    .List<Conclave>();
 
                 foreach (var r in typeList)
                 {
@@ -78,24 +78,24 @@ namespace TrainerPalBuddyFriend3.Controllers
             return View(list);
         }
 
-        public ActionResult Form3(List<Types> newList)
+        public ActionResult Form3(List<Conclave> newList)
         {
             if (ModelState.IsValid)
             {
-                // Get existing types
+                // Get existing Conclave
                 var newListPKs = new List<int>();
                 var oldListPKs = new List<int>();
 
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Types typ = null;
+                    Conclave typ = null;
 
-                    var oldList = _S.QueryOver<Types>(() => typ)
+                    var oldList = _S.QueryOver<Conclave>(() => typ)
                         .SelectList(l => l
                             .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
                         )
-                        .TransformUsing(Transformers.AliasToBean<Types>())
-                        .List<Types>();
+                        .TransformUsing(Transformers.AliasToBean<Conclave>())
+                        .List<Conclave>();
 
                     foreach (var r in oldList)
                     {
@@ -112,7 +112,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         //updates
                         if (oldListPKs.Contains(q.Typepk))
                         {
-                            var persistentType = _S.Load<Types>(q.Typepk);
+                            var persistentType = _S.Load<Conclave>(q.Typepk);
 
                             persistentType.Typeid = q.Typeid;
                             persistentType.Name = q.Name;
@@ -126,7 +126,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         //inserts
                         else if (q.Typepk == -1)
                         {
-                            var persistentType = new Types();
+                            var persistentType = new Conclave();
 
                             persistentType.Typeid = q.Typeid;
                             persistentType.Name = q.Name;
@@ -143,7 +143,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                     {
                         if (!(newListPKs.Contains(x)))
                         {
-                            var persistentType = _S.Load<Types>(x);
+                            var persistentType = _S.Load<Conclave>(x);
 
                             _S.Delete(persistentType);
                             _S.Flush();
@@ -152,7 +152,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                     }
                 }
 
-                ViewBag.onSuccess_Message = "Types updated successfully.";
+                ViewBag.onSuccess_Message = "Conclave updated successfully.";
 
                 return View("Index");
             }
@@ -166,7 +166,7 @@ namespace TrainerPalBuddyFriend3.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Get existing types
+                // Get existing Conclave
                 var newListPKs = new List<int>();
                 var oldListPKs = new List<int>();
 
@@ -262,7 +262,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
                         .Select(x => x.Segmentid).WithAlias(() => sg.Segmentid)
                         .Select(x => x.Name).WithAlias(() => sg.Name)
-                        .Select(x => x.Types).WithAlias(() => sg.Types)
+                        .Select(x => x.Conclave).WithAlias(() => sg.Conclave)
                         .Select(x => x.Intensity).WithAlias(() => sg.Intensity)
                         .Select(x => x.Customflg).WithAlias(() => sg.Customflg)
                     )
@@ -276,15 +276,15 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                 var list2 = new List<MyListTable>();
 
-                Types typ = null;
+                Conclave typ = null;
 
-                var typeList = _S.QueryOver<Types>(() => typ)
+                var typeList = _S.QueryOver<Conclave>(() => typ)
                     .SelectList(l => l
                         .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
                         .Select(x => x.Name).WithAlias(() => typ.Name)
                     )
-                    .TransformUsing(Transformers.AliasToBean<Types>())
-                    .List<Types>();
+                    .TransformUsing(Transformers.AliasToBean<Conclave>())
+                    .List<Conclave>();
 
                 foreach (var r in typeList)
                 {
@@ -297,7 +297,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                 foreach (var s in list)
                 {
-                    s.DropDownList = new SelectList(list2, "Key", "Display");
+                    s.DropDownList = new SelectList(list2, "Key", "Display", s.Conclave.Typepk);
                 }
             }
 
@@ -308,7 +308,7 @@ namespace TrainerPalBuddyFriend3.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Get existing types
+                // Get existing Conclave
                 var newListPKs = new List<int>();
                 var oldListPKs = new List<int>();
 
@@ -342,7 +342,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                             persistentType.Segmentid = q.Segmentid;
                             persistentType.Name = q.Name;
-                            persistentType.Types = q.Types;
+                            persistentType.Conclave = q.Conclave;
                             persistentType.Intensity = q.Intensity;
                             persistentType.Customflg = q.Customflg;
 
@@ -358,7 +358,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                             persistentType.Segmentid = q.Segmentid;
                             persistentType.Name = q.Name;
-                            persistentType.Types = q.Types;
+                            persistentType.Conclave = q.Conclave;
                             persistentType.Intensity = q.Intensity;
                             persistentType.Customflg = q.Customflg;
 
@@ -407,7 +407,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         .Select(x => x.Tippk).WithAlias(() => tp.Tippk)
                         .Select(x => x.Tipid).WithAlias(() => tp.Tipid)
                         .Select(x => x.Text).WithAlias(() => tp.Text)
-                        .Select(x => x.Types).WithAlias(() => tp.Types)
+                        .Select(x => x.Conclave).WithAlias(() => tp.Conclave)
                         .Select(x => x.Customflg).WithAlias(() => tp.Customflg)
                     )
                     .TransformUsing(Transformers.AliasToBean<Tips>())
@@ -420,15 +420,15 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                 var list2 = new List<MyListTable>();
 
-                Types typ = null;
+                Conclave typ = null;
 
-                var typeList = _S.QueryOver<Types>(() => typ)
+                var typeList = _S.QueryOver<Conclave>(() => typ)
                     .SelectList(l => l
                         .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
                         .Select(x => x.Name).WithAlias(() => typ.Name)
                     )
-                    .TransformUsing(Transformers.AliasToBean<Types>())
-                    .List<Types>();
+                    .TransformUsing(Transformers.AliasToBean<Conclave>())
+                    .List<Conclave>();
 
                 foreach (var r in typeList)
                 {
@@ -441,7 +441,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                 foreach (var s in list)
                 {
-                    s.DropDownList = new SelectList(list2, "Key", "Display");
+                    s.DropDownList = new SelectList(list2, "Key", "Display", s.Conclave.Typepk);
                 }
             }
 
@@ -452,7 +452,7 @@ namespace TrainerPalBuddyFriend3.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Get existing types
+                // Get existing Conclave
                 var newListPKs = new List<int>();
                 var oldListPKs = new List<int>();
 
@@ -486,7 +486,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                             persistentType.Tipid = q.Tipid;
                             persistentType.Text = q.Text;
-                            persistentType.Types = q.Types;
+                            persistentType.Conclave = q.Conclave;
                             persistentType.Customflg = q.Customflg;
 
                             _S.Save(persistentType);
@@ -501,7 +501,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                             persistentType.Tipid = q.Tipid;
                             persistentType.Text = q.Text;
-                            persistentType.Types = q.Types;
+                            persistentType.Conclave = q.Conclave;
                             persistentType.Customflg = q.Customflg;
 
                             _S.Save(persistentType);
@@ -534,43 +534,54 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult WkSeg(Danimoth d)
+        public ActionResult SelectWorkout()
         {
-            var list = new List<MyListTable>();
-
-            // Get data for existing Workouts
-            using (ISession _S = MvcApplication.SF.GetCurrentSession())
+            if (ModelState.IsValid)
             {
-                Workouts wk = null;
+                var d = new Wkseg();
 
-                var wkList = _S.QueryOver<Workouts>(() => wk)
-                    .SelectList(l => l
-                        .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
-                        .Select(x => x.Name).WithAlias(() => wk.Name)
-                    )
-                    .TransformUsing(Transformers.AliasToBean<Workouts>())
-                    .List<Workouts>();
+                var list = new List<MyListTable>();
 
-
-                foreach (var r in wkList)
+                // Get data for existing Workouts
+                using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    list.Add(new MyListTable
+                    Workouts wk = null;
+
+                    var wkList = _S.QueryOver(() => wk)
+                        .SelectList(l => l
+                            .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
+                            .Select(x => x.Name).WithAlias(() => wk.Name)
+                        )
+                        .TransformUsing(Transformers.AliasToBean<Workouts>())
+                        .List<Workouts>();
+
+
+                    foreach (var r in wkList)
                     {
-                        Key = r.Workoutpk,
-                        Display = r.Name.ToString()
-                    });
+                        list.Add(new MyListTable
+                        {
+                            Key = r.Workoutpk,
+                            Display = r.Name.ToString()
+                        });
+                    }
+
+                    d.DDLWorkouts = new SelectList(list, "Key", "Display");
+
                 }
 
-                d.DropDownList1 = new SelectList(list, "Key", "Display");
-                
+                return View(d);
             }
 
-            return View(d);
+            else
+            {
+                return View("Index");
+            }
         }
 
-
-        public ActionResult Form7(Danimoth d)
+        public ActionResult Form7(Wkseg d)
         {
+            int g = d.Workouts.Workoutpk;
+
             if (ModelState.IsValid)
             {
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
@@ -578,7 +589,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                     // Get segment list
                     Segments sg = null;
 
-                    var sgList = _S.QueryOver<Segments>(() => sg)
+                    var sgList = _S.QueryOver(() => sg)
                     .SelectList(l => l
                         .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
                         .Select(x => x.Name).WithAlias(() => sg.Name)
@@ -609,13 +620,13 @@ namespace TrainerPalBuddyFriend3.Controllers
                             .Select(x => x.Duration).WithAlias(() => wks.Duration)
                             .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
                             )
-                        .Where(x => x.Workouts == d.SelectedWorkout)
+                        .Where(x => x.Workouts.Workoutpk == g)
                         .TransformUsing(Transformers.AliasToBean<Wkseg>())
                         .List<Wkseg>();
 
-                    d.Dts = new List<Raszagal>();
+                    var h = new List<Wkseg>();
 
-                    foreach(var z in wksList)
+                    foreach (var z in wksList)
                     {
                         var rWksg = new Wkseg
                         {
@@ -624,20 +635,15 @@ namespace TrainerPalBuddyFriend3.Controllers
                             Segments = z.Segments,
                             Duration = z.Duration,
                             Sequence = z.Sequence,
-                            DropDownList2 = new SelectList(list2, "Key", "Display")
+                            DDLSegments = new SelectList(list2, "Key", "Display", z.Segments.Segmentpk)
                         };
 
-                        var rz = new Raszagal
-                        {
-                            rWkseg = rWksg
-                        };
-
-                        d.Dts.Add(rz);
+                        h.Add(rWksg);
                     }
+
+
+                    return View("BuildWorkout", h);
                 }
-
-
-                    return View("WkSeg", d);
             }
 
             else
@@ -646,11 +652,26 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
+
+        public ActionResult BuildWorkout()
+        {
+            if (ModelState.IsValid)
+            {
+                return View("Index");
+            }
+
+            else
+            {
+                return View("Index");
+            }
+        }
+      
+
         public ActionResult Form8(List<Wkseg> d)
         {
             if (ModelState.IsValid)
             {
-                // Get existing types
+                // Get existing Conclave
                 var newListPKs = new List<int>();
                 var oldListPKs = new List<int>();
 
@@ -732,5 +753,73 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
+        public ActionResult SelectWorkout2()
+        {
+            if (ModelState.IsValid)
+            {
+                var d = new Wkseg();
+
+                var list = new List<MyListTable>();
+
+                // Get data for existing Workouts
+                using (ISession _S = MvcApplication.SF.GetCurrentSession())
+                {
+                    Workouts wk = null;
+
+                    var wkList = _S.QueryOver(() => wk)
+                        .SelectList(l => l
+                            .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
+                            .Select(x => x.Name).WithAlias(() => wk.Name)
+                        )
+                        .TransformUsing(Transformers.AliasToBean<Workouts>())
+                        .List<Workouts>();
+
+
+                    foreach (var r in wkList)
+                    {
+                        list.Add(new MyListTable
+                        {
+                            Key = r.Workoutpk,
+                            Display = r.Name.ToString()
+                        });
+                    }
+
+                    d.DDLWorkouts = new SelectList(list, "Key", "Display");
+
+                }
+
+                return View(d);
+            }
+
+            else
+            {
+                return View("Index");
+            }
+        }
+
+        public ActionResult Form9(Workouts w)
+        {
+            if (ModelState.IsValid)
+            {
+                // Summon Danimoth
+                var d = new Danimoth();
+
+                // Construct additional pylons
+                
+                // 
+
+
+                // Get 
+
+                using (ISession _S = MvcApplication.SF.GetCurrentSession())
+                {
+                    return View("Index");
+                }
+            }
+            else
+            {
+                return View("Index");
+            }
+        }
     }
 }

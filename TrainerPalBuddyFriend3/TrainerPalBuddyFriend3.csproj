@@ -161,7 +161,7 @@
     <Compile Include="Models\Danimoth.cs" />
     <Compile Include="Models\Segments.cs" />
     <Compile Include="Models\Tips.cs" />
-    <Compile Include="Models\Types.cs" />
+    <Compile Include="Models\Conclave.cs" />
     <Compile Include="Models\Wkseg.cs" />
     <Compile Include="Models\Workouts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -252,7 +252,6 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\delIcon.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <EmbeddedResource Include="Generator\Segments.hbm.xml" />
@@ -290,10 +289,12 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\script.js" />
     <Content Include="Scripts\workouts.js" />
+    <None Include="Views\Home\SelectWorkout2.cshtml" />
     <Content Include="Views\Home\Workouts.cshtml" />
-    <Content Include="Views\Home\WkSeg.cshtml" />
+    <Content Include="Views\Home\SelectWorkout.cshtml" />
     <Content Include="Views\Home\Demo.cshtml" />
-    <None Include="Views\Home\Types.cshtml" />
+    <Content Include="Views\Home\BuildWorkout.cshtml" />
+    <None Include="Views\Home\Conclave.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

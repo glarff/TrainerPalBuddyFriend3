@@ -1,0 +1,69 @@
+﻿@model List<Wkseg>
+
+@using (Ajax.BeginForm("Form8", "Home", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        UpdateTargetId = "id1",
+        LoadingElementId = "LoadingImage",
+        OnSuccess = "onSuccess_Message",
+        OnFailure = "onFailure_Message"
+    }))
+    {
+<h2>Add Segments</h2>
+<button type="button" class="addbtn" title="Remove row">Add</button>
+<table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
+    <tr>
+        <th style="display:none">PK</th>
+        <th style="display:none">FK</th>
+        <th>Segment</th>
+        <th>Duration (s)</th>
+        <th>Sequence</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    @{
+        int i = 0;
+        int j = 0;
+    }
+    @foreach (var r in Model)
+    {
+        <tr class="visibleRow">
+            <td class="pk" style="display:none">@Html.TextBoxFor(m => Model[i].Wksegpk)</td>
+            <td class="fk" style="display:none">@Html.TextBoxFor(m => Model[i].Workouts.Workoutpk)</td>
+            <td>@Html.DropDownListFor(m => m[i].Segments.Segmentpk, Model[i].DDLSegments)</td>
+            <td>@Html.TextBoxFor(m => Model[i].Duration)</td>
+            <td>@Html.TextBoxFor(m => Model[i].Sequence)</td>
+            <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+            <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+        </tr>
+        i++;
+    }
+
+    @for (j = i; j < i + 20; j++)
+    {
+        // ugly solution until I can find something better that works
+        // add invisible rows to handle addition
+
+        var newRz = new Wkseg();
+        newRz.DDLSegments = Model[0].DDLSegments;
+        newRz.Workouts = Model[0].Workouts;
+
+        Model.Add(newRz);
+
+
+        <tr class="hiddenRow">
+            <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Wksegpk)</td>
+            <td class="fk" style="display:none">@Html.TextBoxFor(m => m[j].Workouts.Workoutpk)</td>
+            <td>@Html.DropDownListFor(m => m[j].Segments.Segmentpk, Model[j].DDLSegments)</td>
+            <td>@Html.TextBoxFor(m => m[j].Duration)</td>
+            <td>@Html.TextBoxFor(m => m[j].Sequence)</td>
+            <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+            <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+        </tr>
+    }
+    <tr name="submitRow">
+        <td colspan="6"><input type="submit" value="Save Changes" /></td>
+    </tr>
+</table>
+
+    }
