@@ -20,7 +20,7 @@ $(document).ready(function () {
 
 $(document).on('click', 'button.deletebtn', function () {
     $(this).closest('tr').hide();
-    $(this).parent().siblings().children().val(0);
+    $(this).parent().siblings('.pk').children().val(0);
 });
 
 $(document).on('click', 'button.editbtn', function () {

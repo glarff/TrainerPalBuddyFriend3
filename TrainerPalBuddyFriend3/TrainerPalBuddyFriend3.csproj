@@ -163,7 +163,7 @@
     <Compile Include="Models\Tips.cs" />
     <Compile Include="Models\Conclave.cs" />
     <Compile Include="Models\Wkseg.cs" />
-    <Compile Include="Models\Workouts.cs" />
+    <Compile Include="Models\Gateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -258,7 +258,7 @@
     <EmbeddedResource Include="Generator\Tips.hbm.xml" />
     <EmbeddedResource Include="Generator\Types.hbm.xml" />
     <EmbeddedResource Include="Generator\Wkseg.hbm.xml" />
-    <EmbeddedResource Include="Generator\Workouts.hbm.xml" />
+    <EmbeddedResource Include="Generator\Gateway.hbm.xml" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
@@ -290,7 +290,7 @@
     <Content Include="Scripts\script.js" />
     <Content Include="Scripts\workouts.js" />
     <None Include="Views\Home\SelectWorkout2.cshtml" />
-    <Content Include="Views\Home\Workouts.cshtml" />
+    <Content Include="Views\Home\Gateway.cshtml" />
     <Content Include="Views\Home\SelectWorkout.cshtml" />
     <Content Include="Views\Home\Demo.cshtml" />
     <Content Include="Views\Home\BuildWorkout.cshtml" />

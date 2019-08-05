@@ -15,7 +15,7 @@ namespace TrainerPalBuddyFriend3
     public class Danimoth
     {
         public Danimoth() { }
-        public virtual Workouts SelectedWorkout { get; set; }
+        public virtual Gateway SelectedWorkout { get; set; }
         public List<Raszagal> Dts { get; set; }
         public virtual SelectList DropDownList1 { get; set; }
     }

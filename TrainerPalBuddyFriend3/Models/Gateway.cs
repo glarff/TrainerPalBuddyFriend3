@@ -5,8 +5,9 @@ using System.Web.Mvc;
 
 namespace TrainerPalBuddyFriend3 {
     
-    public class Workouts {
-        public Workouts() { }
+    public class Gateway
+    {
+        public Gateway() { }
         public virtual int Workoutpk { get; set; }
         public virtual string Workoutid { get; set; }
         public virtual string Name { get; set; }

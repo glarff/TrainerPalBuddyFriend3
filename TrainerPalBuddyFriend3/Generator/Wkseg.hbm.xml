@@ -2,7 +2,7 @@
 <hibernate-mapping assembly="tpbf3" namespace="TrainerPalBuddyFriend3" xmlns="urn:nhibernate-mapping-2.2">
   <class name="Wkseg" table="wkseg" lazy="true" >
     <id name="Wksegpk" column="WkSegPK" />
-    <many-to-one name="Workouts">
+    <many-to-one name="Gateway">
       <column name="WorkoutFK" sql-type="int(11)" not-null="true" />
     </many-to-one>
     <many-to-one name="Segments">

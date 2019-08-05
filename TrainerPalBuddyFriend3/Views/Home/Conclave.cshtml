@@ -1,6 +1,6 @@
 ﻿@model  List<Conclave>
 
-@using (Ajax.BeginForm("Form3", "Home", new AjaxOptions
+@using (Ajax.BeginForm("ConclaveForm", "Home", new AjaxOptions
 {
     HttpMethod = "POST",
     UpdateTargetId = "id1",
@@ -38,8 +38,8 @@
         {
             // ugly solution until I can find something better that works
             // add invisible rows to handle additions
-            var newTyp = new Conclave();
-            Model.Add(newTyp);
+            var newClv = new Conclave();
+            Model.Add(newClv);
 
             <tr class="hiddenRow">
                 <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Typepk)</td>

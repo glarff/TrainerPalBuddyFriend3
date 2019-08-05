@@ -25,6 +25,7 @@ namespace TrainerPalBuddyFriend3
             log4net.Config.XmlConfigurator.Configure();
 
             SF = SessionFactory.GetSF();
+
         }
 
         public override void Init()

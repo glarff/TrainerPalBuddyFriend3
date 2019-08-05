@@ -1,6 +1,6 @@
-﻿@model  List<Workouts>
+﻿@model  List<Gateway>
 
-@using (Ajax.BeginForm("Form6", "Home", new AjaxOptions
+@using (Ajax.BeginForm("GatewayForm", "Home", new AjaxOptions
 {
     HttpMethod = "POST",
     UpdateTargetId = "id1",
@@ -40,7 +40,7 @@
         {
             // ugly solution until I can find something better that works
             // add invisible rows to handle additions
-            var newWk = new Workouts();
+            var newWk = new Gateway();
             Model.Add(newWk);
 
             <tr class="hiddenRow">

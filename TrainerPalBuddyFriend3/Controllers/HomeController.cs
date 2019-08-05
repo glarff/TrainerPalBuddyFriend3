@@ -26,111 +26,67 @@ namespace TrainerPalBuddyFriend3.Controllers
 
         public ActionResult Conclave()
         {
-            var list = new List<Conclave>();
-            // Get data for existing Conclave
+            // Get data for existing Types and pass to View
             using (ISession _S = MvcApplication.SF.GetCurrentSession())
             {
-                Conclave typ = null;
+                Conclave clv = null;
 
-                var typeList = _S.QueryOver<Conclave>(() => typ)
+                var conclaveList = _S.QueryOver(() => clv)
                     .SelectList(l => l
-                        .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
-                        .Select(x => x.Typeid).WithAlias(() => typ.Typeid)
-                        .Select(x => x.Name).WithAlias(() => typ.Name)
-                        .Select(x => x.Customflg).WithAlias(() => typ.Customflg)
+                        .Select(x => x.Typepk).WithAlias(() => clv.Typepk)
+                        .Select(x => x.Typeid).WithAlias(() => clv.Typeid)
+                        .Select(x => x.Name).WithAlias(() => clv.Name)
+                        .Select(x => x.Customflg).WithAlias(() => clv.Customflg)
                     )
                     .TransformUsing(Transformers.AliasToBean<Conclave>())
                     .List<Conclave>();
 
-                foreach (var r in typeList)
-                {
-                    list.Add(r);
-                }
+                return View(conclaveList);
             }
-            return View(list);
         }
 
-        public ActionResult Workouts()
-        {
-            var list = new List<Workouts>();
-
-            // Get data for existing Workouts
-            using (ISession _S = MvcApplication.SF.GetCurrentSession())
-            {
-                Workouts wk = null;
-
-                var wkList = _S.QueryOver<Workouts>(() => wk)
-                    .SelectList(l => l
-                        .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
-                        .Select(x => x.Workoutid).WithAlias(() => wk.Workoutid)
-                        .Select(x => x.Name).WithAlias(() => wk.Name)
-                        .Select(x => x.Description).WithAlias(() => wk.Description)
-                        .Select(x => x.Customflg).WithAlias(() => wk.Customflg)
-                    )
-                    .TransformUsing(Transformers.AliasToBean<Workouts>())
-                    .List<Workouts>();
-
-                foreach (var r in wkList)
-                {
-                    list.Add(r);
-                }
-            }
-            return View(list);
-        }
-
-        public ActionResult Form3(List<Conclave> newList)
+        public ActionResult ConclaveForm(List<Conclave> newList)
         {
             if (ModelState.IsValid)
             {
-                // Get existing Conclave
-                var newListPKs = new List<int>();
-                var oldListPKs = new List<int>();
-
+                // Process submission data and return to Home
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Conclave typ = null;
+                    // Get existing Types 
+                    Conclave clv = null;
 
-                    var oldList = _S.QueryOver<Conclave>(() => typ)
+                    var oldList = _S.QueryOver(() => clv)
                         .SelectList(l => l
-                            .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
+                            .Select(x => x.Typepk).WithAlias(() => clv.Typepk)
                         )
                         .TransformUsing(Transformers.AliasToBean<Conclave>())
                         .List<Conclave>();
 
-                    foreach (var r in oldList)
-                    {
-                        oldListPKs.Add(r.Typepk);
-                    }
-
+                    // Compare new and old Lists
                     foreach (var r in newList)
                     {
-                        newListPKs.Add(r.Typepk);
-                    }
-
-                    foreach (var q in newList)
-                    {
-                        //updates
-                        if (oldListPKs.Contains(q.Typepk))
+                        // updates
+                        if (oldList.Any(p => p.Typepk == r.Typepk))
                         {
-                            var persistentType = _S.Load<Conclave>(q.Typepk);
-
-                            persistentType.Typeid = q.Typeid;
-                            persistentType.Name = q.Name;
-                            persistentType.Customflg = q.Customflg;
+                            var persistentType = _S.Load<Conclave>(r.Typepk);
+                            persistentType.Typeid = r.Typeid;
+                            persistentType.Name = r.Name;
+                            persistentType.Customflg = r.Customflg;
 
                             _S.Save(persistentType);
                             _S.Flush();
                             _S.Clear();
                         }
 
-                        //inserts
-                        else if (q.Typepk == -1)
+                        // inserts
+                        else if (r.Typepk == -1)
                         {
-                            var persistentType = new Conclave();
-
-                            persistentType.Typeid = q.Typeid;
-                            persistentType.Name = q.Name;
-                            persistentType.Customflg = q.Customflg;
+                            var persistentType = new Conclave
+                            {
+                                Typeid = r.Typeid,
+                                Name = r.Name,
+                                Customflg = r.Customflg
+                            };
 
                             _S.Save(persistentType);
                             _S.Flush();
@@ -138,13 +94,12 @@ namespace TrainerPalBuddyFriend3.Controllers
                         }
                     }
 
-                    //deletions
-                    foreach (var x in oldListPKs)
+                    // deletions
+                    foreach (var x in oldList)
                     {
-                        if (!(newListPKs.Contains(x)))
+                        if (!newList.Any(p => p.Typepk == x.Typepk))
                         {
-                            var persistentType = _S.Load<Conclave>(x);
-
+                            var persistentType = _S.Load<Conclave>(x.Typepk);
                             _S.Delete(persistentType);
                             _S.Flush();
                             _S.Clear();
@@ -152,71 +107,83 @@ namespace TrainerPalBuddyFriend3.Controllers
                     }
                 }
 
-                ViewBag.onSuccess_Message = "Conclave updated successfully.";
-
+                ViewBag.onSuccess_Message = "Types updated successfully.";
                 return View("Index");
             }
+
             else
             {
+                ViewBag.onSuccess_Message = "You must construct additional Pylons.";
                 return View("Index");
             }
         }
 
-        public ActionResult Form6(List<Workouts> newList)
+        public ActionResult Gateway()
+        {
+            // Get data for existing Workouts and pass to View
+            using (ISession _S = MvcApplication.SF.GetCurrentSession())
+            {
+                Gateway gw = null;
+
+                var gatewayList = _S.QueryOver(() => gw)
+                    .SelectList(l => l
+                        .Select(x => x.Workoutpk).WithAlias(() => gw.Workoutpk)
+                        .Select(x => x.Workoutid).WithAlias(() => gw.Workoutid)
+                        .Select(x => x.Name).WithAlias(() => gw.Name)
+                        .Select(x => x.Description).WithAlias(() => gw.Description)
+                        .Select(x => x.Customflg).WithAlias(() => gw.Customflg)
+                    )
+                    .TransformUsing(Transformers.AliasToBean<Gateway>())
+                    .List<Gateway>();
+
+                return View(gatewayList);
+            }
+        }
+
+        public ActionResult GatewayForm(List<Gateway> newList)
         {
             if (ModelState.IsValid)
             {
-                // Get existing Conclave
-                var newListPKs = new List<int>();
-                var oldListPKs = new List<int>();
-
+                // Process submission data and return to Home
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Workouts wk = null;
+                    // Get existing Workouts
+                    Gateway gw = null;
 
-                    var oldList = _S.QueryOver<Workouts>(() => wk)
+                    var oldList = _S.QueryOver(() => gw)
                         .SelectList(l => l
-                            .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
+                            .Select(x => x.Workoutpk).WithAlias(() => gw.Workoutpk)
                         )
-                        .TransformUsing(Transformers.AliasToBean<Workouts>())
-                        .List<Workouts>();
+                        .TransformUsing(Transformers.AliasToBean<Gateway>())
+                        .List<Gateway>();
 
-                    foreach (var r in oldList)
-                    {
-                        oldListPKs.Add(r.Workoutpk);
-                    }
-
+                    // Compare new and old Lists
                     foreach (var r in newList)
                     {
-                        newListPKs.Add(r.Workoutpk);
-                    }
-
-                    foreach (var q in newList)
-                    {
-                        //updates
-                        if (oldListPKs.Contains(q.Workoutpk))
+                        // updates
+                        if (oldList.Any(p => p.Workoutpk == r.Workoutpk))
                         {
-                            var persistentType = _S.Load<Workouts>(q.Workoutpk);
-
-                            persistentType.Workoutid = q.Workoutid;
-                            persistentType.Name = q.Name;
-                            persistentType.Description = q.Description;
-                            persistentType.Customflg = q.Customflg;
+                            var persistentType = _S.Load<Gateway>(r.Workoutpk);
+                            persistentType.Workoutid = r.Workoutid;
+                            persistentType.Name = r.Name;
+                            persistentType.Description = r.Description;
+                            persistentType.Customflg = r.Customflg;
 
                             _S.Save(persistentType);
                             _S.Flush();
                             _S.Clear();
                         }
 
-                        //inserts
-                        else if (q.Workoutpk == -1)
+                        // inserts
+                        else if (r.Workoutpk == -1)
                         {
-                            var persistentType = new Workouts();
-
-                            persistentType.Workoutid = q.Workoutid;
-                            persistentType.Name = q.Name;
-                            persistentType.Description = q.Description;
-                            persistentType.Customflg = q.Customflg;
+                            var persistentType = new Gateway
+                            {
+                                Workoutid = r.Workoutid,
+                                Name = r.Name,
+                                Description = r.Description,
+                                Customflg = r.Customflg
+                            };
 
                             _S.Save(persistentType);
                             _S.Flush();
@@ -224,13 +191,12 @@ namespace TrainerPalBuddyFriend3.Controllers
                         }
                     }
 
-                    //deletions
-                    foreach (var x in oldListPKs)
+                    // deletions
+                    foreach (var x in oldList)
                     {
-                        if (!(newListPKs.Contains(x)))
+                        if (!newList.Any(p => p.Workoutpk == x.Workoutpk))
                         {
-                            var persistentType = _S.Load<Workouts>(x);
-
+                            var persistentType = _S.Load<Gateway>(x.Workoutpk);
                             _S.Delete(persistentType);
                             _S.Flush();
                             _S.Clear();
@@ -239,7 +205,6 @@ namespace TrainerPalBuddyFriend3.Controllers
                 }
 
                 ViewBag.onSuccess_Message = "Workouts updated successfully.";
-
                 return View("Index");
             }
             else
@@ -257,7 +222,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             {
                 Segments sg = null;
 
-                var sgList = _S.QueryOver<Segments>(() => sg)
+                var sgList = _S.QueryOver(() => sg)
                     .SelectList(l => l
                         .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
                         .Select(x => x.Segmentid).WithAlias(() => sg.Segmentid)
@@ -545,15 +510,15 @@ namespace TrainerPalBuddyFriend3.Controllers
                 // Get data for existing Workouts
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Workouts wk = null;
+                    Gateway wk = null;
 
                     var wkList = _S.QueryOver(() => wk)
                         .SelectList(l => l
                             .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
                             .Select(x => x.Name).WithAlias(() => wk.Name)
                         )
-                        .TransformUsing(Transformers.AliasToBean<Workouts>())
-                        .List<Workouts>();
+                        .TransformUsing(Transformers.AliasToBean<Gateway>())
+                        .List<Gateway>();
 
 
                     foreach (var r in wkList)
@@ -580,7 +545,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
         public ActionResult Form7(Wkseg d)
         {
-            int g = d.Workouts.Workoutpk;
+            int g = d.Gateway.Workoutpk;
 
             if (ModelState.IsValid)
             {
@@ -609,18 +574,17 @@ namespace TrainerPalBuddyFriend3.Controllers
                     }
 
                     // Get data for existing Wksegs
-
                     Wkseg wks = null;
 
                     var wksList = _S.QueryOver<Wkseg>(() => wks)
                         .SelectList(l => l
                             .Select(x => x.Wksegpk).WithAlias(() => wks.Wksegpk)
-                            .Select(x => x.Workouts).WithAlias(() => wks.Workouts)
+                            .Select(x => x.Gateway).WithAlias(() => wks.Gateway)
                             .Select(x => x.Segments).WithAlias(() => wks.Segments)
                             .Select(x => x.Duration).WithAlias(() => wks.Duration)
                             .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
                             )
-                        .Where(x => x.Workouts.Workoutpk == g)
+                        .Where(x => x.Gateway.Workoutpk == g)
                         .TransformUsing(Transformers.AliasToBean<Wkseg>())
                         .List<Wkseg>();
 
@@ -631,7 +595,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         var rWksg = new Wkseg
                         {
                             Wksegpk = z.Wksegpk,
-                            Workouts = z.Workouts,
+                            Gateway = z.Gateway,
                             Segments = z.Segments,
                             Duration = z.Duration,
                             Sequence = z.Sequence,
@@ -703,7 +667,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         {
                             var persistentType = _S.Load<Wkseg>(q.Wksegpk);
 
-                            persistentType.Workouts = q.Workouts;
+                            persistentType.Gateway = q.Gateway;
                             persistentType.Segments = q.Segments;
                             persistentType.Duration = q.Duration;
                             persistentType.Sequence = q.Sequence;
@@ -718,7 +682,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         {
                             var persistentType = new Wkseg();
 
-                            persistentType.Workouts = q.Workouts;
+                            persistentType.Gateway = q.Gateway;
                             persistentType.Segments = q.Segments;
                             persistentType.Duration = q.Duration;
                             persistentType.Sequence = q.Sequence;
@@ -764,15 +728,15 @@ namespace TrainerPalBuddyFriend3.Controllers
                 // Get data for existing Workouts
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Workouts wk = null;
+                    Gateway wk = null;
 
                     var wkList = _S.QueryOver(() => wk)
                         .SelectList(l => l
                             .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
                             .Select(x => x.Name).WithAlias(() => wk.Name)
                         )
-                        .TransformUsing(Transformers.AliasToBean<Workouts>())
-                        .List<Workouts>();
+                        .TransformUsing(Transformers.AliasToBean<Gateway>())
+                        .List<Gateway>();
 
 
                     foreach (var r in wkList)
@@ -797,7 +761,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult Form9(Workouts w)
+        public ActionResult Form9(Gateway w)
         {
             if (ModelState.IsValid)
             {
