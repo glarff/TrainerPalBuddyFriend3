@@ -162,7 +162,7 @@
     <Compile Include="Models\Templar.cs" />
     <Compile Include="Models\Prophecy.cs" />
     <Compile Include="Models\Conclave.cs" />
-    <Compile Include="Models\Wkseg.cs" />
+    <Compile Include="Models\Warpgate.cs" />
     <Compile Include="Models\Gateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -257,7 +257,7 @@
     <EmbeddedResource Include="Generator\Templar.hbm.xml" />
     <EmbeddedResource Include="Generator\Prophecy.hbm.xml" />
     <EmbeddedResource Include="Generator\Types.hbm.xml" />
-    <EmbeddedResource Include="Generator\Wkseg.hbm.xml" />
+    <EmbeddedResource Include="Generator\Warpgate.hbm.xml" />
     <EmbeddedResource Include="Generator\Gateway.hbm.xml" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -289,11 +289,11 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\script.js" />
     <Content Include="Scripts\workouts.js" />
-    <None Include="Views\Home\SelectWorkout2.cshtml" />
+    <None Include="Views\Home\WarpIn2.cshtml" />
     <Content Include="Views\Home\Gateway.cshtml" />
-    <Content Include="Views\Home\SelectWorkout.cshtml" />
-    <Content Include="Views\Home\Demo.cshtml" />
-    <Content Include="Views\Home\BuildWorkout.cshtml" />
+    <Content Include="Views\Home\WarpIn1.cshtml" />
+    <Content Include="Views\Home\Aiur.cshtml" />
+    <Content Include="Views\Home\Assimilation.cshtml" />
     <None Include="Views\Home\Conclave.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

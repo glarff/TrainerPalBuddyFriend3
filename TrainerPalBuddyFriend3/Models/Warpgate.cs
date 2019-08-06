@@ -5,7 +5,9 @@ using System.Web.Mvc;
 
 namespace TrainerPalBuddyFriend3 {
     
-    public class Wkseg {
+    public class Warpgate
+    {
+        public Warpgate() { }
         public virtual int Wksegpk { get; set; }
         public virtual Gateway Gateway { get; set; }
         public virtual Templar Templar { get; set; }

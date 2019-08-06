@@ -461,13 +461,12 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult SelectWorkout()
+        public ActionResult WarpIn1()
         {
             if (ModelState.IsValid)
             {
-                var d = new Wkseg();
-
-                var list = new List<Archon>();
+                Warpgate d = new Warpgate();
+                List<Archon> archList = new List<Archon>();
 
                 // Get data for existing Workouts
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
@@ -482,18 +481,16 @@ namespace TrainerPalBuddyFriend3.Controllers
                         .TransformUsing(Transformers.AliasToBean<Gateway>())
                         .List<Gateway>();
 
-
                     foreach (var r in wkList)
                     {
-                        list.Add(new Archon
+                        archList.Add(new Archon
                         {
                             Key = r.Workoutpk,
                             Display = r.Name.ToString()
                         });
                     }
 
-                    d.DDLWorkouts = new SelectList(list, "Key", "Display");
-
+                    d.DDLWorkouts = new SelectList(archList, "Key", "Display");
                 }
 
                 return View(d);
@@ -505,7 +502,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult Form7(Wkseg d)
+        public ActionResult WarpIn1Form(Warpgate d)
         {
             int g = d.Gateway.Workoutpk;
 
@@ -516,7 +513,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                     // Get segment list
                     Templar sg = null;
 
-                    var sgList = _S.QueryOver(() => sg)
+                    IList<Templar> sgList = _S.QueryOver(() => sg)
                     .SelectList(l => l
                         .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
                         .Select(x => x.Name).WithAlias(() => sg.Name)
@@ -524,9 +521,9 @@ namespace TrainerPalBuddyFriend3.Controllers
                     .TransformUsing(Transformers.AliasToBean<Templar>())
                     .List<Templar>();
 
-                    var list2 = new List<Archon>();
+                    List<Archon> list2 = new List<Archon>();
 
-                    foreach (var r in sgList)
+                    foreach (Templar r in sgList)
                     {
                         list2.Add(new Archon
                         {
@@ -536,9 +533,9 @@ namespace TrainerPalBuddyFriend3.Controllers
                     }
 
                     // Get data for existing Wksegs
-                    Wkseg wks = null;
+                    Warpgate wks = null;
 
-                    var wksList = _S.QueryOver<Wkseg>(() => wks)
+                    IList<Warpgate> wksList = _S.QueryOver(() => wks)
                         .SelectList(l => l
                             .Select(x => x.Wksegpk).WithAlias(() => wks.Wksegpk)
                             .Select(x => x.Gateway).WithAlias(() => wks.Gateway)
@@ -547,14 +544,14 @@ namespace TrainerPalBuddyFriend3.Controllers
                             .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
                             )
                         .Where(x => x.Gateway.Workoutpk == g)
-                        .TransformUsing(Transformers.AliasToBean<Wkseg>())
-                        .List<Wkseg>();
+                        .TransformUsing(Transformers.AliasToBean<Warpgate>())
+                        .List<Warpgate>();
 
-                    var h = new List<Wkseg>();
+                    List<Warpgate> h = new List<Warpgate>();
 
-                    foreach (var z in wksList)
+                    foreach (Warpgate z in wksList)
                     {
-                        var rWksg = new Wkseg
+                        Warpgate rWksg = new Warpgate
                         {
                             Wksegpk = z.Wksegpk,
                             Gateway = z.Gateway,
@@ -567,8 +564,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         h.Add(rWksg);
                     }
 
-
-                    return View("BuildWorkout", h);
+                    return View("Assimilation", h);
                 }
             }
 
@@ -578,8 +574,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-
-        public ActionResult BuildWorkout()
+        public ActionResult Assimilation()
         {
             if (ModelState.IsValid)
             {
@@ -592,41 +587,27 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
       
-        public ActionResult Form8(List<Wkseg> d)
+        public ActionResult AssimilationForm(List<Warpgate> d)
         {
             if (ModelState.IsValid)
             {
-                // Get existing Conclave
-                var newListPKs = new List<int>();
-                var oldListPKs = new List<int>();
-
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Wkseg tp = null;
+                    Warpgate tp = null;
 
-                    var oldList = _S.QueryOver<Wkseg>(() => tp)
+                    IList<Warpgate> oldList = _S.QueryOver(() => tp)
                         .SelectList(l => l
                             .Select(x => x.Wksegpk).WithAlias(() => tp.Wksegpk)
                         )
-                        .TransformUsing(Transformers.AliasToBean<Wkseg>())
-                        .List<Wkseg>();
+                        .TransformUsing(Transformers.AliasToBean<Warpgate>())
+                        .List<Warpgate>();
 
-                    foreach (var r in oldList)
-                    {
-                        oldListPKs.Add(r.Wksegpk);
-                    }
-
-                    foreach (var z in d)
-                    {
-                        newListPKs.Add(z.Wksegpk);
-                    }
-
-                    foreach (var q in d)
+                    foreach (Warpgate q in d)
                     {
                         //updates
-                        if (oldListPKs.Contains(q.Wksegpk))
-                        {
-                            var persistentType = _S.Load<Wkseg>(q.Wksegpk);
+                        if (oldList.Any(p => p.Wksegpk == q.Wksegpk))
+                            {
+                            Warpgate persistentType = _S.Load<Warpgate>(q.Wksegpk);
 
                             persistentType.Gateway = q.Gateway;
                             persistentType.Templar = q.Templar;
@@ -641,12 +622,13 @@ namespace TrainerPalBuddyFriend3.Controllers
                         //inserts
                         else if (q.Wksegpk == -1)
                         {
-                            var persistentType = new Wkseg();
-
-                            persistentType.Gateway = q.Gateway;
-                            persistentType.Templar = q.Templar;
-                            persistentType.Duration = q.Duration;
-                            persistentType.Sequence = q.Sequence;
+                            Warpgate persistentType = new Warpgate
+                            {
+                                Gateway = q.Gateway,
+                                Templar = q.Templar,
+                                Duration = q.Duration,
+                                Sequence = q.Sequence
+                            };
 
                             _S.Save(persistentType);
                             _S.Flush();
@@ -655,11 +637,11 @@ namespace TrainerPalBuddyFriend3.Controllers
                     }
 
                     //deletions
-                    foreach (var x in oldListPKs)
+                    foreach (Warpgate x in oldList)
                     {
-                        if (!(newListPKs.Contains(x)))
+                        if (!d.Any(p => p.Wksegpk == x.Wksegpk))
                         {
-                            var persistentType = _S.Load<Wkseg>(x);
+                            Warpgate persistentType = _S.Load<Warpgate>(x);
 
                             _S.Delete(persistentType);
                             _S.Flush();
@@ -678,20 +660,20 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult SelectWorkout2()
+        public ActionResult WarpIn2()
         {
             if (ModelState.IsValid)
             {
-                var d = new Wkseg();
+                Warpgate d = new Warpgate();
 
-                var list = new List<Archon>();
+                List<Archon> list = new List<Archon>();
 
                 // Get data for existing Workouts
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
                     Gateway wk = null;
 
-                    var wkList = _S.QueryOver(() => wk)
+                    IList<Gateway> wkList = _S.QueryOver(() => wk)
                         .SelectList(l => l
                             .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
                             .Select(x => x.Name).WithAlias(() => wk.Name)
@@ -700,7 +682,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         .List<Gateway>();
 
 
-                    foreach (var r in wkList)
+                    foreach (Gateway r in wkList)
                     {
                         list.Add(new Archon
                         {
@@ -722,23 +704,58 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult Form9(Gateway w)
+        public ActionResult WarpIn2Form(Gateway w)
         {
             if (ModelState.IsValid)
             {
-                // Summon Danimoth
-                var d = new Danimoth();
-
-                // Construct additional pylons
-                
-                // 
-
-
-                // Get 
-
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    return View("Index");
+                    // Summon Danimoth
+                    Danimoth d = new Danimoth
+                    {
+                        SelectedWorkout = w
+                    };
+
+                    // Get data for existing Wksegs
+                    Warpgate wks = null;
+
+                    IList<Warpgate> wksList = _S.QueryOver(() => wks)
+                        .SelectList(l => l
+                            .Select(x => x.Wksegpk).WithAlias(() => wks.Wksegpk)
+                            .Select(x => x.Gateway).WithAlias(() => wks.Gateway)
+                            .Select(x => x.Templar).WithAlias(() => wks.Templar)
+                            .Select(x => x.Duration).WithAlias(() => wks.Duration)
+                            .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
+                            )
+                        .Where(x => x.Gateway.Workoutpk == g)
+                        .TransformUsing(Transformers.AliasToBean<Warpgate>())
+                        .List<Warpgate>();
+
+                    // DT Rush
+                    foreach (Warpgate z in wksList)
+                    {
+                        Templar tmpTemplar = null;
+                        Prophecy tmpPropchy = null;
+                        int tmpInt = 0;
+
+                        // Determine type
+                        var segType = _S.QueryOver<Templar>()
+                            .Where(uic => uic.Segmentpk == z.Templar.Segmentpk)
+                            .Select(uic => uic.Conclave)
+                            .SingleOrDefault();
+                        
+                        // Get list of tips for that type
+
+                    }
+
+
+                    // 
+
+
+                    // Get 
+
+                     return View("Aiur", d);
+                    
                 }
             }
             else

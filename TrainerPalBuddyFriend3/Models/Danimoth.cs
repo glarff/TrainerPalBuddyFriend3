@@ -8,8 +8,8 @@ namespace TrainerPalBuddyFriend3
 {
     public class Raszagal
     {
-        public Wkseg rWkseg;
-        public Tips rTip;
+        public Warpgate rWkseg;
+        public Prophecy rTip;
     }
 
     public class Danimoth
@@ -17,6 +17,5 @@ namespace TrainerPalBuddyFriend3
         public Danimoth() { }
         public virtual Gateway SelectedWorkout { get; set; }
         public List<Raszagal> Dts { get; set; }
-        public virtual SelectList DropDownList1 { get; set; }
     }
 }

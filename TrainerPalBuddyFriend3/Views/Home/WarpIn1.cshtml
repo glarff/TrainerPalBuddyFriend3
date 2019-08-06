@@ -1,6 +1,6 @@
-﻿@model Wkseg
+﻿@model Warpgate
 
-@using (Ajax.BeginForm("Form7", "Home", new AjaxOptions
+@using (Ajax.BeginForm("WarpIn1Form", "Home", new AjaxOptions
 {
     HttpMethod = "POST",
     UpdateTargetId = "id1",
@@ -12,7 +12,7 @@
     <h2>Select Workout</h2>
     <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
         <tr>
-            <td>@Html.DropDownListFor(m => m.Workouts.Workoutpk, Model.DDLWorkouts)</td>
+            <td>@Html.DropDownListFor(m => m.Gateway.Workoutpk, Model.DDLWorkouts)</td>
             <td><input id="submit1" type="submit" value="Select" /></td>
         </tr>
     </table>
