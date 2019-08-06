@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <hibernate-mapping assembly="tpbf3" namespace="TrainerPalBuddyFriend3" xmlns="urn:nhibernate-mapping-2.2">
-  <class name="Segments" table="segments" lazy="true" >
-    <id name="Segmentpk" column="SegmentPK" />
+  <class name="Prophecy" table="tips" lazy="true" >
+    <id name="Tippk" column="TipPK" />
     <many-to-one name="Conclave">
       <column name="TypeFK" sql-type="int(11)" not-null="true" />
     </many-to-one>
-    <property name="Segmentid">
-      <column name="SegmentID" sql-type="varchar(45)" not-null="true" />
+    <property name="Tipid">
+      <column name="TipID" sql-type="varchar(45)" not-null="true" />
     </property>
-    <property name="Name">
-      <column name="Name" sql-type="varchar(255)" not-null="false" />
-    </property>
-    <property name="Intensity">
-      <column name="Intensity" sql-type="int(11)" not-null="true" />
+    <property name="Text">
+      <column name="Text" sql-type="varchar(1000)" not-null="false" />
     </property>
     <property name="Customflg">
       <column name="CustomFlg" sql-type="int(11)" not-null="true" />

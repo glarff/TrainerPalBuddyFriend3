@@ -1,4 +1,4 @@
-﻿@model  List<Tips>
+﻿@model  List<Prophecy>
 
 @using (Ajax.BeginForm("Form5", "Home", new AjaxOptions
 {
@@ -11,7 +11,7 @@
 {
     <h2>Tips</h2>
     <button type="button" class="addbtn" title="Remove row">Add</button>
-    <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Conclave">
+    <table id="myTbl">
         <tr>
             <th style="display:none">PK</th>
             <th>ID</th>
@@ -28,7 +28,7 @@
                 <td class="pk" style="display:none">@Html.TextBoxFor(m => m[i].Tippk)</td>
                 <td>@Html.TextBoxFor(m => m[i].Tipid)</td>
                 <td>@Html.TextAreaFor(m => m[i].Text)</td>
-                <td>@Html.DropDownListFor(m => m[i].Conclave.Typepk, Model[i].DropDownList)</td>
+                <td>@Html.DropDownListFor(m => m[i].Conclave.Typepk, Model[i].DDLTypes)</td>
                 <td>@Html.CheckBoxFor(m => m[i].Customflg)</td>
                 <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
                 <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
@@ -40,9 +40,9 @@
         {
             // ugly solution until I can find something better that works
             // add invisible rows to handle additions
-            var newTip = new Tips();
+            var newTip = new Prophecy();
 
-            newTip.DropDownList = Model[0].DropDownList;
+            newTip.DDLTypes = Model[0].DDLTypes;
 
             Model.Add(newTip);
 
@@ -50,7 +50,7 @@
                 <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Tippk)</td>
                 <td>@Html.TextBoxFor(m => m[i].Tipid)</td>
                 <td>@Html.TextAreaFor(m => m[i].Text)</td>
-                <td>@Html.DropDownListFor(m => m[i].Conclave.Typepk, Model[i].DropDownList)</td>
+                <td>@Html.DropDownListFor(m => m[i].Conclave.Typepk, Model[i].DDLTypes)</td>
                 <td>@Html.CheckBoxFor(m => m[i].Customflg)</td>
                 <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
                 <td><button type="button" class="deletebtn" title="Remove row">X</button></td>

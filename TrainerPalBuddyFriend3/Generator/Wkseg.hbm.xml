@@ -5,7 +5,7 @@
     <many-to-one name="Gateway">
       <column name="WorkoutFK" sql-type="int(11)" not-null="true" />
     </many-to-one>
-    <many-to-one name="Segments">
+    <many-to-one name="Templar">
       <column name="SegmentFK" sql-type="int(11)" not-null="true" />
     </many-to-one>
     <property name="Duration">

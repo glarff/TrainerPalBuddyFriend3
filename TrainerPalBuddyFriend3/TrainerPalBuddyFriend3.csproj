@@ -159,8 +159,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Danimoth.cs" />
-    <Compile Include="Models\Segments.cs" />
-    <Compile Include="Models\Tips.cs" />
+    <Compile Include="Models\Templar.cs" />
+    <Compile Include="Models\Prophecy.cs" />
     <Compile Include="Models\Conclave.cs" />
     <Compile Include="Models\Wkseg.cs" />
     <Compile Include="Models\Gateway.cs" />
@@ -254,8 +254,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <EmbeddedResource Include="Generator\Segments.hbm.xml" />
-    <EmbeddedResource Include="Generator\Tips.hbm.xml" />
+    <EmbeddedResource Include="Generator\Templar.hbm.xml" />
+    <EmbeddedResource Include="Generator\Prophecy.hbm.xml" />
     <EmbeddedResource Include="Generator\Types.hbm.xml" />
     <EmbeddedResource Include="Generator\Wkseg.hbm.xml" />
     <EmbeddedResource Include="Generator\Gateway.hbm.xml" />
@@ -306,8 +306,8 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Segments.cshtml" />
-    <Content Include="Views\Home\Tips.cshtml" />
+    <Content Include="Views\Home\Templar.cshtml" />
+    <Content Include="Views\Home\Prophecy.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

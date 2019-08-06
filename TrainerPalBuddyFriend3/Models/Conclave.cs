@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-
 namespace TrainerPalBuddyFriend3 {
     
     public class Conclave {
@@ -12,6 +11,5 @@ namespace TrainerPalBuddyFriend3 {
         public virtual string Name { get; set; }
         public virtual bool Customflg { get; set; }
     }
-
 }
 

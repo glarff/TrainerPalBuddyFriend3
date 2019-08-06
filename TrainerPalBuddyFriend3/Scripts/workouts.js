@@ -374,20 +374,25 @@ function getWorkout(wkid) {
 
     // =============================== Tues ================================ //
 
-    var PRE1100 = newSegment("Pre/Post Meals", 5 * 60 * 1000, 1, getTipByType("Productivity"));
-    var PRE1101 = newSegment("Gear Up", 5 * 60 * 1000, 1, getTipByType("Productivity"));
-    var PRE1102 = newSegment("Clean Areas", 5 * 60 * 1000, 1, getTipByType("Productivity"));
-    var PRE1103 = newSegment("Dynamic Stretching", 5 * 60 * 1000, 3, getTipByType("Productivity"));
-    var PRE1104 = newSegment("Lifts", 40 * 60 * 1000, 4, getTipByType("Productivity"));
-    var PRE1105 = newSegment("Cool Down", 300000, 1, getTipByType("Productivity"));
+    var PRE1101 = newSegment("Threshold", 1 * 60 * 1000, 4, getTipByType("Biking"));
+    var PRE1101b = newSegment("Recovery", 1 * 60 * 1000, 1, getTipByType("Biking"));
+    var PRE1102 = newSegment("Threshold", 2 * 60 * 1000, 4, getTipByType("Biking"));
+    var PRE1102b = newSegment("Recovery", 2 * 60 * 1000, 1, getTipByType("Biking"));
+    var PRE1103 = newSegment("Threshold", 3 * 60 * 1000, 4, getTipByType("Biking"));
+    var PRE1103b = newSegment("Recovery", 3 * 60 * 1000, 1, getTipByType("Biking"));
+    var PRE1104 = newSegment("Threshold", 4 * 60 * 1000, 4, getTipByType("Biking"));
+    var PRE1104b = newSegment("Recovery", 4 * 60 * 1000, 1, getTipByType("Biking"));
+    var PRE1105 = newSegment("Threshold", 5 * 60 * 1000, 4, getTipByType("Biking"));
+    var PRE1106 = newSegment("Cool Down", 10 * 60 * 1000, 1, getTipByType("Productivity"));
 
 
-    var qw2 = newWorkout("Wednesday Workout", "Description", "tips",
-        [PRE1100, PRE1101, PRE1102, PRE1103, PRE1104, PRE1105]);
+    var qw2 = newWorkout("Pyramid Intervals 1", "Description", "tips",
+       [PRE1105, PRE1104b, PRE1104, PRE1103b, PRE1103,
+           PRE1102b, PRE1102, PRE1101b, PRE1101, PRE1106]);
 
     // ====================================================================== //
 
 
-    return w3;
+    return qw2;
 
 }

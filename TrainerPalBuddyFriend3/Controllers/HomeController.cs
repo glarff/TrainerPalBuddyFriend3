@@ -213,97 +213,79 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult Segments()
+        public ActionResult Templar()
         {
-            var list = new List<Segments>();
-
             // Get data for existing Workouts
             using (ISession _S = MvcApplication.SF.GetCurrentSession())
             {
-                Segments sg = null;
-
-                var sgList = _S.QueryOver(() => sg)
+                // CTRL + Select Templar
+                Templar tmp = null;
+                
+                var tmpList = _S.QueryOver(() => tmp)
                     .SelectList(l => l
-                        .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
-                        .Select(x => x.Segmentid).WithAlias(() => sg.Segmentid)
-                        .Select(x => x.Name).WithAlias(() => sg.Name)
-                        .Select(x => x.Conclave).WithAlias(() => sg.Conclave)
-                        .Select(x => x.Intensity).WithAlias(() => sg.Intensity)
-                        .Select(x => x.Customflg).WithAlias(() => sg.Customflg)
+                        .Select(x => x.Segmentpk).WithAlias(() => tmp.Segmentpk)
+                        .Select(x => x.Segmentid).WithAlias(() => tmp.Segmentid)
+                        .Select(x => x.Name).WithAlias(() => tmp.Name)
+                        .Select(x => x.Conclave).WithAlias(() => tmp.Conclave)
+                        .Select(x => x.Intensity).WithAlias(() => tmp.Intensity)
+                        .Select(x => x.Customflg).WithAlias(() => tmp.Customflg)
                     )
-                    .TransformUsing(Transformers.AliasToBean<Segments>())
-                    .List<Segments>();
+                    .TransformUsing(Transformers.AliasToBean<Templar>())
+                    .List<Templar>();
 
-                foreach (var r in sgList)
-                {
-                    list.Add(r);
-                }
+                // Summon the Conclave
+                Conclave clv = null;
 
-                var list2 = new List<MyListTable>();
-
-                Conclave typ = null;
-
-                var typeList = _S.QueryOver<Conclave>(() => typ)
+                var typeList = _S.QueryOver(() => clv)
                     .SelectList(l => l
-                        .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
-                        .Select(x => x.Name).WithAlias(() => typ.Name)
+                        .Select(x => x.Typepk).WithAlias(() => clv.Typepk)
+                        .Select(x => x.Name).WithAlias(() => clv.Name)
                     )
                     .TransformUsing(Transformers.AliasToBean<Conclave>())
                     .List<Conclave>();
 
+                // Morph Archons
+                var archList = new List<Archon>();
+
                 foreach (var r in typeList)
                 {
-                    list2.Add(new MyListTable
+                    archList.Add(new Archon
                     {
                         Key = r.Typepk,
                         Display = r.Name.ToString()
                     });
                 }
 
-                foreach (var s in list)
+                foreach (var s in tmpList)
                 {
-                    s.DropDownList = new SelectList(list2, "Key", "Display", s.Conclave.Typepk);
+                    s.DDLTypes = new SelectList(archList, "Key", "Display", s.Conclave.Typepk);
                 }
-            }
 
-            return View(list);
+                return View(tmpList);
+            }
         }
 
-        public ActionResult Form4(List<Segments> newList)
+        public ActionResult TemplarForm(List<Templar> newList)
         {
             if (ModelState.IsValid)
             {
-                // Get existing Conclave
-                var newListPKs = new List<int>();
-                var oldListPKs = new List<int>();
-
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Segments sg = null;
+                    Templar tmp = null;
 
-                    var oldList = _S.QueryOver<Segments>(() => sg)
+                    var oldList = _S.QueryOver(() => tmp)
                         .SelectList(l => l
-                            .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
+                            .Select(x => x.Segmentpk).WithAlias(() => tmp.Segmentpk)
                         )
-                        .TransformUsing(Transformers.AliasToBean<Segments>())
-                        .List<Segments>();
-
-                    foreach (var r in oldList)
-                    {
-                        oldListPKs.Add(r.Segmentpk);
-                    }
-
-                    foreach (var r in newList)
-                    {
-                        newListPKs.Add(r.Segmentpk);
-                    }
+                        .TransformUsing(Transformers.AliasToBean<Templar>())
+                        .List<Templar>();
 
                     foreach (var q in newList)
                     {
                         //updates
-                        if (oldListPKs.Contains(q.Segmentpk))
+                        if (oldList.Any(p => p.Segmentpk == q.Segmentpk))
                         {
-                            var persistentType = _S.Load<Segments>(q.Segmentpk);
+                            Templar persistentType = _S.Load<Templar>(q.Segmentpk);
 
                             persistentType.Segmentid = q.Segmentid;
                             persistentType.Name = q.Name;
@@ -319,13 +301,14 @@ namespace TrainerPalBuddyFriend3.Controllers
                         //inserts
                         else if (q.Segmentpk == -1)
                         {
-                            var persistentType = new Segments();
-
-                            persistentType.Segmentid = q.Segmentid;
-                            persistentType.Name = q.Name;
-                            persistentType.Conclave = q.Conclave;
-                            persistentType.Intensity = q.Intensity;
-                            persistentType.Customflg = q.Customflg;
+                            Templar persistentType = new Templar
+                            {
+                                Segmentid = q.Segmentid,
+                                Name = q.Name,
+                                Conclave = q.Conclave,
+                                Intensity = q.Intensity,
+                                Customflg = q.Customflg
+                            };
 
                             _S.Save(persistentType);
                             _S.Flush();
@@ -334,11 +317,11 @@ namespace TrainerPalBuddyFriend3.Controllers
                     }
 
                     //deletions
-                    foreach (var x in oldListPKs)
+                    foreach (var x in oldList)
                     {
-                        if (!(newListPKs.Contains(x)))
+                        if (!newList.Any(p => p.Segmentpk == x.Segmentpk))
                         {
-                            var persistentType = _S.Load<Segments>(x);
+                            var persistentType = _S.Load<Templar>(x.Segmentpk);
 
                             _S.Delete(persistentType);
                             _S.Flush();
@@ -357,97 +340,76 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
     
-
-        public ActionResult Tips()
+        public ActionResult Prophecy()
         {
-            var list = new List<Tips>();
-
             // Get data for existing Workouts
             using (ISession _S = MvcApplication.SF.GetCurrentSession())
             {
-                Tips tp = null;
+                Prophecy phy = null;
 
-                var tpList = _S.QueryOver<Tips>(() => tp)
+                IList<Prophecy> phyList = _S.QueryOver(() => phy)
                     .SelectList(l => l
-                        .Select(x => x.Tippk).WithAlias(() => tp.Tippk)
-                        .Select(x => x.Tipid).WithAlias(() => tp.Tipid)
-                        .Select(x => x.Text).WithAlias(() => tp.Text)
-                        .Select(x => x.Conclave).WithAlias(() => tp.Conclave)
-                        .Select(x => x.Customflg).WithAlias(() => tp.Customflg)
+                        .Select(x => x.Tippk).WithAlias(() => phy.Tippk)
+                        .Select(x => x.Tipid).WithAlias(() => phy.Tipid)
+                        .Select(x => x.Text).WithAlias(() => phy.Text)
+                        .Select(x => x.Conclave).WithAlias(() => phy.Conclave)
+                        .Select(x => x.Customflg).WithAlias(() => phy.Customflg)
                     )
-                    .TransformUsing(Transformers.AliasToBean<Tips>())
-                    .List<Tips>();
+                    .TransformUsing(Transformers.AliasToBean<Prophecy>())
+                    .List<Prophecy>();
 
-                foreach (var r in tpList)
-                {
-                    list.Add(r);
-                }
+                List<Archon> archList = new List<Archon>();
 
-                var list2 = new List<MyListTable>();
+                Conclave clv = null;
 
-                Conclave typ = null;
-
-                var typeList = _S.QueryOver<Conclave>(() => typ)
+                IList<Conclave> typeList = _S.QueryOver(() => clv)
                     .SelectList(l => l
-                        .Select(x => x.Typepk).WithAlias(() => typ.Typepk)
-                        .Select(x => x.Name).WithAlias(() => typ.Name)
+                        .Select(x => x.Typepk).WithAlias(() => clv.Typepk)
+                        .Select(x => x.Name).WithAlias(() => clv.Name)
                     )
                     .TransformUsing(Transformers.AliasToBean<Conclave>())
                     .List<Conclave>();
 
-                foreach (var r in typeList)
+                foreach (Conclave r in typeList)
                 {
-                    list2.Add(new MyListTable
+                    archList.Add(new Archon
                     {
                         Key = r.Typepk,
                         Display = r.Name.ToString()
                     });
                 }
 
-                foreach (var s in list)
+                foreach (Prophecy s in phyList)
                 {
-                    s.DropDownList = new SelectList(list2, "Key", "Display", s.Conclave.Typepk);
+                    s.DDLTypes = new SelectList(archList, "Key", "Display", s.Conclave.Typepk);
                 }
-            }
 
-            return View(list);
+                return View(phyList);
+            }
         }
 
-        public ActionResult Form5(List<Tips> newList)
+        public ActionResult ProphecyForm(List<Prophecy> newList)
         {
             if (ModelState.IsValid)
             {
                 // Get existing Conclave
-                var newListPKs = new List<int>();
-                var oldListPKs = new List<int>();
-
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    Tips tp = null;
+                    Prophecy phy = null;
 
-                    var oldList = _S.QueryOver<Tips>(() => tp)
+                    var oldList = _S.QueryOver(() => phy)
                         .SelectList(l => l
-                            .Select(x => x.Tippk).WithAlias(() => tp.Tippk)
+                            .Select(x => x.Tippk).WithAlias(() => phy.Tippk)
                         )
-                        .TransformUsing(Transformers.AliasToBean<Tips>())
-                        .List<Tips>();
-
-                    foreach (var r in oldList)
-                    {
-                        oldListPKs.Add(r.Tippk);
-                    }
-
-                    foreach (var r in newList)
-                    {
-                        newListPKs.Add(r.Tippk);
-                    }
+                        .TransformUsing(Transformers.AliasToBean<Prophecy>())
+                        .List<Prophecy>();
 
                     foreach (var q in newList)
                     {
                         //updates
-                        if (oldListPKs.Contains(q.Tippk))
+                        if (oldList.Any(p => p.Tippk == q.Tippk))
                         {
-                            var persistentType = _S.Load<Tips>(q.Tippk);
+                            var persistentType = _S.Load<Prophecy>(q.Tippk);
 
                             persistentType.Tipid = q.Tipid;
                             persistentType.Text = q.Text;
@@ -462,7 +424,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         //inserts
                         else if (q.Tippk == -1)
                         {
-                            var persistentType = new Tips();
+                            var persistentType = new Prophecy();
 
                             persistentType.Tipid = q.Tipid;
                             persistentType.Text = q.Text;
@@ -476,11 +438,11 @@ namespace TrainerPalBuddyFriend3.Controllers
                     }
 
                     //deletions
-                    foreach (var x in oldListPKs)
+                    foreach (var x in oldList)
                     {
-                        if (!(newListPKs.Contains(x)))
+                        if (!newList.Any(p => p.Tippk == x.Tippk))
                         {
-                            var persistentType = _S.Load<Tips>(x);
+                            var persistentType = _S.Load<Prophecy>(x.Tippk);
 
                             _S.Delete(persistentType);
                             _S.Flush();
@@ -505,7 +467,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             {
                 var d = new Wkseg();
 
-                var list = new List<MyListTable>();
+                var list = new List<Archon>();
 
                 // Get data for existing Workouts
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
@@ -523,7 +485,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                     foreach (var r in wkList)
                     {
-                        list.Add(new MyListTable
+                        list.Add(new Archon
                         {
                             Key = r.Workoutpk,
                             Display = r.Name.ToString()
@@ -552,21 +514,21 @@ namespace TrainerPalBuddyFriend3.Controllers
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
                     // Get segment list
-                    Segments sg = null;
+                    Templar sg = null;
 
                     var sgList = _S.QueryOver(() => sg)
                     .SelectList(l => l
                         .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
                         .Select(x => x.Name).WithAlias(() => sg.Name)
                     )
-                    .TransformUsing(Transformers.AliasToBean<Segments>())
-                    .List<Segments>();
+                    .TransformUsing(Transformers.AliasToBean<Templar>())
+                    .List<Templar>();
 
-                    var list2 = new List<MyListTable>();
+                    var list2 = new List<Archon>();
 
                     foreach (var r in sgList)
                     {
-                        list2.Add(new MyListTable
+                        list2.Add(new Archon
                         {
                             Key = r.Segmentpk,
                             Display = r.Name.ToString()
@@ -580,7 +542,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         .SelectList(l => l
                             .Select(x => x.Wksegpk).WithAlias(() => wks.Wksegpk)
                             .Select(x => x.Gateway).WithAlias(() => wks.Gateway)
-                            .Select(x => x.Segments).WithAlias(() => wks.Segments)
+                            .Select(x => x.Templar).WithAlias(() => wks.Templar)
                             .Select(x => x.Duration).WithAlias(() => wks.Duration)
                             .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
                             )
@@ -596,10 +558,10 @@ namespace TrainerPalBuddyFriend3.Controllers
                         {
                             Wksegpk = z.Wksegpk,
                             Gateway = z.Gateway,
-                            Segments = z.Segments,
+                            Templar = z.Templar,
                             Duration = z.Duration,
                             Sequence = z.Sequence,
-                            DDLSegments = new SelectList(list2, "Key", "Display", z.Segments.Segmentpk)
+                            DDLSegments = new SelectList(list2, "Key", "Display", z.Templar.Segmentpk)
                         };
 
                         h.Add(rWksg);
@@ -630,7 +592,6 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
       
-
         public ActionResult Form8(List<Wkseg> d)
         {
             if (ModelState.IsValid)
@@ -668,7 +629,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                             var persistentType = _S.Load<Wkseg>(q.Wksegpk);
 
                             persistentType.Gateway = q.Gateway;
-                            persistentType.Segments = q.Segments;
+                            persistentType.Templar = q.Templar;
                             persistentType.Duration = q.Duration;
                             persistentType.Sequence = q.Sequence;
 
@@ -683,7 +644,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                             var persistentType = new Wkseg();
 
                             persistentType.Gateway = q.Gateway;
-                            persistentType.Segments = q.Segments;
+                            persistentType.Templar = q.Templar;
                             persistentType.Duration = q.Duration;
                             persistentType.Sequence = q.Sequence;
 
@@ -723,7 +684,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             {
                 var d = new Wkseg();
 
-                var list = new List<MyListTable>();
+                var list = new List<Archon>();
 
                 // Get data for existing Workouts
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
@@ -741,7 +702,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                     foreach (var r in wkList)
                     {
-                        list.Add(new MyListTable
+                        list.Add(new Archon
                         {
                             Key = r.Workoutpk,
                             Display = r.Name.ToString()
