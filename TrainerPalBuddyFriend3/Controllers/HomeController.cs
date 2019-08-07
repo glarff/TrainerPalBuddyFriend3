@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using NHibernate.Linq;
 using System.Linq;
 using NHibernate.Transform;
+using System.Linq.Expressions;
+using NHibernate.Criterion;
 
 namespace TrainerPalBuddyFriend3.Controllers
 {
@@ -18,7 +20,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             return View();
         }
 
-        public ActionResult Demo()
+        public ActionResult Aiur()
         {
 
             return View();
@@ -710,10 +712,15 @@ namespace TrainerPalBuddyFriend3.Controllers
             {
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    // Summon Danimoth
+                    // Get Workout
+                    Gateway gw = _S.Query<Gateway>()
+                        .Where(x => x.Workoutpk == w.Workoutpk)
+                        .SingleOrDefault();
+
                     Danimoth d = new Danimoth
                     {
-                        SelectedWorkout = w
+                        dWorkoutName = gw.Name,
+                        Dts = new List<Raszagal>()
                     };
 
                     // Get data for existing Wksegs
@@ -727,34 +734,43 @@ namespace TrainerPalBuddyFriend3.Controllers
                             .Select(x => x.Duration).WithAlias(() => wks.Duration)
                             .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
                             )
-                        .Where(x => x.Gateway.Workoutpk == g)
+                        .Where(x => x.Gateway.Workoutpk == w.Workoutpk)
                         .TransformUsing(Transformers.AliasToBean<Warpgate>())
                         .List<Warpgate>();
 
                     // DT Rush
                     foreach (Warpgate z in wksList)
                     {
-                        Templar tmpTemplar = null;
-                        Prophecy tmpPropchy = null;
-                        int tmpInt = 0;
-
-                        // Determine type
-                        var segType = _S.QueryOver<Templar>()
-                            .Where(uic => uic.Segmentpk == z.Templar.Segmentpk)
-                            .Select(uic => uic.Conclave)
+                        Templar rSeg = _S.Query<Templar>()
+                            .Where(x => x.Segmentpk == z.Templar.Segmentpk)
                             .SingleOrDefault();
-                        
-                        // Get list of tips for that type
 
+                        Conclave rTyp = _S.Query<Conclave>()
+                             .Where(x => x.Typepk == rSeg.Conclave.Typepk)
+                             .SingleOrDefault();
+
+                        // Get a random tip for that type
+                        ICriteria criteria = _S
+                          .CreateCriteria(typeof(Prophecy))
+                          .Add(Restrictions.Eq("TypeFK", rTyp.Typepk))
+                          .AddOrder(new RandomOrder())
+                          .SetMaxResults(1);
+
+                        Raszagal rz = new Raszagal
+                        {
+                            rSegmentName = rSeg.Name,
+                            rTip = criteria.UniqueResult<Prophecy>(),
+                            rWkseg = new Warpgate
+                            {
+                                Duration = z.Duration,
+                                Sequence = z.Sequence
+                            }
+                        };
+
+                        d.Dts.Add(rz);
                     }
 
-
-                    // 
-
-
-                    // Get 
-
-                     return View("Aiur", d);
+                    return View("Aiur", d);
                     
                 }
             }

@@ -392,7 +392,21 @@ function getWorkout(wkid) {
 
     // ====================================================================== //
 
+    // =============================== Tues ================================ //
 
-    return qw2;
+    var ZL01 = newSegment("PUSH Exercises", 15 * 60 * 1000, 4, getTipByType("Productivity"));
+    var ZL02 = newSegment("PULL Exercises", 15 * 60 * 1000, 4, getTipByType("Productivity"));
+    var ZL03 = newSegment("CORE (front) Exercises", 10 * 60 * 1000, 4, getTipByType("Productivity"));
+    var ZL04 = newSegment("CORE (back) Exercises", 10 * 60 * 1000, 4, getTipByType("Productivity"));
+    var ZL05 = newSegment("Cool Down / Clean Up", 10 * 60 * 1000, 1, getTipByType("Productivity"));
+
+
+    var zealot = newWorkout("Pyramid Intervals 1", "Description", "tips",
+        warmUp2.concat([ZL01, ZL02, ZL03, ZL04, ZL05]));
+
+    // ====================================================================== //
+
+
+    return zealot;
 
 }
