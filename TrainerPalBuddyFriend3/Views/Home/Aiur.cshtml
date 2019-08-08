@@ -10,16 +10,16 @@
 
         <div class="box b">
             <span class="buttonContainer">
-                <button type="button" onclick="execute()">Start</button>
+                <button class ="btnStartTimer" type="button">Start</button>
             </span>
         </div>
         <!---------------------------------------------------------------------->
         <!------------------------ Main Timer Section -------------------------->
 
         <div class="box c">
-            <span class="mainComponentContainer">
+            <div class="mainComponentContainer">
                 <div id="mainTimer" class="bigTimer"></div>
-            </span>
+            </div>
             <span class="mainTimerFooter">Time Remaining in Workout</span>
         </div>
         <!---------------------------------------------------------------------->
@@ -28,13 +28,13 @@
         <div class="box d">
             <span class="segmentTitleLabel">Current Segment: </span>
 
-            <span class="segmentTitleContainer">
+            <div class="segmentTitleContainer">
                 <div id="segmentTitle"></div>
-            </span>
+            </div>
 
-            <span class="mainComponentContainer">
+            <div class="mainComponentContainer">
                 <div id="segmentTimer" class="bigTimer"></div>
-            </span>
+            </div>
 
             <span class="segmentTimerFooter">Time Remaining in Segment</span>
         </div>
@@ -42,9 +42,9 @@
         <!------------------------ Segment Tips Section ------------------------>
 
         <div class="box e">
-            <span class="mainComponentContainer">
+            <div class="mainComponentContainer">
                 <div id="segmentTips" class="segmentTips"></div>
-            </span>
+            </div>
             <span class="segmentTipsFooter">Segment Tips</span>
         </div>
         <!---------------------------------------------------------------------->
@@ -55,33 +55,33 @@
         </div>
 
         <div class="box g">
-            <span class="upcomingSegmentsIntensityContainer">
+            <div class="upcomingSegmentsIntensityContainer">
                 <div id="upcomingSegment1intensity" class="intensityText">*</div>
                 <div id="upcomingSegment2intensity" class="intensityText">*</div>
                 <div id="upcomingSegment3intensity" class="intensityText">*</div>
                 <div id="upcomingSegment4intensity" class="intensityText">*</div>
                 <div id="upcomingSegment5intensity" class="intensityText">*</div>
-            </span>
+            </div>
         </div>
 
         <div class="box h">
-            <span class="upcomingSegmentsTitleContainer">
+            <div class="upcomingSegmentsTitleContainer">
                 <div id="upcomingSegment1title" class="segmentsText"></div>
                 <div id="upcomingSegment2title" class="segmentsText"></div>
                 <div id="upcomingSegment3title" class="segmentsText"></div>
                 <div id="upcomingSegment4title" class="segmentsText"></div>
                 <div id="upcomingSegment5title" class="segmentsText"></div>
-            </span>
+            </div>
         </div>
 
         <div class="box i">
-            <span class="upcomingSegmentsWindowContainer">
+            <div class="upcomingSegmentsWindowContainer">
                 <div id="upcomingSegment1window" class="segmentsText"></div>
                 <div id="upcomingSegment2window" class="segmentsText"></div>
                 <div id="upcomingSegment3window" class="segmentsText"></div>
                 <div id="upcomingSegment4window" class="segmentsText"></div>
                 <div id="upcomingSegment5window" class="segmentsText"></div>
-            </span>
+            </div>
         </div>
         <!---------------------------------------------------------------------->
 
@@ -91,10 +91,16 @@
 
     var w1 = null;
 
+    var segAry = [];
+
 // Convery model to js object
 var model = @Html.Raw(Json.Encode(Model));
 
-var segAry = [];
+    for (var seg of model.Dts) {
+        segAry.push(newSegment(seg.RSegmentName, seg.RWkseg.Duration, seg.RSegmentIntensity, seg.RTip.Text));
+    }
+
+    w1 = newWorkout(model.DWorkoutName, "", "", segAry);
 
 // Calculate total duration of all segments
 totalTime = calculateTotalTime(w1);
@@ -128,85 +134,89 @@ changeText("mainTimer", formatForTimer2(totalTime));
 changeText("segmentTimer", formatForTimer2(w1.segments[0].duration));
 changeBorder(w1.segments[0].intensity);
 
-// Calculate total time and time left after semgment 1
-totalTime = calculateTotalTime(w1);
-timeRemainingAfterCurrentSegment = totalTime - w1.segments[0].duration;
 
-// Set the date/time we're counting down to
-finishTime = new Date().addMilliseconds(totalTime);
-currentSegment = 0;
-elapsedDuration = 0;
+        function execute() {
+            // Calculate total time and time left after semgment 1
+            totalTime = calculateTotalTime(w1);
+            timeRemainingAfterCurrentSegment = totalTime - w1.segments[0].duration;
 
-// Shift down in upcoming segments
-updateUpcomingSegments(w1,totalTime,0);
+            // Set the date/time we're counting down to
+            finishTime = new Date().addMilliseconds(totalTime);
+            currentSegment = 0;
+            elapsedDuration = 0;
 
-// Start loop - iterate every .1 seconds
-x = setInterval(function() {
+            // Shift down in upcoming segments
+            updateUpcomingSegments(w1, totalTime, 0);
 
-// Get todays date and time
-now = new Date().getTime();
+            // Start loop - iterate every .1 seconds
+            x = setInterval(function () {
 
-// Find the distance between now and the count down date
-distance = finishTime - now;
-distance2 = distance - timeRemainingAfterCurrentSegment;
+                // Get todays date and time
+                now = new Date().getTime();
 
-mainTimerDivs = getTimeDivisions(distance);
-segTimerDivs = getTimeDivisions2(distance2);
-        
-mainTimerHours = mainTimerDivs.hrs;
-mainTimerMinutes = mainTimerDivs.mins;
-mainTimerSeconds = mainTimerDivs.secs;
+                // Find the distance between now and the count down date
+                distance = finishTime - now;
+                distance2 = distance - timeRemainingAfterCurrentSegment;
 
-segTimerMinutes = segTimerDivs.mins;
-segTimerSeconds = segTimerDivs.secs;
+                mainTimerDivs = getTimeDivisions(distance);
+                segTimerDivs = getTimeDivisions2(distance2);
 
-// Display the main timer
-changeText("mainTimer", formatForTimer(mainTimerHours,mainTimerMinutes,
-mainTimerSeconds));
+                mainTimerHours = mainTimerDivs.hrs;
+                mainTimerMinutes = mainTimerDivs.mins;
+                mainTimerSeconds = mainTimerDivs.secs;
 
-// Display segment timer - use00 if negative
-if (segTimerSeconds < 0) {
-changeText("segmentTimer", formatForTimer(0,0,0));
-}
+                segTimerMinutes = segTimerDivs.mins;
+                segTimerSeconds = segTimerDivs.secs;
 
-else {
-changeText("segmentTimer", formatForTimer(0,segTimerMinutes,
-segTimerSeconds));
-}
+                // Display the main timer
+                changeText("mainTimer", formatForTimer(mainTimerHours, mainTimerMinutes,
+                    mainTimerSeconds));
 
-// Set component backgrounds based on intensity
-if (currentSegment < w1.segments.length) {
-changeBorder(w1.segments[currentSegment].intensity);
-}
+                // Display segment timer - use00 if negative
+                if (segTimerSeconds < 0) {
+                    changeText("segmentTimer", formatForTimer(0, 0, 0));
+                }
 
-// When reaching end of the timer
-if (distance < 0) {
-clearInterval(x);
-changeText("mainTimer", "Done!");
-changeText("segmentTimer", "Done!");
-}
+                else {
+                    changeText("segmentTimer", formatForTimer(0, segTimerMinutes,
+                        segTimerSeconds));
+                }
 
-// When rearching the end of a segment
-else if (distance2 < 0) {
-            
-currentSegment++;
+                // Set component backgrounds based on intensity
+                if (currentSegment < w1.segments.length) {
+                    changeBorder(w1.segments[currentSegment].intensity);
+                }
 
-// Recalculate time remaining after this segment
-timeRemainingAfterCurrentSegment = totalTime;
+                // When reaching end of the timer
+                if (distance < 0) {
+                    clearInterval(x);
+                    changeText("mainTimer", "Done!");
+                    changeText("segmentTimer", "Done!");
+                }
 
-for (i = 0; i < currentSegment + 1; i++) {
-timeRemainingAfterCurrentSegment -= w1.segments[i].duration;
-}
+                // When rearching the end of a segment
+                else if (distance2 < 0) {
 
-// Update the labels on the screen
-changeText("segmentTitle", w1.segments[currentSegment].title);
-changeText("segmentTips", w1.segments[currentSegment].tips);
+                    currentSegment++;
 
-// Update the next segments list
-updateUpcomingSegments(w1,totalTime,currentSegment);
-}
+                    // Recalculate time remaining after this segment
+                    timeRemainingAfterCurrentSegment = totalTime;
 
-}, 100);
+                    for (i = 0; i < currentSegment + 1; i++) {
+                        timeRemainingAfterCurrentSegment -= w1.segments[i].duration;
+                    }
+
+                    // Update the labels on the screen
+                    changeText("segmentTitle", w1.segments[currentSegment].title);
+                    changeText("segmentTips", w1.segments[currentSegment].tips);
+
+                    // Update the next segments list
+                    updateUpcomingSegments(w1, totalTime, currentSegment);
+                }
+
+            }, 100);
+
+        }
 
 /* ============================= FIN ============================= */
 

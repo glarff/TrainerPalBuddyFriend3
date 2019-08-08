@@ -42,9 +42,10 @@ table {
 }
 
 button {
-    background-color: #0F1A40;
+    background-color: #4B0082;
     border-radius: 8px;
     color: #F8F8FF;
+    padding: 4px 4px;
 }
 
 input[type="submit"] {
@@ -124,7 +125,7 @@ body {
 
 .wrapper {
     display: grid;
-    grid-template-columns: 600px 300px 60px 450px 250px;
+    grid-template-columns: 600px 125px 60px 350px 150px;
     background-color: #333333;
     color: #444;
     grid-auto-rows: minmax(50px, auto);
@@ -183,15 +184,15 @@ body {
 }
 
 .wkTitle {
-    font-size: 42px;
-    padding-left: 50px;
-    width: 450px;
+    font-size: 32px;
+    padding-left: 25px;
+    width: 550px;
     display: block;
     float: left;
 }
 
 .buttonContainer {
-    width: 150px;
+    width: 50px;
     display: block;
     float: left;
 }
@@ -214,7 +215,7 @@ body {
     padding-bottom: 50px;
     display: block;
     height: auto;
-    width: 750px;
+    width: 600px;
     float: left;
     clear: left;
     font-size: 42px;
@@ -229,7 +230,7 @@ body {
     padding-top: 50px;
     padding-bottom: 50px;
     display: block;
-    width: 750px;
+    width: 600px;
     float: left;
     clear: left;
     font-size: 64px;
@@ -243,7 +244,7 @@ body {
 .mainTimerFooter {
     padding-top: 10px;
     padding-bottom: 30px;
-    width: 725px;
+    width: 575px;
     float: left;
     clear: left;
     font-size: 18px;
@@ -262,7 +263,7 @@ body {
     padding-top: 50px;
     padding-bottom: 50px;
     display: block;
-    width: 750px;
+    width: 600px;
     float: left;
     clear: left;
     font-size: 64px;
@@ -276,7 +277,7 @@ body {
 .segmentTimerFooter {
     padding-top: 10px;
     padding-bottom: 50px;
-    width: 725px;
+    width: 575px;
     float: left;
     clear: left;
     font-size: 18px;
@@ -291,7 +292,7 @@ body {
     margin-left: 10px;
     margin-right: 10px;
     display: block;
-    width: 650px;
+    width: 600px;
     font-size: 32px;
     text-align: center;
     line-height: 48px;
@@ -299,7 +300,7 @@ body {
 
 .segmentTipsFooter {
     padding-top: 10px;
-    width: 725px;
+    width: 575px;
     float: left;
     clear: left;
     font-size: 18px;
@@ -336,7 +337,7 @@ body {
     display: block;
     width: 600px;
     float: left;
-    font-size: 48px;
+    font-size: 32px;
 }
 
 .upcomingSegmentsIntensityContainer {
@@ -349,7 +350,7 @@ body {
     background-color: black;
     display: block;
     float: left;
-    font-size: 32px;
+    font-size: 28px;
     width: 500px;
 }
 
@@ -358,7 +359,7 @@ body {
     background-color: black;
     display: block;
     float: left;
-    font-size: 32px;
+    font-size: 28px;
     width: 250px;
 }
 

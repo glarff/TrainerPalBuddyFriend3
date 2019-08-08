@@ -719,7 +719,7 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                     Danimoth d = new Danimoth
                     {
-                        dWorkoutName = gw.Name,
+                        DWorkoutName = gw.Name,
                         Dts = new List<Raszagal>()
                     };
 
@@ -732,7 +732,6 @@ namespace TrainerPalBuddyFriend3.Controllers
                             .Select(x => x.Gateway).WithAlias(() => wks.Gateway)
                             .Select(x => x.Templar).WithAlias(() => wks.Templar)
                             .Select(x => x.Duration).WithAlias(() => wks.Duration)
-                            .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
                             )
                         .Where(x => x.Gateway.Workoutpk == w.Gateway.Workoutpk)
                         .TransformUsing(Transformers.AliasToBean<Warpgate>())
@@ -760,9 +759,10 @@ namespace TrainerPalBuddyFriend3.Controllers
 
                         Raszagal rz = new Raszagal
                         {
-                            rSegmentName = rSeg.Name,
-                            rTip = clv2,
-                            rWkseg = new Warpgate
+                            RSegmentName = rSeg.Name,
+                            RSegmentIntensity = rSeg.Intensity,
+                            RTip = clv2,
+                            RWkseg = new Warpgate
                             {
                                 Duration = z.Duration,
                                 Sequence = z.Sequence

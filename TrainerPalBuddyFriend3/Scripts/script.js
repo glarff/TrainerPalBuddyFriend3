@@ -39,6 +39,16 @@ $(document).on('click', 'button.editbtn', function () {
     }
 });
 
+$(document).on('click', 'button.btnStartTimer', function () {
+    if ($(this).html() == 'Start') {
+        execute();
+        $(this).html('Pause');
+    }
+    else {
+        $(this).html('Resume');
+    }
+});
+
 $(document).on('click', 'button.addbtn', function () {
     $('.hiddenRow:first').addClass('visibleRow');
     $('.hiddenRow:first').children(".pk").children().val(-1);

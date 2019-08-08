@@ -11,15 +11,16 @@ namespace TrainerPalBuddyFriend3
 {
     public class Raszagal
     {
-        public virtual Warpgate rWkseg { get; set; }
-        public virtual Prophecy rTip { get; set; }
-        public virtual string rSegmentName { get; set; }
+        public virtual Warpgate RWkseg { get; set; }
+        public virtual Prophecy RTip { get; set; }
+        public virtual string RSegmentName { get; set; }
+        public virtual int RSegmentIntensity { get; set; }
     }
 
     public class Danimoth
     {
         public Danimoth() { }
-        public virtual string dWorkoutName { get; set; }
+        public virtual string DWorkoutName { get; set; }
         public List<Raszagal> Dts { get; set; }
     }
 
