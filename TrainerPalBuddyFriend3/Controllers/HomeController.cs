@@ -706,7 +706,7 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult WarpIn2Form(Gateway w)
+        public ActionResult WarpIn2Form(Warpgate w)
         {
             if (ModelState.IsValid)
             {
@@ -714,7 +714,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                 {
                     // Get Workout
                     Gateway gw = _S.Query<Gateway>()
-                        .Where(x => x.Workoutpk == w.Workoutpk)
+                        .Where(x => x.Workoutpk == w.Gateway.Workoutpk)
                         .SingleOrDefault();
 
                     Danimoth d = new Danimoth
@@ -734,7 +734,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                             .Select(x => x.Duration).WithAlias(() => wks.Duration)
                             .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
                             )
-                        .Where(x => x.Gateway.Workoutpk == w.Workoutpk)
+                        .Where(x => x.Gateway.Workoutpk == w.Gateway.Workoutpk)
                         .TransformUsing(Transformers.AliasToBean<Warpgate>())
                         .List<Warpgate>();
 
@@ -752,14 +752,16 @@ namespace TrainerPalBuddyFriend3.Controllers
                         // Get a random tip for that type
                         ICriteria criteria = _S
                           .CreateCriteria(typeof(Prophecy))
-                          .Add(Restrictions.Eq("TypeFK", rTyp.Typepk))
+                          .Add(Restrictions.Eq("Conclave.Typepk", rTyp.Typepk))
                           .AddOrder(new RandomOrder())
                           .SetMaxResults(1);
+
+                        Prophecy clv2 = criteria.UniqueResult<Prophecy>();
 
                         Raszagal rz = new Raszagal
                         {
                             rSegmentName = rSeg.Name,
-                            rTip = criteria.UniqueResult<Prophecy>(),
+                            rTip = clv2,
                             rWkseg = new Warpgate
                             {
                                 Duration = z.Duration,
