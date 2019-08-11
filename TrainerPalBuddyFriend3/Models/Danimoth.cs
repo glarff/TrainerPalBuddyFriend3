@@ -21,6 +21,7 @@ namespace TrainerPalBuddyFriend3
     {
         public Danimoth() { }
         public virtual string DWorkoutName { get; set; }
+
         public List<Raszagal> Dts { get; set; }
     }
 

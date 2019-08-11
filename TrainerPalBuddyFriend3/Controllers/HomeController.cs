@@ -634,7 +634,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                     {
                         if (!d.Any(p => p.Wksegpk == x.Wksegpk))
                         {
-                            Warpgate persistentType = _S.Load<Warpgate>(x);
+                            Warpgate persistentType = _S.Load<Warpgate>(x.Wksegpk);
 
                             _S.Delete(persistentType);
                             _S.Flush();
@@ -657,15 +657,15 @@ namespace TrainerPalBuddyFriend3.Controllers
         {
             if (ModelState.IsValid)
             {
-                Warpgate d = new Warpgate();
-
+                // [0] Build Probes
+                List<Warpgate> d = new List<Warpgate>();
                 List<Archon> list = new List<Archon>();
 
-                // Get data for existing Workouts
+                // [1] Warp in Pylons
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
+                    // [1.0] Get Workout names
                     Gateway wk = null;
-
                     IList<Gateway> wkList = _S.QueryOver(() => wk)
                         .SelectList(l => l
                             .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
@@ -674,7 +674,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         .TransformUsing(Transformers.AliasToBean<Gateway>())
                         .List<Gateway>();
 
-
+                    // [1.1] Assimilate Archons
                     foreach (Gateway r in wkList)
                     {
                         list.Add(new Archon
@@ -684,11 +684,19 @@ namespace TrainerPalBuddyFriend3.Controllers
                         });
                     }
 
-                    d.DDLWorkouts = new SelectList(list, "Key", "Display");
+                    // [1.2] Transit names to Aiur
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Warpgate wg = new Warpgate
+                        {
+                            DDLWorkouts = new SelectList(list, "Key", "Display")
+                        };
 
-                }
+                        d.Add(wg);
+                    }
 
-                return View(d);
+                    return View(d);
+                }    
             }
 
             else
@@ -697,68 +705,76 @@ namespace TrainerPalBuddyFriend3.Controllers
             }
         }
 
-        public ActionResult WarpIn2Form(Warpgate w)
+        public ActionResult WarpIn2Form(List<Warpgate> w)
         {
             if (ModelState.IsValid)
             {
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    // Get Workout
-                    Gateway gw = _S.Query<Gateway>()
-                        .Where(x => x.Workoutpk == w.Gateway.Workoutpk)
-                        .SingleOrDefault();
+                    // [0] Get Workout Name
+                    string wkNm = _S.QueryOver<Gateway>()
+                        .Where(x => x.Workoutpk == w[1].Gateway.Workoutpk)
+                        .Select(x => x.Name)
+                        .SingleOrDefault<string>();
 
+                    // [1] Summon Danimoth
                     Danimoth d = new Danimoth
                     {
-                        DWorkoutName = gw.Name,
+                        DWorkoutName = wkNm,
                         Dts = new List<Raszagal>()
                     };
-
-                    // Get data for existing Wksegs
-                    Warpgate wks = null;
-
-                    IList<Warpgate> wksList = _S.QueryOver(() => wks)
-                        .Where(x => x.Gateway.Workoutpk == w.Gateway.Workoutpk)
-                        .OrderBy(x => x.Sequence).Asc
-                        .List<Warpgate>();
-
-                    // DT Rush
-                    foreach (Warpgate z in wksList)
+                    
+                    // [2] Acquire Energy
+                    foreach(Warpgate wg in w)
                     {
-                        Templar rSeg = _S.Query<Templar>()
-                            .Where(x => x.Segmentpk == z.Templar.Segmentpk)
-                            .SingleOrDefault();
+                        // [2.0] Get data for existing Wksegs
+                        Warpgate wks = null;
+                        IList<Warpgate> wksList = _S.QueryOver(() => wks)
+                            .Where(x => x.Gateway.Workoutpk == wg.Gateway.Workoutpk)
+                            .OrderBy(x => x.Sequence).Asc
+                            .List<Warpgate>();
 
-                        Conclave rTyp = _S.Query<Conclave>()
-                             .Where(x => x.Typepk == rSeg.Conclave.Typepk)
-                             .SingleOrDefault();
-
-                        // Get a random tip for that type
-                        ICriteria criteria = _S
-                          .CreateCriteria(typeof(Prophecy))
-                          .Add(Restrictions.Eq("Conclave.Typepk", rTyp.Typepk))
-                          .AddOrder(new RandomOrder())
-                          .SetMaxResults(1);
-
-                        Prophecy clv2 = criteria.UniqueResult<Prophecy>();
-
-                        Raszagal rz = new Raszagal
+                        // [2.1] DT Rush
+                        foreach (Warpgate z in wksList)
                         {
-                            RSegmentName = rSeg.Name,
-                            RSegmentIntensity = rSeg.Intensity,
-                            RTip = clv2,
-                            RWkseg = new Warpgate
-                            {
-                                Duration = z.Duration * 1000,
-                                Sequence = z.Sequence
-                            }
-                        };
+                            // [2.1.0] Get segment data
+                            Templar rSeg = _S.QueryOver<Templar>()
+                                .Where(x => x.Segmentpk == z.Templar.Segmentpk)
+                                .SingleOrDefault<Templar>();
 
-                        d.Dts.Add(rz);
+                            // [2.1.1] Get TypePK
+                            Conclave rTyp = _S.QueryOver<Conclave>()
+                                 .Where(x => x.Typepk == rSeg.Conclave.Typepk)
+                                 .SingleOrDefault<Conclave>();
+
+                            // [2.1.2] Get a random tip for that type
+                            ICriteria criteria = _S
+                              .CreateCriteria(typeof(Prophecy))
+                              .Add(Restrictions.Eq("Conclave.Typepk", rTyp.Typepk))
+                              .AddOrder(new RandomOrder())
+                              .SetMaxResults(1);
+
+                            Prophecy clv2 = criteria.UniqueResult<Prophecy>();
+
+                            // [2.1.3] Warp in DTs
+                            Raszagal rz = new Raszagal
+                            {
+                                RSegmentName = rSeg.Name,
+                                RSegmentIntensity = rSeg.Intensity,
+                                RTip = clv2,
+                                RWkseg = new Warpgate
+                                {
+                                    Duration = z.Duration * 10,
+                                    Sequence = z.Sequence
+                                }
+                            };
+
+                            // [2.1.4] Warp DTs to Danimoth
+                            d.Dts.Add(rz);
+                        }
                     }
 
                     return View("Aiur", d);
-                    
                 }
             }
             else

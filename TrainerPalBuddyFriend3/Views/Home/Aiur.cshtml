@@ -1,5 +1,9 @@
 ﻿@model Danimoth
 
+<script>
+    var jsonModel = @Html.Raw(Json.Encode(Model));
+</script>
+
     <div class="wrapper">
 
         <!---------------------- Title and Start Button ------------------------>
@@ -93,14 +97,14 @@
 
     var segAry = [];
 
-// Convery model to js object
-var model = @Html.Raw(Json.Encode(Model));
+    // Convery model to js object
+    
 
-    for (var seg of model.Dts) {
+    for (var seg of jsonModel.Dts) {
         segAry.push(newSegment(seg.RSegmentName, seg.RWkseg.Duration, seg.RSegmentIntensity, seg.RTip.Text));
     }
 
-    w1 = newWorkout(model.DWorkoutName, "", "", segAry);
+    w1 = newWorkout(jsonModel.DWorkoutName, "", "", segAry);
 
 // Calculate total duration of all segments
 totalTime = calculateTotalTime(w1);
