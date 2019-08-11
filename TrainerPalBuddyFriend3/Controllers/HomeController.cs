@@ -506,8 +506,6 @@ namespace TrainerPalBuddyFriend3.Controllers
 
         public ActionResult WarpIn1Form(Warpgate d)
         {
-            int g = d.Gateway.Workoutpk;
-
             if (ModelState.IsValid)
             {
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
@@ -538,35 +536,31 @@ namespace TrainerPalBuddyFriend3.Controllers
                     Warpgate wks = null;
 
                     IList<Warpgate> wksList = _S.QueryOver(() => wks)
-                        .SelectList(l => l
-                            .Select(x => x.Wksegpk).WithAlias(() => wks.Wksegpk)
-                            .Select(x => x.Gateway).WithAlias(() => wks.Gateway)
-                            .Select(x => x.Templar).WithAlias(() => wks.Templar)
-                            .Select(x => x.Duration).WithAlias(() => wks.Duration)
-                            .Select(x => x.Sequence).WithAlias(() => wks.Sequence)
-                            )
-                        .Where(x => x.Gateway.Workoutpk == g)
-                        .TransformUsing(Transformers.AliasToBean<Warpgate>())
+                        .Where(x => x.Gateway.Workoutpk == d.Gateway.Workoutpk)
+                        .OrderBy(x => x.Sequence).Asc
                         .List<Warpgate>();
-
-                    List<Warpgate> h = new List<Warpgate>();
 
                     foreach (Warpgate z in wksList)
                     {
-                        Warpgate rWksg = new Warpgate
-                        {
-                            Wksegpk = z.Wksegpk,
-                            Gateway = z.Gateway,
-                            Templar = z.Templar,
-                            Duration = z.Duration,
-                            Sequence = z.Sequence,
-                            DDLSegments = new SelectList(list2, "Key", "Display", z.Templar.Segmentpk)
-                        };
-
-                        h.Add(rWksg);
+                        z.DDLSegments = new SelectList(list2, "Key", "Display", z.Templar.Segmentpk);
                     }
 
-                    return View("Assimilation", h);
+                    // Return data needed for controller if no result
+                    if (wksList.Count == 0)
+                    {
+                        Gateway tmpG = new Gateway
+                        {
+                            Workoutpk = d.Gateway.Workoutpk
+                        };
+
+                        wksList.Add(new Warpgate
+                        {
+                            Gateway = tmpG,
+                            DDLSegments = new SelectList(list2, "Key", "Display")
+                        });
+                    }
+
+                    return View("Assimilation", wksList);                    
                 }
             }
 
@@ -598,10 +592,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                     Warpgate tp = null;
 
                     IList<Warpgate> oldList = _S.QueryOver(() => tp)
-                        .SelectList(l => l
-                            .Select(x => x.Wksegpk).WithAlias(() => tp.Wksegpk)
-                        )
-                        .TransformUsing(Transformers.AliasToBean<Warpgate>())
+                        .Where(x => x.Gateway.Workoutpk == d[0].Gateway.Workoutpk)
                         .List<Warpgate>();
 
                     foreach (Warpgate q in d)
@@ -727,14 +718,8 @@ namespace TrainerPalBuddyFriend3.Controllers
                     Warpgate wks = null;
 
                     IList<Warpgate> wksList = _S.QueryOver(() => wks)
-                        .SelectList(l => l
-                            .Select(x => x.Wksegpk).WithAlias(() => wks.Wksegpk)
-                            .Select(x => x.Gateway).WithAlias(() => wks.Gateway)
-                            .Select(x => x.Templar).WithAlias(() => wks.Templar)
-                            .Select(x => x.Duration).WithAlias(() => wks.Duration)
-                            )
                         .Where(x => x.Gateway.Workoutpk == w.Gateway.Workoutpk)
-                        .TransformUsing(Transformers.AliasToBean<Warpgate>())
+                        .OrderBy(x => x.Sequence).Asc
                         .List<Warpgate>();
 
                     // DT Rush
@@ -764,7 +749,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                             RTip = clv2,
                             RWkseg = new Warpgate
                             {
-                                Duration = z.Duration,
+                                Duration = z.Duration * 1000,
                                 Sequence = z.Sequence
                             }
                         };
