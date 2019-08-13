@@ -128,14 +128,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                 Gateway gw = null;
 
                 var gatewayList = _S.QueryOver(() => gw)
-                    .SelectList(l => l
-                        .Select(x => x.Workoutpk).WithAlias(() => gw.Workoutpk)
-                        .Select(x => x.Workoutid).WithAlias(() => gw.Workoutid)
-                        .Select(x => x.Name).WithAlias(() => gw.Name)
-                        .Select(x => x.Description).WithAlias(() => gw.Description)
-                        .Select(x => x.Customflg).WithAlias(() => gw.Customflg)
-                    )
-                    .TransformUsing(Transformers.AliasToBean<Gateway>())
+                     .OrderBy(x => x.Workoutid).Asc
                     .List<Gateway>();
 
                 return View(gatewayList);
@@ -169,7 +162,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                             persistentType.Workoutid = r.Workoutid;
                             persistentType.Name = r.Name;
                             persistentType.Description = r.Description;
-                            persistentType.Customflg = r.Customflg;
+                            persistentType.Iswarmupflg = r.Iswarmupflg;
 
                             _S.Save(persistentType);
                             _S.Flush();
@@ -184,7 +177,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                                 Workoutid = r.Workoutid,
                                 Name = r.Name,
                                 Description = r.Description,
-                                Customflg = r.Customflg
+                                Iswarmupflg = r.Iswarmupflg
                             };
 
                             _S.Save(persistentType);
@@ -224,15 +217,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                 Templar tmp = null;
                 
                 var tmpList = _S.QueryOver(() => tmp)
-                    .SelectList(l => l
-                        .Select(x => x.Segmentpk).WithAlias(() => tmp.Segmentpk)
-                        .Select(x => x.Segmentid).WithAlias(() => tmp.Segmentid)
-                        .Select(x => x.Name).WithAlias(() => tmp.Name)
-                        .Select(x => x.Conclave).WithAlias(() => tmp.Conclave)
-                        .Select(x => x.Intensity).WithAlias(() => tmp.Intensity)
-                        .Select(x => x.Customflg).WithAlias(() => tmp.Customflg)
-                    )
-                    .TransformUsing(Transformers.AliasToBean<Templar>())
+                    .OrderBy(x => x.Segmentid).Asc
                     .List<Templar>();
 
                 // Summon the Conclave
@@ -476,11 +461,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                     Gateway wk = null;
 
                     var wkList = _S.QueryOver(() => wk)
-                        .SelectList(l => l
-                            .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
-                            .Select(x => x.Name).WithAlias(() => wk.Name)
-                        )
-                        .TransformUsing(Transformers.AliasToBean<Gateway>())
+                        .OrderBy(x => x.Name).Asc
                         .List<Gateway>();
 
                     foreach (var r in wkList)
@@ -658,44 +639,59 @@ namespace TrainerPalBuddyFriend3.Controllers
             if (ModelState.IsValid)
             {
                 // [0] Build Probes
-                List<Warpgate> d = new List<Warpgate>();
-                List<Archon> list = new List<Archon>();
+                List<Warpgate> f2 = new List<Warpgate>();
+                List<Archon> ctrl1 = new List<Archon>();
+                List<Archon> ctrl2 = new List<Archon>();
 
                 // [1] Warp in Pylons
                 using (ISession _S = MvcApplication.SF.GetCurrentSession())
                 {
-                    // [1.0] Get Workout names
+                    // [1.0] Select all Gateways
                     Gateway wk = null;
                     IList<Gateway> wkList = _S.QueryOver(() => wk)
-                        .SelectList(l => l
-                            .Select(x => x.Workoutpk).WithAlias(() => wk.Workoutpk)
-                            .Select(x => x.Name).WithAlias(() => wk.Name)
-                        )
-                        .TransformUsing(Transformers.AliasToBean<Gateway>())
+                        .OrderBy(x => x.Name).Asc
                         .List<Gateway>();
 
-                    // [1.1] Assimilate Archons
+                    // [1.1] Assimilate Archons and assign control groups
                     foreach (Gateway r in wkList)
                     {
-                        list.Add(new Archon
+                        if (r.Iswarmupflg)
                         {
-                            Key = r.Workoutpk,
-                            Display = r.Name.ToString()
-                        });
+                            ctrl1.Add(new Archon
+                            {
+                                Key = r.Workoutpk,
+                                Display = r.Name.ToString()
+                            });
+                        }
+                        else
+                        {
+                            ctrl2.Add(new Archon
+                            {
+                                Key = r.Workoutpk,
+                                Display = r.Name.ToString()
+                            });
+                        }
                     }
 
-                    // [1.2] Transit names to Aiur
+                    // [1.2] Load Archons into Warp Prism
                     for (int i = 0; i < 2; i++)
                     {
-                        Warpgate wg = new Warpgate
-                        {
-                            DDLWorkouts = new SelectList(list, "Key", "Display")
-                        };
+                        Warpgate wg = new Warpgate();
 
-                        d.Add(wg);
+                        if (i == 0)
+                        {
+                            wg.DDLWorkouts = new SelectList(ctrl1, "Key", "Display");
+                        }
+                        else
+                        {
+                            wg.DDLWorkouts = new SelectList(ctrl2, "Key", "Display");
+                        }
+
+                        f2.Add(wg);
                     }
 
-                    return View(d);
+                    // [1.3] Commence Archon drop
+                    return View(f2);
                 }    
             }
 
@@ -764,7 +760,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                                 RTip = clv2,
                                 RWkseg = new Warpgate
                                 {
-                                    Duration = z.Duration * 10,
+                                    Duration = z.Duration * 1000,
                                     Sequence = z.Sequence
                                 }
                             };

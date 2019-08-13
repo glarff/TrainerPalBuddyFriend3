@@ -12,6 +12,6 @@ namespace TrainerPalBuddyFriend3 {
         public virtual string Workoutid { get; set; }
         public virtual string Name { get; set; }
         public virtual string Description { get; set; }
-        public virtual bool Customflg { get; set; }
+        public virtual bool Iswarmupflg { get; set; }
     }
 }

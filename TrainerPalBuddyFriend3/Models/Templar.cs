@@ -18,7 +18,8 @@ namespace TrainerPalBuddyFriend3 {
 
     public class Archon
     {
-        public int Key { get; set; }
-        public string Display { get; set; }
+        public virtual int Key { get; set; }
+        public virtual string Display { get; set; }
     }
+
 }

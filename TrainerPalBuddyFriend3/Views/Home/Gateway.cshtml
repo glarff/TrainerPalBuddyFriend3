@@ -17,7 +17,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Description</th>
-            <th>Custom</th>
+            <th>Is Warmup</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -29,7 +29,7 @@
                 <td>@Html.TextBoxFor(m => m[i].Workoutid)</td>
                 <td>@Html.TextBoxFor(m => m[i].Name)</td>
                 <td>@Html.TextAreaFor(m => m[i].Description)</td>
-                <td>@Html.CheckBoxFor(m => m[i].Customflg)</td>
+                <td>@Html.CheckBoxFor(m => m[i].Iswarmupflg)</td>
                 <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
                 <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
             </tr>
@@ -48,13 +48,13 @@
                 <td>+ @Html.TextBoxFor(m => m[j].Workoutid)</td>
                 <td>@Html.TextBoxFor(m => m[j].Name)</td>
                 <td>@Html.TextAreaFor(m => m[i].Description)</td>
-                <td>@Html.CheckBoxFor(m => m[j].Customflg)</td>
+                <td>@Html.CheckBoxFor(m => m[j].Iswarmupflg)</td>
                 <td> <button type="button" class="editbtn" title="Edit row">Edit</button> </td>
                 <td> <button type="button" class="deletebtn" title="Remove row">X</button> </td>
             </tr>
         }
-        <tr name="submitRow">
-            <td colspan="6"><input type="submit" value="Save Changes" /></td>
+        <tr>
+            <td colspan="6" class="submitRow"><input type="submit" value="Save Changes" /></td>
         </tr>
     </table>
 }

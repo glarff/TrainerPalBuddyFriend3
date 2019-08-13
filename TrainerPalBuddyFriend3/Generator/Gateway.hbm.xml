@@ -11,8 +11,8 @@
     <property name="Description">
       <column name="Description" sql-type="varchar(1000)" not-null="false" />
     </property>
-    <property name="Customflg">
-      <column name="CustomFlg" sql-type="int(11)" not-null="true" />
+    <property name="Iswarmupflg">
+      <column name="IsWarmupFlg" sql-type="int(11)" not-null="true" />
     </property>
   </class>
 </hibernate-mapping>

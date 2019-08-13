@@ -1,12 +1,5 @@
 ﻿@model List<Warpgate>
 
-<script type="text/javascript">
-
-    // [0] JQUERY to populate descriptions
-    
-
-</script>
-
 @using (Ajax.BeginForm("WarpIn2Form", "Home", new AjaxOptions
 {
     HttpMethod = "POST",
@@ -19,18 +12,17 @@
 <h2>Select Workout</h2>
 <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
     <tr>
-        <td>Selct Warmup</td>
+        <td>Select Warmup</td>
         <td>@Html.DropDownListFor(m => m[0].Gateway.Workoutpk, Model[0].DDLWorkouts)</td>
-        <td>@Html.DropDownListFor(m => m[0].Gateway.Workoutpk, Model[0].DDLWorkouts)</td>
-        <td><div id="WarmUpDesc"></div></td>
+        <td class="wkDesc"><div id="WarmUpDesc1"></div></td>
     </tr>
     <tr>
         <td>Select Workout</td>
         <td>@Html.DropDownListFor(m => m[1].Gateway.Workoutpk, Model[1].DDLWorkouts)</td>
-        <td><div id="WorkoutDesc"></div></td>
+        <td class="wkDesc"><div id="WorkoutDesc2"></div></td>
     </tr>
     <tr>
-        <td colspan="3"><input id="submit1" type="submit" value="Select" /></td>
+        <td colspan="3" class="submitRow"><input id="submit1" type="submit" value="Select" /></td>
     </tr>
 </table>
 }

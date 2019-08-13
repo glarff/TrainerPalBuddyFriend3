@@ -17,13 +17,28 @@ table {
     margin-top: 10px;
 }
 
+td, th {
+    border-bottom: 1px solid #ddd;
+    padding: 6px;
+    text-align: center;
+}
+
+
+.container {
+    margin: auto;
+    max-width: 1600px;
+}
+
 .form-dropdown option {
     background-color: #252120 !important;
 }
 
-
 .hiddenRow {
     display:none;
+}
+
+.submitRow {
+    text-align: left;
 }
 
 .visibleRow {
@@ -45,7 +60,7 @@ button {
     background-color: #4B0082;
     border-radius: 8px;
     color: #F8F8FF;
-    padding: 4px 4px;
+    padding: 6px 10px;
 }
 
 input[type="submit"] {
@@ -78,9 +93,7 @@ textarea {
     background-color: #01030C;
 }
 
-td, th {
-    padding: 6px;
-}
+
 
 .subject-info-box-1,
 .subject-info-box-2 {

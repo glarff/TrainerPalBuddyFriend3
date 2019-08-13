@@ -9,12 +9,13 @@
 $(document).ready(function () {
     $('input[type!="submit"]').each(function () {
         $(this).prop('readonly', true);
-        $(this).css('background-color', 'darkgrey');
+        $(this).css('background-color', '#b3b3b3');
     })
 
     $('textarea').each(function () {
         $(this).prop('readonly', true);
-        $(this).css('background-color', 'darkgrey');
+        $(this).css('background-color', '#b3b3b3');
+        $(this).height(30);
     })
 });
 
@@ -29,12 +30,14 @@ $(document).on('click', 'button.editbtn', function () {
         $(this).parent().siblings().children('input[type="text"]').prop('readonly', false);
         $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'white');
         $(this).parent().siblings().children('textarea').prop('readonly', false);
+        $(this).parent().siblings().children('textarea').css('background-color', 'white');
         $(this).html('Save');
     }
     else {
         $(this).parent().siblings().children('input[type="text"]').prop('readonly', true);
-        $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'darkgrey');
+        $(this).parent().siblings().children('input[type!="submit"]').css('background-color', '#b3b3b3');
         $(this).parent().siblings().children('textarea').prop('readonly', true);
+        $(this).parent().siblings().children('textarea').css('background-color', '#b3b3b3');
         $(this).html('Edit');
     }
 });
