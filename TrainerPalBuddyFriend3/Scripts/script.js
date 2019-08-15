@@ -9,12 +9,14 @@
 $(document).ready(function () {
     $('input[type!="submit"]').each(function () {
         $(this).prop('readonly', true);
-        $(this).css('background-color', '#b3b3b3');
+        $(this).css('background-color', '#000');
+        $(this).css('color', '#D3D3D3');
     })
 
     $('textarea').each(function () {
         $(this).prop('readonly', true);
-        $(this).css('background-color', '#b3b3b3');
+        $(this).css('background-color', '#000');
+        $(this).css('color', '#D3D3D3');
         $(this).height(30);
     })
 });
@@ -28,16 +30,20 @@ $(document).on('click', 'button.editbtn', function () {
 
     if ($(this).html() == 'Edit') {
         $(this).parent().siblings().children('input[type="text"]').prop('readonly', false);
-        $(this).parent().siblings().children('input[type!="submit"]').css('background-color', 'white');
+        $(this).parent().siblings().children('input[type!="submit"]').css('background-color', '#fff');
+        $(this).parent().siblings().children('input[type!="submit"]').css('color', '#000');
         $(this).parent().siblings().children('textarea').prop('readonly', false);
-        $(this).parent().siblings().children('textarea').css('background-color', 'white');
+        $(this).parent().siblings().children('textarea').css('background-color', '#fff');
+        $(this).parent().siblings().children('textarea').css('color', '#000');
         $(this).html('Save');
     }
     else {
         $(this).parent().siblings().children('input[type="text"]').prop('readonly', true);
-        $(this).parent().siblings().children('input[type!="submit"]').css('background-color', '#b3b3b3');
+        $(this).parent().siblings().children('input[type!="submit"]').css('background-color', '#000');
+        $(this).parent().siblings().children('input[type!="submit"]').css('color', '#fff');
         $(this).parent().siblings().children('textarea').prop('readonly', true);
-        $(this).parent().siblings().children('textarea').css('background-color', '#b3b3b3');
+        $(this).parent().siblings().children('textarea').css('background-color', '#000');
+        $(this).parent().siblings().children('textarea').css('color', '#D3D3D3');
         $(this).html('Edit');
     }
 });
@@ -52,13 +58,15 @@ $(document).on('click', 'button.btnStartTimer', function () {
     }
 });
 
-$(document).on('click', 'button.addbtn', function () {
+$(document).on('click', '#zAddBtn', function () {
     $('.hiddenRow:first').addClass('visibleRow');
     $('.hiddenRow:first').children(".pk").children().val(-1);
     $('.hiddenRow:first').find('input[type="text"]').prop('readonly', false);
     $('.hiddenRow:first').find('input[type="text"]').css('background-color', 'white');
+    $('.hiddenRow:first').find('input[type="text"]').css('color', '#000');
     $('.hiddenRow:first').find('textarea').prop('readonly', false);
     $('.hiddenRow:first').find('textarea').css('background-color', 'white');
+    $('.hiddenRow:first').find('textarea').css('color', '#000');
     $('.hiddenRow:first').find('.editbtn').html('Save');
     $('.hiddenRow:first').removeClass('hiddenRow');
 });
@@ -108,7 +116,7 @@ function changeBorder(intsty) {
    elements = document.getElementsByClassName("segmentTitleContainer");
    elements2 = document.getElementsByClassName("mainComponentContainer");
 
-   newColor = "5px solid " + getColorByIntensity(intsty);
+   newColor = "2px solid " + getColorByIntensity(intsty);
 
    for (var i = 0; i < elements.length; i++) {
       elements[i].style.border = newColor;

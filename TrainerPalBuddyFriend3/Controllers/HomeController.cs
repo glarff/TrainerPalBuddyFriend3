@@ -329,34 +329,24 @@ namespace TrainerPalBuddyFriend3.Controllers
     
         public ActionResult Prophecy()
         {
-            // Get data for existing Workouts
             using (ISession _S = MvcApplication.SF.GetCurrentSession())
             {
+                // [1] Build Probes
                 Prophecy phy = null;
-
-                IList<Prophecy> phyList = _S.QueryOver(() => phy)
-                    .SelectList(l => l
-                        .Select(x => x.Tippk).WithAlias(() => phy.Tippk)
-                        .Select(x => x.Tipid).WithAlias(() => phy.Tipid)
-                        .Select(x => x.Text).WithAlias(() => phy.Text)
-                        .Select(x => x.Conclave).WithAlias(() => phy.Conclave)
-                        .Select(x => x.Customflg).WithAlias(() => phy.Customflg)
-                    )
-                    .TransformUsing(Transformers.AliasToBean<Prophecy>())
-                    .List<Prophecy>();
+                Conclave clv = null;
 
                 List<Archon> archList = new List<Archon>();
 
-                Conclave clv = null;
+                // [2] Gather Minerals
+                IList<Prophecy> phyList = _S.QueryOver(() => phy)
+                    .OrderBy(x => x.Tipid).Asc
+                    .List<Prophecy>();
 
                 IList<Conclave> typeList = _S.QueryOver(() => clv)
-                    .SelectList(l => l
-                        .Select(x => x.Typepk).WithAlias(() => clv.Typepk)
-                        .Select(x => x.Name).WithAlias(() => clv.Name)
-                    )
-                    .TransformUsing(Transformers.AliasToBean<Conclave>())
+                    .OrderBy(x => x.Name).Asc
                     .List<Conclave>();
 
+                // [3] Build 4 Gateways
                 foreach (Conclave r in typeList)
                 {
                     archList.Add(new Archon
@@ -366,11 +356,13 @@ namespace TrainerPalBuddyFriend3.Controllers
                     });
                 }
 
+                // [4] Send Units across the map
                 foreach (Prophecy s in phyList)
                 {
                     s.DDLTypes = new SelectList(archList, "Key", "Display", s.Conclave.Typepk);
                 }
 
+                // [5] Destroy enemy
                 return View(phyList);
             }
         }
@@ -499,6 +491,7 @@ namespace TrainerPalBuddyFriend3.Controllers
                         .Select(x => x.Segmentpk).WithAlias(() => sg.Segmentpk)
                         .Select(x => x.Name).WithAlias(() => sg.Name)
                     )
+                    .OrderBy(x => x.Name).Asc
                     .TransformUsing(Transformers.AliasToBean<Templar>())
                     .List<Templar>();
 

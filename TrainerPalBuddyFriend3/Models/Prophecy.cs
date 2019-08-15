@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 
 namespace TrainerPalBuddyFriend3 {
-    
-    public class Prophecy {
+
+    public class Prophecy
+    {
         public Prophecy() { }
         public virtual int Tippk { get; set; }
         public virtual Conclave Conclave { get; set; }

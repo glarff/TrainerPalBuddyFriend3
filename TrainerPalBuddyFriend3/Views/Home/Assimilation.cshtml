@@ -1,68 +1,75 @@
 ﻿@model List<Warpgate>
 
-    @using (Ajax.BeginForm("AssimilationForm", "Home", new AjaxOptions
-    {
+@using (Ajax.BeginForm("AssimilationForm", "Home", new AjaxOptions
+{
     HttpMethod = "POST",
     UpdateTargetId = "id1",
     LoadingElementId = "LoadingImage",
     OnSuccess = "onSuccess_Message",
     OnFailure = "onFailure_Message"
-    }))
-    {
-    <h2>Add Segments</h2>
-    <button type="button" class="addbtn" title="Remove row">Add</button>
-    <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
-        <tr>
-            <th style="display:none">PK</th>
-            <th style="display:none">FK</th>
-            <th>Segment</th>
-            <th>Duration (s)</th>
-            <th>Sequence</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        @{
-        int i = 0;
-        int j = 0;
-        }
-        @foreach (var r in Model)
-        {
-        <tr class="visibleRow">
-            <td class="pk" style="display:none">@Html.TextBoxFor(m => Model[i].Wksegpk)</td>
-            <td class="fk" style="display:none">@Html.TextBoxFor(m => Model[i].Gateway.Workoutpk)</td>
-            <td>@Html.DropDownListFor(m => m[i].Templar.Segmentpk, Model[i].DDLSegments)</td>
-            <td>@Html.TextBoxFor(m => Model[i].Duration)</td>
-            <td>@Html.TextBoxFor(m => Model[i].Sequence)</td>
-            <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
-            <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
-        </tr>
-        i++;
-        }
+}))
+{
+    <div class="zPageHead01">
+        <button id="zAddBtn" type="button" class="btn btn-primary btn-lg" title="Add row" style="float:right; margin-right:20px; margin-top:45px">Add Segment &raquo;</button>
+        <h2>Assimilation</h2>
+        <p class="lead">
+            Build your workout.  Edit existing segments in the workout or add to it.
+        </p>
+    </div>
+    <div class="zPageBody01">
+        <table id="myTbl" class="table table-condensed nestedtablewithactions" summary="Defined Types">
+            <tr>
+                <th style="display:none">PK</th>
+                <th style="display:none">FK</th>
+                <th>Segment</th>
+                <th>Duration (s)</th>
+                <th>Sequence</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            @{
+                int i = 0;
+                int j = 0;
+            }
+            @foreach (var r in Model)
+            {
+                <tr class="visibleRow">
+                    <td class="pk" style="display:none">@Html.TextBoxFor(m => Model[i].Wksegpk)</td>
+                    <td class="fk" style="display:none">@Html.TextBoxFor(m => Model[i].Gateway.Workoutpk)</td>
+                    <td>@Html.DropDownListFor(m => m[i].Templar.Segmentpk, Model[i].DDLSegments)</td>
+                    <td>@Html.TextBoxFor(m => Model[i].Duration)</td>
+                    <td>@Html.TextBoxFor(m => Model[i].Sequence)</td>
+                    <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+                    <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+                </tr>
+                i++;
+            }
 
-        @for (j = i; j < i + 20; j++)
-        {
-        // ugly solution until I can find something better that works
-        // add invisible rows to handle addition
+            @for (j = i; j < i + 20; j++)
+            {
+                // ugly solution until I can find something better that works
+                // add invisible rows to handle addition
 
-        Warpgate newRz = new Warpgate();
-        newRz.DDLSegments = Model[0].DDLSegments;
-        newRz.Gateway = Model[0].Gateway;
+                Warpgate newRz = new Warpgate();
+                newRz.DDLSegments = Model[0].DDLSegments;
+                newRz.Gateway = Model[0].Gateway;
 
-        Model.Add(newRz);
+                Model.Add(newRz);
 
-        <tr class="hiddenRow">
-            <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Wksegpk)</td>
-            <td class="fk" style="display:none">@Html.TextBoxFor(m => m[j].Gateway.Workoutpk)</td>
-            <td>@Html.DropDownListFor(m => m[j].Templar.Segmentpk, Model[j].DDLSegments)</td>
-            <td>@Html.TextBoxFor(m => m[j].Duration)</td>
-            <td>@Html.TextBoxFor(m => m[j].Sequence)</td>
-            <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
-            <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
-        </tr>
-        }
-        <tr name="submitRow">
-            <td colspan="6" class="submitRow"><input type="submit" value="Save Changes" /></td>
-        </tr>
-    </table>
+                <tr class="hiddenRow">
+                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Wksegpk)</td>
+                    <td class="fk" style="display:none">@Html.TextBoxFor(m => m[j].Gateway.Workoutpk)</td>
+                    <td>@Html.DropDownListFor(m => m[j].Templar.Segmentpk, Model[j].DDLSegments)</td>
+                    <td>@Html.TextBoxFor(m => m[j].Duration)</td>
+                    <td>@Html.TextBoxFor(m => m[j].Sequence)</td>
+                    <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+                    <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="zPageFooter01">
+        <input type="submit" class="btn btn-primary btn-lg" value="Save Changes" />
+    </div>
 
-    }
+}

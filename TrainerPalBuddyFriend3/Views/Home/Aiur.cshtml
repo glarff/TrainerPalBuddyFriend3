@@ -1,7 +1,15 @@
 ﻿@model Danimoth
 
 <script>
+
+    $(document).ready(function () {
+        $('.container').each(function () {
+            $(this).css('width', '1650px');
+        })
+    });
+
     var jsonModel = @Html.Raw(Json.Encode(Model));
+
 </script>
 
     <div class="wrapper">
@@ -33,7 +41,7 @@
             <span class="segmentTitleLabel">Current Segment: </span>
 
             <div class="segmentTitleContainer">
-                <div id="segmentTitle"></div>
+                <div id="segmentTitle" class="segmentTitle"></div>
             </div>
 
             <div class="mainComponentContainer">
@@ -49,7 +57,7 @@
             <div class="mainComponentContainer">
                 <div id="segmentTips" class="segmentTips"></div>
             </div>
-            <span class="segmentTipsFooter">Segment Tips</span>
+            <span class="segmentTipsFooter">Segment Tip</span>
         </div>
         <!---------------------------------------------------------------------->
         <!--------------------- Upcoming Segments Section ---------------------->
@@ -126,7 +134,7 @@ elapsedDuration += w1.segments[i].duration;
 }
 
 // Set the Workout Title
-changeText("workoutTitle", w1.title);
+changeText("workoutTitle", "Workout: " + w1.title);
 
 // Display the first segment
 changeText("segmentTitle", w1.segments[0].title);

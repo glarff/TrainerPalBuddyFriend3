@@ -1,15 +1,41 @@
 ﻿body {
-    background-color: #252120;
-    color: #BBBCBF;
+    background-color: #282923;
+    color: #ffffe6;
     font-size: 18px;
-    font-family: Montserrat;
+    font-family: Merriweather;
+    margin: auto;
     padding-top: 50px;
     padding-bottom: 20px;
 }
 
+.col-md-4 {
+    background-color: black;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.99), 0 2px 2px 0px rgba(0, 0, 0, 0.99);
+    font-size: 14px;
+    width: 31%;
+    margin-left: 13px;
+    margin-right: 13px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.imageContainer01 {
+    float: right;
+    padding: 30px;
+}
+
+.pSmaller {
+    font-size: 18px;
+    font-family: Raleway;
+}
+
+.scrollable-element {
+    scrollbar-color: red yellow;
+}
+
 select {
     background-color: #252120;
-    color: #BBBCBF;
+    color: #ffffe6;
     max-width: 280px;
 }
 
@@ -21,12 +47,12 @@ td, th {
     border-bottom: 1px solid #ddd;
     padding: 6px;
     text-align: center;
+    vertical-align: middle !important;
 }
-
 
 .container {
     margin: auto;
-    max-width: 1600px;
+    max-width: 2400px;
 }
 
 .form-dropdown option {
@@ -67,6 +93,7 @@ input[type="submit"] {
     background-color: #4B0082;
     border-radius: 8px;
     color: #F8F8FF;
+    margin-bottom: 10px;
     margin-top: 10px;
     padding: 10px 24px;
 }
@@ -92,8 +119,6 @@ textarea {
 .navbar-inverse {
     background-color: #01030C;
 }
-
-
 
 .subject-info-box-1,
 .subject-info-box-2 {
@@ -123,6 +148,10 @@ select[multiple] {
     margin-bottom: 5px;
 }
 
+.lead {
+    font-family:Raleway;
+}
+
 * {
     font-style: normal;
     font-variant: normal;
@@ -131,23 +160,15 @@ select[multiple] {
     color: #ffffe6;
 }
 
-body {
-    background: #333333;
-    margin: 40px;
-}
-
 .wrapper {
     display: grid;
-    grid-template-columns: 600px 125px 60px 350px 150px;
-    background-color: #333333;
+    grid-template-columns: 800px 150px 60px 350px 150px;
     color: #444;
     grid-auto-rows: minmax(50px, auto);
-    margin-left: auto;
-    margin-right: auto;
+    padding-top: 15px;
 }
 
 .box {
-    background-color: #333333;
     color: #fff;
 }
 
@@ -197,9 +218,10 @@ body {
 }
 
 .wkTitle {
-    font-size: 32px;
+    font-size: 42px;
+    padding-bottom: 30px;
     padding-left: 25px;
-    width: 550px;
+    width: 750px;
     display: block;
     float: left;
 }
@@ -212,6 +234,7 @@ body {
 
 .bigTimer {
     font-size: 64px;
+    font-family: Ubuntu;
 }
 
 .intensityText {
@@ -224,11 +247,12 @@ body {
 }
 
 .mainComponentContainer {
-    padding-top: 50px;
-    padding-bottom: 50px;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.99), 0 2px 2px 0px rgba(0, 0, 0, 0.99);
+    padding-top: 40px;
+    padding-bottom: 40px;
     display: block;
     height: auto;
-    width: 600px;
+    width: 800px;
     float: left;
     clear: left;
     font-size: 42px;
@@ -243,7 +267,7 @@ body {
     padding-top: 50px;
     padding-bottom: 50px;
     display: block;
-    width: 600px;
+    width: 800px;
     float: left;
     clear: left;
     font-size: 64px;
@@ -257,29 +281,39 @@ body {
 .mainTimerFooter {
     padding-top: 10px;
     padding-bottom: 30px;
-    width: 575px;
+    width: 775px;
     float: left;
     clear: left;
+    font-family: Raleway;
     font-size: 18px;
     text-align: right;
 }
 
 .segmentsText {
-    border: 1px solid #595959;
+    border: 1px solid #282923;
+    font-family: Raleway;
     font-size: 28px;
     height: 58px;
     line-height: 58px;
     padding-left: 10px;
 }
 
+.segmentTitle {
+    font-family: Raleway;
+    font-size: 32px;
+    height: 58px;
+    line-height: 58px;
+}
+
 .segmentTimerContainer {
     padding-top: 50px;
     padding-bottom: 50px;
     display: block;
-    width: 600px;
+    width: 800px;
     float: left;
     clear: left;
     font-size: 64px;
+    font-family: Roboto;
     background-color: black;
     text-align: center;
     border-style: groove;
@@ -290,9 +324,10 @@ body {
 .segmentTimerFooter {
     padding-top: 10px;
     padding-bottom: 50px;
-    width: 575px;
+    width: 775px;
     float: left;
     clear: left;
+    font-family: Raleway;
     font-size: 18px;
     text-align: right;
 }
@@ -305,7 +340,7 @@ body {
     margin-left: 10px;
     margin-right: 10px;
     display: block;
-    width: 600px;
+    width: 800px;
     font-size: 32px;
     text-align: center;
     line-height: 48px;
@@ -313,37 +348,33 @@ body {
 
 .segmentTipsFooter {
     padding-top: 10px;
-    width: 575px;
+    width: 775px;
     float: left;
     clear: left;
+    font-family: Raleway;
     font-size: 18px;
     text-align: right;
 }
 
 .segmentTitleContainer {
-    padding-top: 10px;
-    padding-bottom: 10px;
     display: block;
-    width: 300px;
+    width: 450px;
     float: right;
-    font-size: 32px;
     background-color: black;
     text-align: center;
     border-style: groove;
     border: 2px solid blue;
-    border-radius: 15px;
+    border-radius: 20px;
     margin-bottom: 15px;
     vertical-align: middle;
 }
 
 .segmentTitleLabel {
-    padding-top: 10px;
+    padding-top: 15px;
     padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 10px;
-    width: 500px;
     font-size: 28px;
-    vertical-align: bottom;
+    float: left;
+    width: 300px;
 }
 
 .upcomingSegmentsTitle {
@@ -378,4 +409,32 @@ body {
 
 .jumbotron {
     background-color: black;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.99), 0 2px 2px 0px rgba(0, 0, 0, 0.99);
+}
+
+.zPageHead01 {
+    background-color: black;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.99), 0 2px 2px 0px rgba(0, 0, 0, 0.99);
+    padding: 5px 10px 5px 25px;
+    width: 95%;
+}
+
+.zPageBody01 {
+    background-color: black;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.99), 0 2px 2px 0px rgba(0, 0, 0, 0.99);
+    margin-top:20px;
+    max-height: 700px;
+    padding: 5px 10px 25px 25px;
+    width: 95%;
+    overflow-y:scroll;
+}
+
+.zPageFooter01 {
+    background-color: black;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.99), 0 2px 2px 0px rgba(0, 0, 0, 0.99);
+    border-top: 2px;
+    border-top-color:grey;
+    margin-top: 1em;
+    padding: 5px 10px 5px 25px;
+    width: 95%;
 }
