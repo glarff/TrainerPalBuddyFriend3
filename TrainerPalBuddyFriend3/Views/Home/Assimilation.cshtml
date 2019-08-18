@@ -21,11 +21,11 @@
             <tr>
                 <th style="display:none">PK</th>
                 <th style="display:none">FK</th>
-                <th>Segment</th>
-                <th>Duration (s)</th>
-                <th>Sequence</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th style="width:250px">Segment</th>
+                <th style="width:150px">Duration (s)</th>
+                <th style="width:95px">Sequence</th>
+                <th style="width:85px">Edit</th>
+                <th style="width:85px">Delete</th>
             </tr>
             @{
                 int i = 0;
@@ -33,19 +33,22 @@
             }
             @foreach (var r in Model)
             {
-                <tr class="visibleRow">
-                    <td class="pk" style="display:none">@Html.TextBoxFor(m => Model[i].Wksegpk)</td>
-                    <td class="fk" style="display:none">@Html.TextBoxFor(m => Model[i].Gateway.Workoutpk)</td>
-                    <td>@Html.DropDownListFor(m => m[i].Templar.Segmentpk, Model[i].DDLSegments)</td>
-                    <td>@Html.TextBoxFor(m => Model[i].Duration)</td>
-                    <td>@Html.TextBoxFor(m => Model[i].Sequence)</td>
-                    <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
-                    <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
-                </tr>
+        <tr class="visibleRow">
+            <td class="pk" style="display:none">@Html.TextBoxFor(m => Model[i].Wksegpk)</td>
+            <td class="fk" style="display:none">@Html.TextBoxFor(m => Model[i].Gateway.Workoutpk)</td>
+            <td class="dynamicList">
+                @Html.DropDownListFor(m =>  m[i].Templar.Segmentpk, Model[i].DDLSegments)
+                <div class="zLabelContainer"></div>
+            </td>
+            <td class="zColumnSmaller">@Html.TextBoxFor(m => Model[i].Duration)</td>
+            <td class="zColumnSmaller">@Html.TextBoxFor(m => Model[i].Sequence)</td>
+            <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+            <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+        </tr>
                 i++;
             }
 
-            @for (j = i; j < i + 20; j++)
+            @for (j = i; j < i + 50; j++)
             {
                 // ugly solution until I can find something better that works
                 // add invisible rows to handle addition
@@ -56,15 +59,18 @@
 
                 Model.Add(newRz);
 
-                <tr class="hiddenRow">
-                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Wksegpk)</td>
-                    <td class="fk" style="display:none">@Html.TextBoxFor(m => m[j].Gateway.Workoutpk)</td>
-                    <td>@Html.DropDownListFor(m => m[j].Templar.Segmentpk, Model[j].DDLSegments)</td>
-                    <td>@Html.TextBoxFor(m => m[j].Duration)</td>
-                    <td>@Html.TextBoxFor(m => m[j].Sequence)</td>
-                    <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
-                    <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
-                </tr>
+        <tr class="hiddenRow">
+            <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Wksegpk)</td>
+            <td class="fk" style="display:none">@Html.TextBoxFor(m => m[j].Gateway.Workoutpk)</td>
+            <td class="dynamicList">
+                @Html.DropDownListFor(m => m[j].Templar.Segmentpk, Model[j].DDLSegments)
+                <div class="zLabelContainer"></div>
+            </td>
+            <td>@Html.TextBoxFor(m => m[j].Duration)</td>
+            <td>@Html.TextBoxFor(m => m[j].Sequence)</td>
+            <td class="zColumnSmaller"><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+            <td class="zColumnSmaller"><button type="button" class="deletebtn" title="Remove row">X</button></td>
+        </tr>
             }
         </table>
     </div>

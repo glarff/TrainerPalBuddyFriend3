@@ -20,25 +20,34 @@
         <table id="myTbl">
             <tr>
                 <th style="display:none">PK</th>
-                <th>ID</th>
-                <th>Text</th>
+                <th style="width:180px">ID</th>
+                <th style="width:400px">Text</th>
                 <th>Type</th>
-                <th>Custom</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th style="width:95px">Custom</th>
+                <th style="width:85px">Edit</th>
+                <th style="width:85px">Delete</th>
             </tr>
             @{ int i = 0; int j = 0; }
             @foreach (var r in Model)
             {
-                <tr class="visibleRow">
-                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m[i].Tippk)</td>
-                    <td>@Html.TextBoxFor(m => m[i].Tipid)</td>
-                    <td>@Html.TextAreaFor(m => m[i].Text)</td>
-                    <td>@Html.DropDownListFor(m => m[i].Conclave.Typepk, Model[i].DDLTypes)</td>
-                    <td>@Html.CheckBoxFor(m => m[i].Customflg)</td>
-                    <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
-                    <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
-                </tr>
+        <tr class="visibleRow">
+            <td class="pk" style="display:none">@Html.TextBoxFor(m => m[i].Tippk)</td>
+            <td class="zColumnSmaller">@Html.TextBoxFor(m => m[i].Tipid)</td>
+            <td>@Html.TextAreaFor(m => m[i].Text)</td>
+            <td class="dynamicList">
+                @Html.DropDownListFor(m => m[i].Conclave.Typepk, Model[i].DDLTypes)
+                <div class="zLabelContainer"></div>
+            </td>
+            <td>
+                <label class="z1container">
+                    <br />
+                    @Html.CheckBoxFor(m => m[i].Customflg)
+                    <span class="checkmark"></span>
+                </label>
+            </td>
+            <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+            <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+        </tr>
                 i++;
             }
 
@@ -52,15 +61,24 @@
 
                 Model.Add(newTip);
 
-                <tr class="hiddenRow">
-                    <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Tippk)</td>
-                    <td>@Html.TextBoxFor(m => m[j].Tipid)</td>
-                    <td>@Html.TextAreaFor(m => m[j].Text)</td>
-                    <td>@Html.DropDownListFor(m => m[j].Conclave.Typepk, Model[j].DDLTypes)</td>
-                    <td>@Html.CheckBoxFor(m => m[j].Customflg)</td>
-                    <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
-                    <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
-                </tr>
+        <tr class="hiddenRow">
+            <td class="pk" style="display:none">@Html.TextBoxFor(m => m[j].Tippk)</td>
+            <td class="zColumnSmaller">@Html.TextBoxFor(m => m[j].Tipid)</td>
+            <td>@Html.TextAreaFor(m => m[j].Text)</td>
+            <td class="dynamicList">
+                @Html.DropDownListFor(m => m[j].Conclave.Typepk, Model[j].DDLTypes)
+                <div class="zLabelContainer"></div>
+            </td>
+            <td>
+                <label class="z1container">
+                    <br />
+                    @Html.CheckBoxFor(m => m[j].Customflg)
+                    <span class="checkmark"></span>
+                </label>
+            </td>
+            <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+            <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
+        </tr>
             }
         </table>
     </div>

@@ -6,7 +6,13 @@
 
 /* ======================= GLOBAL JQUERY ========================= */
 
+function preventDefault(e) {
+    e.preventDefault();
+}
+
 $(document).ready(function () {
+
+    // Default Controls to Read-Only
     $('input[type!="submit"]').each(function () {
         $(this).prop('readonly', true);
         $(this).css('background-color', '#000');
@@ -19,6 +25,20 @@ $(document).ready(function () {
         $(this).css('color', '#D3D3D3');
         $(this).height(30);
     })
+
+    // Checkboxes and Radio Buttons
+    $('.checkmark').each(function () { $(this).bind('click', preventDefault); })
+    $('span[class^="zRadio"]').each(function () { $(this).bind('click', preventDefault); })
+
+    $('.z1container').each(function () { $(this).css('cursor', 'not-allowed'); })
+    $('.z2container').each(function () { $(this).css('cursor', 'not-allowed'); })
+    $('.z3container').each(function () { $(this).css('cursor', 'not-allowed'); })
+
+    // Dropdown Lists
+    $('.dynamicList select').each(function () {
+        $(this).hide();
+        $(this).parent().children('.zLabelContainer').html($(this).children('option:selected').text());
+    })
 });
 
 $(document).on('click', 'button.deletebtn', function () {
@@ -30,20 +50,38 @@ $(document).on('click', 'button.editbtn', function () {
 
     if ($(this).html() == 'Edit') {
         $(this).parent().siblings().children('input[type="text"]').prop('readonly', false);
-        $(this).parent().siblings().children('input[type!="submit"]').css('background-color', '#fff');
+        $(this).parent().siblings().children('input[type!="submit"]').css('background-color', '#D3D3D3');
         $(this).parent().siblings().children('input[type!="submit"]').css('color', '#000');
         $(this).parent().siblings().children('textarea').prop('readonly', false);
         $(this).parent().siblings().children('textarea').css('background-color', '#fff');
         $(this).parent().siblings().children('textarea').css('color', '#000');
+
+        $(this).parent().siblings().children('label').children().unbind('click', preventDefault);
+        $(this).parent().siblings().children('label').css('cursor', 'pointer');
+
+        $(this).parent().siblings().children('select').show();
+        $(this).parent().siblings().children('.zLabelContainer').hide();
+
+        $(this).parent().parent().css('backgroundColor', '#282923');
         $(this).html('Save');
     }
     else {
         $(this).parent().siblings().children('input[type="text"]').prop('readonly', true);
         $(this).parent().siblings().children('input[type!="submit"]').css('background-color', '#000');
-        $(this).parent().siblings().children('input[type!="submit"]').css('color', '#fff');
+        $(this).parent().siblings().children('input[type!="submit"]').css('color', '#D3D3D3');
         $(this).parent().siblings().children('textarea').prop('readonly', true);
         $(this).parent().siblings().children('textarea').css('background-color', '#000');
         $(this).parent().siblings().children('textarea').css('color', '#D3D3D3');
+        $(this).parent().siblings().children('.checkmark').prop('readonly', 'readonly');
+
+        $(this).parent().siblings().children('label').children().bind('click', preventDefault);
+        $(this).parent().siblings().children('label').css('cursor', 'not-allowed');
+
+        $(this).parent().siblings().children('select').hide();
+        $(this).parent().siblings().children('.zLabelContainer').html($(this).parent().siblings().children('select').children('option:selected').text());
+        $(this).parent().siblings().children('.zLabelContainer').show();
+
+        $(this).parent().parent().css('backgroundColor', '#000');
         $(this).html('Edit');
     }
 });
@@ -62,10 +100,10 @@ $(document).on('click', '#zAddBtn', function () {
     $('.hiddenRow:first').addClass('visibleRow');
     $('.hiddenRow:first').children(".pk").children().val(-1);
     $('.hiddenRow:first').find('input[type="text"]').prop('readonly', false);
-    $('.hiddenRow:first').find('input[type="text"]').css('background-color', 'white');
+    $('.hiddenRow:first').find('input[type="text"]').css('background-color', '#D3D3D3');
     $('.hiddenRow:first').find('input[type="text"]').css('color', '#000');
     $('.hiddenRow:first').find('textarea').prop('readonly', false);
-    $('.hiddenRow:first').find('textarea').css('background-color', 'white');
+    $('.hiddenRow:first').find('textarea').css('background-color', '#D3D3D3');
     $('.hiddenRow:first').find('textarea').css('color', '#000');
     $('.hiddenRow:first').find('.editbtn').html('Save');
     $('.hiddenRow:first').removeClass('hiddenRow');
@@ -116,7 +154,7 @@ function changeBorder(intsty) {
    elements = document.getElementsByClassName("segmentTitleContainer");
    elements2 = document.getElementsByClassName("mainComponentContainer");
 
-   newColor = "2px solid " + getColorByIntensity(intsty);
+   newColor = "2px outset " + getColorByIntensity(intsty);
 
    for (var i = 0; i < elements.length; i++) {
       elements[i].style.border = newColor;
