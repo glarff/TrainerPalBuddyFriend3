@@ -66,10 +66,10 @@
                 @Html.DropDownListFor(m => m[j].Templar.Segmentpk, Model[j].DDLSegments)
                 <div class="zLabelContainer"></div>
             </td>
-            <td>@Html.TextBoxFor(m => m[j].Duration)</td>
-            <td>@Html.TextBoxFor(m => m[j].Sequence)</td>
-            <td class="zColumnSmaller"><button type="button" class="editbtn" title="Edit row">Edit</button></td>
-            <td class="zColumnSmaller"><button type="button" class="deletebtn" title="Remove row">X</button></td>
+            <td class="zColumnSmaller">@Html.TextBoxFor(m => m[j].Duration)</td>
+            <td class="zColumnSmaller">@Html.TextBoxFor(m => m[j].Sequence)</td>
+            <td><button type="button" class="editbtn" title="Edit row">Edit</button></td>
+            <td><button type="button" class="deletebtn" title="Remove row">X</button></td>
         </tr>
             }
         </table>

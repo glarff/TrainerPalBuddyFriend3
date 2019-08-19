@@ -105,6 +105,8 @@ $(document).on('click', '#zAddBtn', function () {
     $('.hiddenRow:first').find('textarea').prop('readonly', false);
     $('.hiddenRow:first').find('textarea').css('background-color', '#D3D3D3');
     $('.hiddenRow:first').find('textarea').css('color', '#000');
+    $('.hiddenRow:first').find('select').show();
+    $('.hiddenRow:first').find('.zLabelContainer').hide();
     $('.hiddenRow:first').find('.editbtn').html('Save');
     $('.hiddenRow:first').removeClass('hiddenRow');
 });
