@@ -4,7 +4,7 @@
    Date: 1/4/19
 */
 
-/* ======================= GLOBAL JQUERY ========================= */
+/* =========================== GLOBAL JQUERY ============================= */
 
 function preventDefault(e) {
     e.preventDefault();
@@ -29,7 +29,6 @@ $(document).ready(function () {
     // Checkboxes and Radio Buttons
     $('.checkmark').each(function () { $(this).bind('click', preventDefault); })
     $('span[class^="zRadio"]').each(function () { $(this).bind('click', preventDefault); })
-
     $('.z1container').each(function () { $(this).css('cursor', 'not-allowed'); })
     $('.z2container').each(function () { $(this).css('cursor', 'not-allowed'); })
     $('.z3container').each(function () { $(this).css('cursor', 'not-allowed'); })
@@ -55,13 +54,10 @@ $(document).on('click', 'button.editbtn', function () {
         $(this).parent().siblings().children('textarea').prop('readonly', false);
         $(this).parent().siblings().children('textarea').css('background-color', '#fff');
         $(this).parent().siblings().children('textarea').css('color', '#000');
-
         $(this).parent().siblings().children('label').children().unbind('click', preventDefault);
         $(this).parent().siblings().children('label').css('cursor', 'pointer');
-
         $(this).parent().siblings().children('select').show();
         $(this).parent().siblings().children('.zLabelContainer').hide();
-
         $(this).parent().parent().css('backgroundColor', '#282923');
         $(this).html('Save');
     }
@@ -73,14 +69,11 @@ $(document).on('click', 'button.editbtn', function () {
         $(this).parent().siblings().children('textarea').css('background-color', '#000');
         $(this).parent().siblings().children('textarea').css('color', '#D3D3D3');
         $(this).parent().siblings().children('.checkmark').prop('readonly', 'readonly');
-
         $(this).parent().siblings().children('label').children().bind('click', preventDefault);
         $(this).parent().siblings().children('label').css('cursor', 'not-allowed');
-
         $(this).parent().siblings().children('select').hide();
         $(this).parent().siblings().children('.zLabelContainer').html($(this).parent().siblings().children('select').children('option:selected').text());
         $(this).parent().siblings().children('.zLabelContainer').show();
-
         $(this).parent().parent().css('backgroundColor', '#000');
         $(this).html('Edit');
     }
@@ -91,7 +84,12 @@ $(document).on('click', 'button.btnStartTimer', function () {
         execute();
         $(this).html('Pause');
     }
+    else if ($(this).html() == 'Resume') {
+        startTimer();
+        $(this).html('Pause');
+    }
     else {
+        pauseTimer();
         $(this).html('Resume');
     }
 });
@@ -107,13 +105,15 @@ $(document).on('click', '#zAddBtn', function () {
     $('.hiddenRow:first').find('textarea').css('color', '#000');
     $('.hiddenRow:first').find('select').show();
     $('.hiddenRow:first').find('.zLabelContainer').hide();
+    $('.hiddenRow:first').find('label').css('cursor', 'pointer');
+    $('.hiddenRow:first').find('label').children().unbind('click', preventDefault);
     $('.hiddenRow:first').find('.editbtn').html('Save');
-    $('.hiddenRow:first').removeClass('hiddenRow');
+
 });
 
-/* =============================================================== */
+/* ========================================================================= */
 
-/* ======================= UTIL FUNCTIONS ======================== */
+/* ============================ UTIL FUNCTIONS ============================= */
 
 Date.prototype.addMilliseconds = function(ms) {    
    this.setTime(this.getTime() + ms); 
@@ -173,9 +173,9 @@ function addZeroPadding(num) {
    return num;
 }
 
-/* =============================================================== */
+/* ========================================================================= */
 
-/* ====================== HELPER FUNCTIONS ======================= */
+/* =========================== HELPER FUNCTIONS ============================ */
 
 /*
    Get Time Divisions
@@ -452,5 +452,149 @@ function updateUpcomingSegments(wk, ttl, seg) {
 
 }
 
-/* =============================================================== */
+/* ========================================================================= */
 
+/* ============================= MAIN PROGRAM ============================== */
+
+function loadElements() {
+
+    // Calculate total duration of all segments
+    totalTime = calculateTotalTime(w1);
+
+    // Initial population of next segments list
+    elapsedDuration = 0;
+
+    // Use 5 if there are more than 5 segments, otherwise use the length
+    var z = w1.segments.length;
+
+    if (z > 4) {
+        z = 5;
+    }
+
+    for (i = 0; i < z; i++) {
+        nextSegmentWindow = calculateSegmentWindow(totalTime, elapsedDuration, w1.segments[i].duration);
+        changeText("upcomingSegment" + (i + 1) + "intensity", w1.segments[i].intensity);
+        changeColor("upcomingSegment" + (i + 1) + "intensity", getColorByIntensity(w1.segments[i].intensity));
+        changeText("upcomingSegment" + (i + 1) + "window", nextSegmentWindow);
+        changeText("upcomingSegment" + (i + 1) + "title", w1.segments[i].title);
+        elapsedDuration += w1.segments[i].duration;
+    }
+
+    // Set the Workout Title
+    changeText("workoutTitle", "Workout: " + w1.title);
+
+    // Display the first segment
+    changeText("segmentTitle", w1.segments[0].title);
+    changeText("segmentTips", w1.segments[0].tips);
+
+    // Initial population of timers
+    changeText("mainTimer", formatForTimer2(totalTime));
+
+    changeText("segmentTimer", formatForTimer2(w1.segments[0].duration));
+    changeBorder(w1.segments[0].intensity);
+}
+
+function execute() {
+
+    // Calculate total time and time left after semgment 1
+    totalTime = calculateTotalTime(w1);
+    timeRemainingAfterCurrentSegment = totalTime - w1.segments[0].duration;
+
+    // Set the date/time we're counting down to
+    finishTime = new Date().addMilliseconds(totalTime);
+    currentSegment = 0;
+    elapsedDuration = 0;
+
+    // Shift down in upcoming segments
+    updateUpcomingSegments(w1, totalTime, 0);
+
+    w1.timeLeft = totalTime;
+    startTimer();
+}
+
+function startTimer() {
+
+    w1.pause = false;
+    finishTime = new Date().addMilliseconds(w1.timeLeft);
+
+    // Start loop - iterate every .1 seconds
+    x = setInterval(function () {
+
+        // Get todays date and time
+        now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        distance = finishTime - now;
+        distance2 = distance - timeRemainingAfterCurrentSegment;
+
+        mainTimerDivs = getTimeDivisions(distance);
+        segTimerDivs = getTimeDivisions2(distance2);
+
+        mainTimerHours = mainTimerDivs.hrs;
+        mainTimerMinutes = mainTimerDivs.mins;
+        mainTimerSeconds = mainTimerDivs.secs;
+
+        segTimerMinutes = segTimerDivs.mins;
+        segTimerSeconds = segTimerDivs.secs;
+
+        // Display the main timer
+        changeText("mainTimer", formatForTimer(mainTimerHours, mainTimerMinutes,
+            mainTimerSeconds));
+
+        // Display segment timer - use00 if negative
+        if (segTimerSeconds < 0) {
+            changeText("segmentTimer", formatForTimer(0, 0, 0));
+        }
+
+        else {
+            changeText("segmentTimer", formatForTimer(0, segTimerMinutes,
+                segTimerSeconds));
+        }
+
+        // Set component backgrounds based on intensity
+        if (currentSegment < w1.segments.length) {
+            changeBorder(w1.segments[currentSegment].intensity);
+        }
+
+        if (w1.pause) {
+            clearInterval(x);
+
+            // Save time left
+            w1.timeLeft = distance;
+        }
+
+        // When reaching end of the timer
+        if (distance < 0) {
+            clearInterval(x);
+            changeText("mainTimer", "Done!");
+            changeText("segmentTimer", "Done!");
+        }
+
+        // When rearching the end of a segment
+        else if (distance2 < 0) {
+
+            currentSegment++;
+
+            // Recalculate time remaining after this segment
+            timeRemainingAfterCurrentSegment = totalTime;
+
+            for (i = 0; i < currentSegment + 1; i++) {
+                timeRemainingAfterCurrentSegment -= w1.segments[i].duration;
+            }
+
+            // Update the labels on the screen
+            changeText("segmentTitle", w1.segments[currentSegment].title);
+            changeText("segmentTips", w1.segments[currentSegment].tips);
+
+            // Update the next segments list
+            updateUpcomingSegments(w1, totalTime, currentSegment);
+        }
+
+    }, 100);
+}
+    
+function pauseTimer() {
+    w1.pause = true;
+}
+
+/* ================================== FIN ================================== */
